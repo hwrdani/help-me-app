@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Help-Me</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x:hidden;}
+
+/* ── LAYOUT ── */
+.app{max-width:420px;margin:0 auto;min-height:100vh;position:relative;background:#F9F7F4;}
+.screen{display:none;flex-direction:column;min-height:100vh;animation:fadeUp .3s ease;}
+.screen.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
+  background:#fff;display:flex;padding:10px 0 18px;box-shadow:0 -3px 16px rgba(0,0,0,.08);z-index:200;}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+  font-size:10px;font-weight:700;color:#B0B8C4;transition:color .2s;}
+.bni.active{color:#FF6B35;}
+.bni .ic{font-size:22px;}
+.bni.active .ic{background:#FFF0EB;width:42px;height:42px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:-2px;}
+
+/* ── BACK BUTTON ── */
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:#FF6B35;color:#fff;
+  padding:10px 18px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 3px 12px rgba(255,107,53,.35);transition:opacity .2s,transform .15s;user-select:none;}
+.back-btn:active{opacity:.85;transform:scale(.96);}
+
+/* ── CARDS / SHADOWS ── */
+.card{background:#fff;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.07);}
+
+/* ── SCROLL AREA ── */
+.scroll{flex:1;overflow-y:auto;padding-bottom:88px;scrollbar-width:none;}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:12px;}
+.sec-title{font-size:18px;font-weight:800;}
+.see-all{font-size:13px;font-weight:700;color:#FF6B35;cursor:pointer;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:#1A1A2E;color:#fff;padding:11px 22px;border-radius:30px;font-size:14px;
+  font-weight:700;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── OFFLINE BANNER ── */
+.offline-bar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:420px;background:#1F2937;color:#fff;text-align:center;
+  padding:9px;font-size:13px;font-weight:700;z-index:9998;}
+.offline-bar.show{display:block;}
+
+/* ════════════════════════════════
+   SOS FLOATING BUTTON
+════════════════════════════════ */
+.sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+
+.sos-btn{width:64px;height:64px;background:linear-gradient(135deg,#FF4757,#C0392B);
+  border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 5px 20px rgba(255,71,87,.5);animation:pulse 2s infinite;transition:transform .15s;}
+.sos-btn:active{transform:scale(.92);}
+.sos-btn .si{font-size:15px;font-weight:900;color:#fff;letter-spacing:1px;line-height:1;}
+.sos-btn .sl{display:none;}
+@keyframes pulse{0%,100%{box-shadow:0 5px 20px rgba(255,71,87,.5)}
+  50%{box-shadow:0 5px 30px rgba(255,71,87,.8),0 0 0 10px rgba(255,71,87,.15)}}
+
+.sos-panel{display:none;flex-direction:column;gap:8px;align-items:flex-end;margin-top:4px;}
+.sos-panel.open{display:flex;}
+.sos-row{display:flex;align-items:center;gap:8px;cursor:pointer;animation:slideR .2s ease both;}
+@keyframes slideR{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.sos-lbl{background:#fff;padding:9px 14px;border-radius:20px;font-size:13px;font-weight:800;
+  box-shadow:0 3px 14px rgba(0,0,0,.12);white-space:nowrap;color:#1A1A2E;}
+.sos-ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:0 3px 12px rgba(0,0,0,.15);flex-shrink:0;border:none;cursor:pointer;}
+
+.sos-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:4999;backdrop-filter:blur(2px);}
+.sos-overlay.open{display:block;}
+
+/* ════════════════════════════════
+   SPLASH
+════════════════════════════════ */
+#splash{background:linear-gradient(145deg,#FF6B35,#FF8C5A,#FFB347);
+  justify-content:center;align-items:center;gap:24px;}
+.sp-logo{text-align:center;animation:popIn .6s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.sp-icon{width:96px;height:96px;background:#fff;border-radius:26px;display:flex;
+  align-items:center;justify-content:center;font-size:50px;margin:0 auto 18px;
+  box-shadow:0 10px 36px rgba(0,0,0,.2);}
+.sp-title{font-size:40px;font-weight:900;color:#fff;letter-spacing:-1px;}
+.sp-title span{color:#FFE66D;}
+.sp-tag{font-size:15px;color:rgba(255,255,255,.85);font-weight:600;margin-top:6px;}
+.lang-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.lang-chip{background:rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:700;cursor:pointer;border:2px solid rgba(255,255,255,.4);transition:all .2s;}
+.lang-chip.active,.lang-chip:hover{background:#fff;color:#FF6B35;border-color:#fff;}
+.sp-btn{background:#fff;color:#FF6B35;border:none;padding:18px 48px;border-radius:50px;
+  font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);
+  font-family:'Nunito',sans-serif;transition:transform .15s;}
+.sp-btn:active{transform:scale(.96);}
+
+/* ════════════════════════════════
+   HOME
+════════════════════════════════ */
+.home-hdr{background:linear-gradient(135deg,#FF6B35,#FF8C5A);padding:50px 20px 28px;border-radius:0 0 28px 28px;}
+.home-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.home-logo{font-size:26px;font-weight:900;color:#fff;}
+.home-logo span{color:#FFE66D;}
+.notif{width:40px;height:40px;background:rgba(255,255,255,.25);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;position:relative;}
+.ndot{width:9px;height:9px;background:#FFE66D;border-radius:50%;position:absolute;
+  top:7px;right:7px;border:2px solid #FF6B35;}
+.home-greet{color:rgba(255,255,255,.8);font-size:14px;font-weight:600;margin-bottom:3px;}
+.home-q{color:#fff;font-size:21px;font-weight:800;}
+.search-bar{display:flex;align-items:center;background:#fff;border-radius:14px;
+  padding:13px 16px;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.12);margin-top:18px;}
+.search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Nunito',sans-serif;
+  font-weight:600;color:#1A1A2E;background:transparent;}
+.search-bar input::placeholder{color:#B0B8C4;}
+
+.loc-bar{display:flex;align-items:center;gap:7px;padding:13px 20px;font-size:14px;
+  color:#6B7280;font-weight:600;}
+.loc-name{color:#1A1A2E;font-weight:700;}
+.loc-change{color:#FF6B35;font-weight:700;margin-left:auto;cursor:pointer;}
+
+/* Emergency Banner */
+.emg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#FF4757,#FF6B81);
+  border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;box-shadow:0 6px 18px rgba(255,71,87,.3);}
+.emg-banner .ei{font-size:34px;}
+.emg-banner .et{color:#fff;font-weight:800;font-size:15px;}
+.emg-banner .es{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;}
+.emg-banner .ea{margin-left:auto;color:#fff;font-size:22px;}
+
+/* Category Grid */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px;margin-bottom:22px;}
+.cat-card{background:#fff;border-radius:20px;padding:16px 10px;text-align:center;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);transition:transform .18s,box-shadow .18s;border:2px solid transparent;}
+.cat-card:active{transform:scale(.95);}
+.cat-card:hover{border-color:#FF6B35;box-shadow:0 6px 24px rgba(0,0,0,.11);}
+.cat-ic{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;
+  justify-content:center;font-size:26px;margin:0 auto 9px;}
+.cat-nm{font-size:11px;font-weight:800;color:#1A1A2E;line-height:1.3;}
+
+/* Supplier register */
+.reg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#667EEA,#764BA2);
+  border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 18px rgba(102,126,234,.3);}
+.reg-banner .rt{color:#fff;font-weight:800;font-size:15px;margin-bottom:4px;}
+.reg-banner .rs{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;margin-bottom:12px;}
+.reg-banner .rb{background:#fff;color:#764BA2;border:none;padding:9px 18px;border-radius:10px;
+  font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+/* Featured */
+.feat-scroll{display:flex;gap:12px;padding:0 20px;overflow-x:auto;margin-bottom:22px;scrollbar-width:none;}
+.feat-scroll::-webkit-scrollbar{display:none;}
+.feat-card{min-width:180px;background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);cursor:pointer;flex-shrink:0;transition:transform .18s;}
+.feat-card:active{transform:scale(.97);}
+.feat-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:44px;}
+.feat-info{padding:10px;}
+.feat-nm{font-weight:800;font-size:13px;margin-bottom:3px;}
+.feat-cat{font-size:11px;color:#6B7280;font-weight:600;margin-bottom:6px;}
+.feat-stars{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;}
+.stars{color:#FFB800;letter-spacing:-1px;}
+
+/* ════════════════════════════════
+   CATEGORY SCREEN
+════════════════════════════════ */
+.screen-hdr{background:#fff;padding:48px 20px 18px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
+.screen-hdr-txt .stitle{font-size:19px;font-weight:800;}
+.screen-hdr-txt .ssub{font-size:12px;color:#6B7280;font-weight:600;}
+
+.subcat-scroll{display:flex;gap:8px;padding:14px 20px;overflow-x:auto;
+  background:#fff;scrollbar-width:none;border-bottom:1px solid #F3F4F6;}
+.subcat-scroll::-webkit-scrollbar{display:none;}
+.subcat{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap;
+  cursor:pointer;border:2px solid #E5E7EB;color:#6B7280;transition:all .18s;flex-shrink:0;}
+.subcat.active{background:#FF6B35;border-color:#FF6B35;color:#fff;}
+
+.sup-list{padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+
+/* Supplier card */
+.sup-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);
+  border:2px solid transparent;transition:transform .18s,border-color .18s;position:relative;}
+.sup-card:hover{border-color:rgba(255,107,53,.2);}
+.sup-card:active{transform:scale(.98);}
+.sup-top{display:flex;gap:13px;margin-bottom:12px;padding-right:38px;cursor:pointer;}
+.sup-avatar{width:58px;height:58px;border-radius:15px;display:flex;align-items:center;
+  justify-content:center;font-size:28px;flex-shrink:0;}
+.sup-name{font-weight:800;font-size:15px;margin-bottom:3px;}
+.sup-spec{font-size:12px;color:#6B7280;font-weight:600;margin-bottom:5px;}
+.sup-rating{display:flex;align-items:center;gap:5px;}
+.r-stars{color:#FFB800;font-size:13px;letter-spacing:-1px;}
+.r-num{font-weight:700;font-size:13px;}
+.r-cnt{color:#6B7280;font-size:11px;font-weight:600;}
+.open-badge{padding:4px 9px;border-radius:8px;font-size:11px;font-weight:700;align-self:flex-start;flex-shrink:0;}
+.open-badge.open{background:#D1FAE5;color:#065F46;}
+.open-badge.closed{background:#FEE2E2;color:#991B1B;}
+.sup-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;font-weight:600;margin-bottom:12px;}
+
+/* Heart button on card */
+.heart-btn{position:absolute;top:14px;right:14px;width:32px;height:32px;background:#FEE2E2;
+  border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:transform .18s;}
+.heart-btn:active{transform:scale(.85);}
+
+/* Action buttons row */
+.act-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.act-btn{padding:10px 6px;border-radius:12px;border:none;cursor:pointer;font-size:10px;
+  font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:transform .15s;font-family:'Nunito',sans-serif;}
+.act-btn:active{transform:scale(.9);}
+.act-btn .bi{font-size:19px;}
+.ab-wa{background:#D7F5E3;color:#1A6634;}
+.ab-call{background:#DBEAFE;color:#1E40AF;}
+.ab-map{background:#FEF3C7;color:#92400E;}
+.ab-info{background:#F3E8FF;color:#6B21A8;}
+
+/* ════════════════════════════════
+   DETAIL SCREEN
+════════════════════════════════ */
+#detail{flex-direction:column;}
+.det-scroll{flex:1;overflow-y:auto;padding-bottom:90px;scrollbar-width:none;}
+.det-scroll::-webkit-scrollbar{display:none;}
+.det-hero{height:200px;display:flex;align-items:center;justify-content:center;
+  font-size:76px;position:relative;flex-shrink:0;}
+.det-hero-back{position:absolute;top:48px;left:16px;}
+.det-hero-share{position:absolute;top:48px;right:16px;width:42px;height:42px;
+  background:rgba(255,255,255,.9);border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12);}
+.det-hero-heart{position:absolute;bottom:16px;right:16px;width:46px;height:46px;
+  background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.14);border:none;}
+
+.det-body{background:#fff;border-radius:28px 28px 0 0;margin-top:-20px;padding:22px 18px 0;}
+.det-name{font-size:22px;font-weight:900;margin-bottom:4px;}
+.det-spec{font-size:13px;color:#6B7280;font-weight:600;margin-bottom:10px;}
+.det-rating-row{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+.det-stars{color:#FFB800;font-size:18px;letter-spacing:-1px;}
+.det-rnum{font-weight:800;font-size:17px;}
+.det-rcnt{color:#6B7280;font-size:13px;font-weight:600;}
+
+.det-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.det-act{padding:13px 6px;border-radius:14px;border:none;cursor:pointer;font-size:11px;
+  font-weight:800;display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:transform .15s;font-family:'Nunito',sans-serif;}
+.det-act:active{transform:scale(.91);}
+.det-act .di{font-size:22px;}
+
+.info-sec{background:#F9F7F4;border-radius:14px;padding:14px;margin-bottom:14px;}
+.info-sec-ttl{font-size:11px;font-weight:800;color:#6B7280;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:10px;}
+.info-row{display:flex;align-items:flex-start;gap:11px;padding:7px 0;
+  border-bottom:1px solid rgba(0,0,0,.05);}
+.info-row:last-child{border-bottom:none;}
+.ir-ic{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
+.ir-lbl{color:#6B7280;font-size:11px;font-weight:600;}
+.ir-val{font-weight:700;font-size:14px;}
+
+.hrs-grid{display:flex;flex-direction:column;gap:5px;}
+.hr-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;padding:3px 0;}
+.hr-day{color:#6B7280;}
+.hr-today{color:#FF6B35;font-weight:800;}
+
+.rev-list{display:flex;flex-direction:column;gap:12px;}
+.rev-card{background:#F9F7F4;border-radius:14px;padding:12px;}
+.rev-hdr{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.rev-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;}
+.rev-nm{font-weight:700;font-size:13px;}
+.rev-dt{font-size:11px;color:#6B7280;font-weight:600;}
+.rev-stars{color:#FFB800;font-size:13px;margin-left:auto;}
+.rev-txt{font-size:13px;font-weight:600;line-height:1.5;color:#1A1A2E;}
+.add-rev-btn{width:100%;padding:14px;background:#FF6B35;color:#fff;border:none;
+  border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;
+  font-family:'Nunito',sans-serif;transition:opacity .18s;}
+.add-rev-btn:active{opacity:.85;}
+
+/* ════════════════════════════════
+   FAVORITES
+════════════════════════════════ */
+.fav-hdr{background:linear-gradient(135deg,#F472B6,#EC4899);padding:50px 20px 26px;border-radius:0 0 28px 28px;}
+.fav-hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.fav-title{font-size:24px;font-weight:900;color:#fff;}
+.fav-cnt{font-size:13px;color:rgba(255,255,255,.8);font-weight:600;}
+.fav-sub{font-size:12px;color:rgba(255,255,255,.7);font-weight:600;}
+
+.offline-note{margin:14px 20px 0;background:#FFF7ED;border:2px solid #FED7AA;
+  border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:9px;
+  font-size:13px;font-weight:600;color:#92400E;}
+
+.fav-list{padding:14px 20px;display:flex;flex-direction:column;gap:14px;}
+.fav-empty{text-align:center;padding:56px 20px;}
+.fav-empty .fe-ic{font-size:60px;margin-bottom:14px;}
+.fav-empty .fe-t{font-size:19px;font-weight:800;margin-bottom:7px;}
+.fav-empty .fe-s{font-size:13px;color:#6B7280;font-weight:600;line-height:1.5;}
+
+.fav-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);position:relative;}
+.fav-remove{position:absolute;top:12px;right:12px;width:28px;height:28px;background:#FEE2E2;
+  border-radius:50%;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.fav-note-lbl{font-size:11px;font-weight:800;color:#6B7280;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:5px;margin-top:12px;border-top:1px solid #F3F4F6;padding-top:12px;}
+.fav-note-input{width:100%;border:2px solid #E5E7EB;border-radius:10px;padding:8px 11px;
+  font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;resize:none;
+  background:#F9F7F4;transition:border-color .18s;}
+.fav-note-input:focus{border-color:#F472B6;}
+.fav-saved-lbl{font-size:11px;color:#9CA3AF;font-weight:600;margin-top:7px;}
+
+/* ════════════════════════════════
+   LOGIN
+════════════════════════════════ */
+#login{background:linear-gradient(160deg,#667EEA,#764BA2);justify-content:flex-end;}
+.login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;}
+.login-ic{font-size:54px;margin-bottom:14px;}
+.login-ttl{font-size:30px;font-weight:900;color:#fff;margin-bottom:7px;}
+.login-sub{font-size:14px;color:rgba(255,255,255,.75);font-weight:600;text-align:center;max-width:240px;}
+.login-sheet{background:#fff;border-radius:28px 28px 0 0;padding:28px 22px 36px;}
+.ls-title{font-size:21px;font-weight:800;margin-bottom:5px;}
+.ls-sub{font-size:13px;color:#6B7280;font-weight:600;margin-bottom:20px;}
+.phone-wrap{display:flex;background:#F9F7F4;border-radius:14px;overflow:hidden;
+  border:2px solid transparent;transition:border-color .18s;margin-bottom:14px;}
+.phone-wrap:focus-within{border-color:#667EEA;}
+.cc{padding:14px 13px;font-size:15px;font-weight:700;color:#1A1A2E;
+  display:flex;align-items:center;gap:5px;cursor:pointer;border-right:2px solid rgba(0,0,0,.08);white-space:nowrap;}
+.phone-wrap input{flex:1;border:none;outline:none;background:transparent;padding:14px 13px;
+  font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;color:#1A1A2E;}
+.main-btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:800;
+  cursor:pointer;font-family:'Nunito',sans-serif;transition:opacity .18s;display:flex;
+  align-items:center;justify-content:center;gap:9px;color:#fff;}
+.main-btn:active{opacity:.85;}
+.btn-purple{background:linear-gradient(135deg,#667EEA,#764BA2);}
+.btn-green{background:linear-gradient(135deg,#34D399,#059669);}
+.btn-teal{background:linear-gradient(135deg,#4ECDC4,#44A08D);}
+.btn-ghost{background:#F9F7F4;color:#6B7280;}
+.divider{text-align:center;color:#6B7280;font-size:12px;font-weight:600;margin:16px 0;position:relative;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#E5E7EB;}
+.divider::before{left:0;}.divider::after{right:0;}
+.otp-row{display:flex;gap:10px;justify-content:center;margin:20px 0;}
+.otp-input{width:52px;height:60px;border:2px solid #E5E7EB;border-radius:13px;text-align:center;
+  font-size:24px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;
+  background:#F9F7F4;transition:border-color .18s;}
+.otp-input:focus{border-color:#667EEA;background:#fff;}
+.resend-row{text-align:center;margin-top:14px;font-size:13px;color:#6B7280;font-weight:600;}
+.resend-row span{color:#667EEA;font-weight:700;cursor:pointer;}
+
+/* ════════════════════════════════
+   PROFILE
+════════════════════════════════ */
+.prof-hdr{background:linear-gradient(135deg,#4ECDC4,#44A08D);padding:48px 20px 28px;text-align:center;}
+.prof-av{width:76px;height:76px;background:#fff;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;
+  box-shadow:0 4px 18px rgba(0,0,0,.14);}
+.prof-nm{font-size:21px;font-weight:800;color:#fff;margin-bottom:3px;}
+.prof-since{font-size:13px;color:rgba(255,255,255,.75);font-weight:600;}
+.prof-body{padding:18px 20px;padding-bottom:90px;}
+.prof-sec-ttl{font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;
+  letter-spacing:.5px;margin:18px 0 9px;}
+.pmi{display:flex;align-items:center;gap:13px;padding:14px;background:#fff;
+  border-radius:14px;margin-bottom:8px;cursor:pointer;transition:transform .15s;}
+.pmi:active{transform:scale(.98);}
+.pmi-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;
+  justify-content:center;font-size:19px;flex-shrink:0;}
+.pmi-ttl{font-weight:700;font-size:14px;}
+.pmi-sub{font-size:11px;color:#6B7280;font-weight:600;}
+.pmi-arr{margin-left:auto;color:#9CA3AF;font-size:18px;}
+
+/* ════════════════════════════════
+   REGISTER
+════════════════════════════════ */
+.reg-scroll{flex:1;overflow-y:auto;padding:20px;padding-bottom:40px;scrollbar-width:none;}
+.reg-scroll::-webkit-scrollbar{display:none;}
+.price-box{background:linear-gradient(135deg,#667EEA,#764BA2);border-radius:18px;padding:20px;
+  color:#fff;margin-bottom:20px;text-align:center;}
+.price-box .pb-ic{font-size:38px;margin-bottom:9px;}
+.price-box .pb-t{font-weight:800;font-size:17px;margin-bottom:5px;}
+.price-box .pb-p{font-size:34px;font-weight:900;margin-bottom:3px;}
+.price-box .pb-s{font-size:12px;opacity:.8;}
+.feat-item{display:flex;align-items:center;gap:11px;background:#fff;padding:13px;
+  border-radius:13px;margin-bottom:8px;}
+.feat-item .fi-ic{font-size:22px;}
+.feat-item .fi-t{font-weight:700;font-size:14px;}
+.feat-item .fi-s{font-size:11px;color:#6B7280;font-weight:600;}
+
+/* ════════════════════════════════
+   MAPS MODAL
+════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;align-items:flex-end;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;padding:22px;width:100%;max-width:420px;margin:0 auto;}
+.modal-title{font-weight:800;font-size:17px;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:#6B7280;font-weight:600;margin-bottom:18px;}
+.map-btn{width:100%;padding:14px;border:none;border-radius:13px;font-size:14px;font-weight:800;
+  cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:11px;
+  color:#fff;margin-bottom:9px;transition:opacity .15s;}
+.map-btn:active{opacity:.85;}
+.map-cancel{background:#F9F7F4;color:#6B7280;width:100%;padding:13px;border:none;
+  border-radius:13px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ OFFLINE BAR ═══ -->
+<div class="offline-bar" id="offline-bar">📵 You're offline — showing saved favorites only</div>
+
+<!-- ═══ SOS ═══ -->
+<div class="sos-overlay" id="sos-overlay" onclick="closeSOS()"></div>
+<div class="sos-fab">
+  <button class="sos-btn" id="sos-btn" onclick="toggleSOS()">
+    <span class="si">SOS</span>
+  </button>
+  <div class="sos-panel" id="sos-panel">
+    <div class="sos-row" style="animation-delay:.04s" onclick="sosGo('🏥','Finding nearest hospital...')">
+      <div class="sos-lbl">🏥 Closest Hospital</div>
+      <button class="sos-ic" style="background:#FFE4E6;">🏥</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.08s" onclick="sosGo('🚑','Calling ambulance...')">
+      <div class="sos-lbl">🚑 Ambulance</div>
+      <button class="sos-ic" style="background:#FEE2E2;">🚑</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.12s" onclick="sosGo('👮','Connecting to police...')">
+      <div class="sos-lbl">👮 Police</div>
+      <button class="sos-ic" style="background:#DBEAFE;">👮</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.16s" onclick="sosGo('🔥','Calling fire department...')">
+      <div class="sos-lbl">🔥 Fire Department</div>
+      <button class="sos-ic" style="background:#FEF3C7;">🔥</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.20s" onclick="sosGo('🔧','Finding nearest mechanic...')">
+      <div class="sos-lbl">🔧 Closest Mechanic</div>
+      <button class="sos-ic" style="background:#D1FAE5;">🔧</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.24s" onclick="sosGo('🚗','Finding nearest tow truck...')">
+      <div class="sos-lbl">🚗 Tow Truck</div>
+      <button class="sos-ic" style="background:#EDE9FE;">🚗</button>
+    </div>
+    <div class="sos-row" style="animation-delay:.28s" onclick="sosGo('💊','Finding nearest 24hr pharmacy...')">
+      <div class="sos-lbl">💊 24hr Pharmacy</div>
+      <button class="sos-ic" style="background:#D1FAE5;">💊</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAPS MODAL ═══ -->
+<div class="modal-overlay" id="maps-modal" onclick="closeMaps()">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">Open in Maps</div>
+    <div class="modal-sub" id="maps-addr">Dubai, UAE</div>
+    <button class="map-btn" style="background:#4285F4;" onclick="toast('🗺️ Opening Google Maps...');closeMaps()">
+      <span style="font-size:20px">🗺️</span> Google Maps
+    </button>
+    <button class="map-btn" style="background:#33CCFF;" onclick="toast('🧭 Opening Waze...');closeMaps()">
+      <span style="font-size:20px">🧭</span> Waze
+    </button>
+    <button class="map-btn" style="background:#1A1A2E;" onclick="toast('🍎 Opening Apple Maps...');closeMaps()">
+      <span style="font-size:20px">🍎</span> Apple Maps
+    </button>
+    <button class="map-cancel" onclick="closeMaps()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════
+     SPLASH
+════════════════════════════════ -->
+<div class="screen active" id="splash">
+  <div class="sp-logo">
+    <div class="sp-icon">🆘</div>
+    <div class="sp-title">Help<span>-Me</span></div>
+    <div class="sp-tag">Find trusted services, anywhere in the world</div>
+  </div>
+  <div class="lang-row">
+    <div class="lang-chip active" onclick="setLang(this)">English</div>
+    <div class="lang-chip" onclick="setLang(this)">العربية</div>
+    <div class="lang-chip" onclick="setLang(this)">Français</div>
+    <div class="lang-chip" onclick="setLang(this)">Español</div>
+    <div class="lang-chip" onclick="setLang(this)">فارسی</div>
+    <div class="lang-chip" onclick="setLang(this)">Türkçe</div>
+  </div>
+  <button class="sp-btn" onclick="go('login')">Get Started 🚀</button>
+</div>
+
+<!-- ════════════════════════════════
+     HOME
+════════════════════════════════ -->
+<div class="screen" id="home">
+  <div class="home-hdr">
+    <div class="home-top">
+      <div class="home-logo">Help<span>-Me</span></div>
+      <div class="notif" onclick="toast('🔔 No new notifications')">🔔<div class="ndot"></div></div>
+    </div>
+    <div class="home-greet">Good day 👋</div>
+    <div class="home-q">What do you need help with?</div>
+    <div class="search-bar">
+      <span style="font-size:18px;color:#9CA3AF">🔍</span>
+      <input type="text" placeholder="Search doctors, mechanics...">
+      <span style="font-size:18px;cursor:pointer" onclick="toast('⚙️ Filters coming soon!')">⚙️</span>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="loc-bar">
+      <span>📍</span>
+      <span>You're in <span class="loc-name">Dubai, UAE</span></span>
+      <span class="loc-change" onclick="toast('📍 Location detection coming in Stage 2!')">Change</span>
+    </div>
+
+    <div class="emg-banner" onclick="openCat('emergency')">
+      <div class="ei">🚨</div>
+      <div><div class="et">Emergency Services</div><div class="es">Ambulance · Police · Fire</div></div>
+      <div class="ea">›</div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title">Browse Categories</div>
+      <div class="see-all" onclick="toast('All categories coming soon!')">See all</div>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="openCat('doctors')">
+        <div class="cat-ic" style="background:#FFE4E6">🏥</div>
+        <div class="cat-nm">Doctors &amp; Healthcare</div>
+      </div>
+      <div class="cat-card" onclick="openCat('mechanics')">
+        <div class="cat-ic" style="background:#DBEAFE">🔧</div>
+        <div class="cat-nm">Mechanics &amp; Auto</div>
+      </div>
+      <div class="cat-card" onclick="openCat('pharmacy')">
+        <div class="cat-ic" style="background:#D1FAE5">💊</div>
+        <div class="cat-nm">Pharmacy</div>
+      </div>
+      <div class="cat-card" onclick="openCat('restaurants')">
+        <div class="cat-ic" style="background:#FEF3C7">🍽️</div>
+        <div class="cat-nm">Restaurants &amp; Cafes</div>
+      </div>
+      <div class="cat-card" onclick="openCat('hotels')">
+        <div class="cat-ic" style="background:#EDE9FE">🏨</div>
+        <div class="cat-nm">Hotels &amp; Stays</div>
+      </div>
+      <div class="cat-card" onclick="openCat('beauty')">
+        <div class="cat-ic" style="background:#FCE7F3">💇</div>
+        <div class="cat-nm">Beauty &amp; Salons</div>
+      </div>
+    </div>
+
+    <div class="reg-banner" onclick="go('register')">
+      <div class="rt">Are you a business owner? 🏪</div>
+      <div class="rs">List your business and reach customers worldwide</div>
+      <button class="rb">Register Your Business →</button>
+    </div>
+
+    <div class="sec-hdr"><div class="sec-title">⭐ Top Rated Nearby</div></div>
+    <div class="feat-scroll">
+      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[0])">
+        <div class="feat-img" style="background:#FFE4E6">🏥</div>
+        <div class="feat-info">
+          <div class="feat-nm">Dr. Ahmed Clinic</div>
+          <div class="feat-cat">General Practitioner</div>
+          <div class="feat-stars"><span class="stars">★★★★★</span> 4.9 (128)</div>
+        </div>
+      </div>
+      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[3])">
+        <div class="feat-img" style="background:#DBEAFE">🔧</div>
+        <div class="feat-info">
+          <div class="feat-nm">ProFix Garage</div>
+          <div class="feat-cat">Auto Mechanic</div>
+          <div class="feat-stars"><span class="stars">★★★★★</span> 4.8 (96)</div>
+        </div>
+      </div>
+      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[6])">
+        <div class="feat-img" style="background:#D1FAE5">💊</div>
+        <div class="feat-info">
+          <div class="feat-nm">LifeCare Pharmacy</div>
+          <div class="feat-cat">24hr Pharmacy</div>
+          <div class="feat-stars"><span class="stars">★★★★☆</span> 4.7 (214)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENT BANNER -->
+    <div style="margin:0 20px 22px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
+      <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
+        <div style="width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🤝</div>
+        <div>
+          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help-Me Agent</div>
+          <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;">Earn recurring commissions — work anywhere in the world</div>
+        </div>
+      </div>
+      <button style="width:100%;padding:12px;background:#fff;color:#D97706;border:none;border-radius:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">
+        Apply Now — It's Free →
+      </button>
+    </div>
+
+  </div>
+
+  <div class="bnav">
+    <div class="bni active" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni" onclick="toast('🔍 Explore coming soon!')"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     CATEGORY
+════════════════════════════════ -->
+<div class="screen" id="category">
+  <div class="scroll">
+    <!-- Hero banner injected by openCat() -->
+    <div id="cat-hero"></div>
+    <!-- Sticky header below hero -->
+    <div style="position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);">
+      <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;">
+        <div class="back-btn" onclick="go('home')">← Back</div>
+        <div>
+          <div class="stitle" id="cat-title">Category</div>
+          <div class="ssub" id="cat-sub">0 providers</div>
+        </div>
+      </div>
+      <div class="subcat-scroll" id="subcat-scroll"></div>
+    </div>
+    <div class="sup-list" id="sup-list"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni active"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     DETAIL
+════════════════════════════════ -->
+<div class="screen" id="detail">
+  <div class="det-scroll" id="det-scroll"></div>
+  <div class="bnav">
+    <div class="bni" onclick="go('category')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni active"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     FAVORITES
+════════════════════════════════ -->
+<div class="screen" id="favorites">
+  <div class="fav-hdr">
+    <div class="fav-hdr-top">
+      <div class="fav-title">❤️ My Favorites</div>
+      <div class="fav-cnt" id="fav-cnt">0 saved</div>
+    </div>
+    <div class="fav-sub">Available offline — no internet needed</div>
+  </div>
+  <div class="scroll">
+    <div class="offline-note"><span style="font-size:18px">📲</span> All favorites saved on your phone. <strong>No internet needed.</strong></div>
+    <div class="fav-list" id="fav-list"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni" onclick="toast('🔍 Explore!')"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni active"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     LOGIN
+════════════════════════════════ -->
+<div class="screen" id="login">
+  <div class="login-top">
+    <div class="login-ic">🆘</div>
+    <div class="login-ttl">Help-Me</div>
+    <div class="login-sub">Find trusted services anywhere in the world</div>
+
+    <!-- Step indicators -->
+    <div style="display:flex;align-items:center;gap:8px;margin-top:24px;">
+      <div id="step-dot-1" style="width:32px;height:8px;border-radius:4px;background:#fff;transition:all .3s;"></div>
+      <div id="step-dot-2" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
+      <div id="step-dot-3" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Phone number -->
+  <div id="login-s1" class="login-sheet">
+    <div class="ls-title">Welcome! 👋</div>
+    <div class="ls-sub">Enter your phone number to get started. We'll send a verification code via WhatsApp.</div>
+
+    <!-- Searchable country code -->
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="phone-wrap" style="cursor:pointer;" onclick="toggleCCDropdown()">
+        <div id="cc-display" style="padding:14px 10px 14px 14px;font-size:14px;font-weight:700;
+          color:#1A1A2E;border-right:2px solid rgba(0,0,0,.08);white-space:nowrap;min-width:110px;
+          display:flex;align-items:center;gap:6px;">
+          🇦🇪 +971 <span style="font-size:10px;color:#9CA3AF;">▼</span>
+        </div>
+        <input type="tel" placeholder="50 123 4567" id="phone-input" onclick="event.stopPropagation()">
+      </div>
+      <!-- CC dropdown -->
+      <div id="dd-cc" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
+        border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:2000;margin-top:4px;
+        border:2px solid #667EEA;overflow:hidden;">
+        <div style="padding:10px;">
+          <input id="cc-search" type="text" placeholder="🔍 Search country..."
+            style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;
+            font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;"
+            oninput="filterCC(this.value)" onclick="event.stopPropagation()">
+        </div>
+        <div id="cc-list" style="max-height:220px;overflow-y:auto;scrollbar-width:none;"></div>
+      </div>
+    </div>
+
+    <button class="main-btn btn-purple" onclick="showOTP()" style="margin-bottom:14px;">
+      💬 Send WhatsApp Code
+    </button>
+    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
+      🔒 Your number is only used for verification.<br>We never share it with anyone.
+    </div>
+  </div>
+
+  <!-- STEP 2: OTP -->
+  <div id="login-s2" class="login-sheet" style="display:none">
+    <div class="ls-title">Check WhatsApp 💬</div>
+    <div class="ls-sub">We sent a 4-digit code to <strong id="otp-num">+971 50 ···</strong><br>Enter it below to verify your number.</div>
+    <div class="otp-row">
+      <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,0)">
+      <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,1)">
+      <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,2)">
+      <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,3)">
+    </div>
+    <button class="main-btn btn-green" onclick="showProfile()" style="margin-bottom:14px;">
+      ✅ Verify Code
+    </button>
+    <div class="resend-row">Didn't receive it? <span onclick="toast('📲 New code sent!')">Resend Code</span></div>
+    <div style="text-align:center;margin-top:10px;">
+      <span style="font-size:13px;color:#9CA3AF;font-weight:600;cursor:pointer;" onclick="go('login');resetLogin()">← Change number</span>
+    </div>
+  </div>
+
+  <!-- STEP 3: Name & Country -->
+  <div id="login-s3" class="login-sheet" style="display:none">
+    <div class="ls-title">Almost there! 🎉</div>
+    <div class="ls-sub">Just two quick details and you're in. Everything else is optional.</div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Your Name <span style="color:#FF4757">*</span></div>
+      <input id="reg-name" type="text" placeholder="e.g. Mohammed, Sara, John..."
+        style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
+        font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
+        onfocus="this.style.borderColor='#667EEA'" onblur="this.style.borderColor='#E5E7EB'">
+    </div>
+
+    <!-- WhatsApp number -->
+    <div style="margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:2px;">💬 WhatsApp Number <span style="color:#FF4757">*</span></div>
+      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:6px;">This may be different from your login number</div>
+      <div style="position:relative;">
+        <div style="display:flex;gap:0;background:#F9F7F4;border:2px solid #E5E7EB;border-radius:13px;overflow:hidden;transition:border-color .2s;" id="wa-wrap">
+          <div id="wa-cc-display" style="padding:13px 10px 13px 13px;font-size:13px;font-weight:700;
+            color:#1A1A2E;border-right:2px solid rgba(0,0,0,.08);white-space:nowrap;cursor:pointer;
+            display:flex;align-items:center;gap:4px;min-width:100px;" onclick="toggleWACCDropdown()">
+            🇦🇪 +971 <span style="font-size:9px;color:#9CA3AF;">▼</span>
+          </div>
+          <input id="reg-wa" type="tel" placeholder="50 123 4567"
+            style="flex:1;border:none;outline:none;background:transparent;padding:13px 12px;
+            font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;color:#1A1A2E;"
+            onfocus="document.getElementById('wa-wrap').style.borderColor='#667EEA'"
+            onblur="document.getElementById('wa-wrap').style.borderColor='#E5E7EB'">
+        </div>
+        <!-- WA CC dropdown -->
+        <div id="dd-wa-cc" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
+          border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:2000;margin-top:4px;
+          border:2px solid #667EEA;overflow:hidden;">
+          <div style="padding:10px;">
+            <input type="text" placeholder="🔍 Search country..."
+              style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;
+              font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;"
+              oninput="filterWACC(this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div id="wa-cc-list" style="max-height:200px;overflow-y:auto;scrollbar-width:none;"></div>
+        </div>
+      </div>
+      <div style="margin-top:6px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;">
+          <input type="checkbox" id="wa-same" onchange="copyLoginToWA(this)"
+            style="width:16px;height:16px;accent-color:#25D366;cursor:pointer;">
+          Same as my login number above
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">🏠 I live in <span style="color:#FF4757">*</span></div>
+      <div style="position:relative;">
+        <input id="reg-country" type="text" placeholder="Search country..." autocomplete="off"
+          style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
+          font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#667EEA';showDropdown('dd-country','reg-country')"
+          oninput="filterDropdown('dd-country','reg-country')"
+          onblur="setTimeout(()=>hideDropdown('dd-country'),200)">
+        <div id="dd-country" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
+          border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;max-height:200px;
+          overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">📍 I am currently in <span style="color:#FF4757">*</span></div>
+      <div style="position:relative;">
+        <div style="display:flex;gap:8px;">
+          <div style="position:relative;flex:1;">
+            <input id="reg-location" type="text" placeholder="Search country..." autocomplete="off"
+              style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
+              font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
+              onfocus="this.style.borderColor='#667EEA';showDropdown('dd-location','reg-location')"
+              oninput="filterDropdown('dd-location','reg-location')"
+              onblur="setTimeout(()=>hideDropdown('dd-location'),200)">
+            <div id="dd-location" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
+              border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;max-height:200px;
+              overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
+          </div>
+          <button onclick="detectLocation()" id="detect-btn"
+            style="padding:14px 13px;background:#DBEAFE;border:none;border-radius:13px;font-size:20px;
+            cursor:pointer;flex-shrink:0;transition:all .2s;">📍</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-top:5px;">
+        Tap 📍 to auto-detect your current location
+      </div>
+    </div>
+
+    <button class="main-btn btn-purple" onclick="finishReg()" style="margin-bottom:12px;">
+      🚀 Enter Help-Me
+    </button>
+    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
+      You can add more profile details later.<br>Other info is completely optional.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PROFILE
+════════════════════════════════ -->
+<div class="screen" id="profile">
+  <div class="prof-hdr">
+    <div class="prof-av">👤</div>
+    <div class="prof-nm">Guest User</div>
+    <div class="prof-since">Join Help-Me to unlock all features</div>
+  </div>
+  <div class="prof-body scroll">
+    <button class="main-btn btn-teal" style="margin-bottom:18px" onclick="go('login')">🔐 Login / Create Account</button>
+    <div class="prof-sec-ttl">Settings</div>
+    <div class="pmi" onclick="toast('🌍 Language selector coming!')">
+      <div class="pmi-ic" style="background:#FEF3C7">🌍</div>
+      <div><div class="pmi-ttl">Language</div><div class="pmi-sub">English</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="pmi" onclick="toast('📍 Location settings coming!')">
+      <div class="pmi-ic" style="background:#DBEAFE">📍</div>
+      <div><div class="pmi-ttl">Location</div><div class="pmi-sub">Dubai, UAE</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="pmi" onclick="toast('🔔 Notification settings coming!')">
+      <div class="pmi-ic" style="background:#D1FAE5">🔔</div>
+      <div><div class="pmi-ttl">Notifications</div><div class="pmi-sub">Enabled</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="prof-sec-ttl">Business</div>
+    <div class="pmi" onclick="go('register')">
+      <div class="pmi-ic" style="background:#EDE9FE">🏪</div>
+      <div><div class="pmi-ttl">Register a Business</div><div class="pmi-sub">List your services on Help-Me</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="pmi" onclick="go('agent')">
+      <div class="pmi-ic" style="background:#FEF3C7">🤝</div>
+      <div><div class="pmi-ttl">Become an Agent</div><div class="pmi-sub">Earn recurring commissions worldwide</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="prof-sec-ttl">Support</div>
+    <div class="pmi" onclick="toast('❓ Help center coming!')">
+      <div class="pmi-ic" style="background:#FFE4E6">❓</div>
+      <div><div class="pmi-ttl">Help &amp; Support</div><div class="pmi-sub">FAQs and contact us</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="pmi" onclick="toast('📄 Terms &amp; Privacy')">
+      <div class="pmi-ic" style="background:#F3F4F6">📄</div>
+      <div><div class="pmi-ttl">Terms &amp; Privacy</div><div class="pmi-sub">Version 1.0 — Prototype</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+    <div class="pmi" onclick="logOut()" style="margin-top:8px;">
+      <div class="pmi-ic" style="background:#FEE2E2">🚪</div>
+      <div><div class="pmi-ttl" style="color:#DC2626">Log Out</div><div class="pmi-sub">You'll need to verify again to log back in</div></div>
+      <div class="pmi-arr">›</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni" onclick="toast('🔍 Explore!')"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni active"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     REGISTER
+════════════════════════════════ -->
+<div class="screen" id="register">
+  <div class="screen-hdr">
+    <div class="back-btn" onclick="go('home')">← Back</div>
+    <div class="screen-hdr-txt">
+      <div class="stitle">Register Your Business</div>
+      <div class="ssub">Join providers on Help-Me worldwide</div>
+    </div>
+  </div>
+  <div class="reg-scroll">
+    <div class="price-box">
+      <div class="pb-ic">🏪</div>
+      <div class="pb-t">Annual Listing Fee</div>
+      <div class="pb-p">$99 <span style="font-size:16px;opacity:.8">/year</span></div>
+      <div class="pb-s">Reach customers worldwide · Unlimited updates</div>
+    </div>
+    <div class="feat-item"><span class="fi-ic">✅</span><div><div class="fi-t">Verified Listing</div><div class="fi-s">Get the verified badge</div></div></div>
+    <div class="feat-item"><span class="fi-ic">🌍</span><div><div class="fi-t">Global Visibility</div><div class="fi-s">Seen by Middle East travelers worldwide</div></div></div>
+    <div class="feat-item"><span class="fi-ic">⭐</span><div><div class="fi-t">Ratings &amp; Reviews</div><div class="fi-s">Build trust with verified reviews</div></div></div>
+    <div class="feat-item"><span class="fi-ic">📊</span><div><div class="fi-t">Business Dashboard</div><div class="fi-s">Manage profile &amp; track views</div></div></div>
+    <div style="margin-top:20px">
+      <button class="main-btn btn-purple" style="margin-bottom:10px" onclick="toast('📝 Full registration form coming in Stage 3!')">📝 Start Registration</button>
+      <button class="main-btn btn-ghost" onclick="go('home')">Maybe Later</button>
+    </div>
+
+    <!-- AGENT DIVIDER -->
+    <div style="display:flex;align-items:center;gap:12px;margin:28px 0 20px;">
+      <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#E5E7EB)"></div>
+      <div style="font-size:12px;font-weight:800;color:#9CA3AF;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;">Or become an agent</div>
+      <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#E5E7EB)"></div>
+    </div>
+
+    <!-- AGENT BANNER -->
+    <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:20px;margin-bottom:8px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+        <div style="width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🤝</div>
+        <div>
+          <div style="color:#fff;font-weight:900;font-size:17px;margin-bottom:3px;">Become a Help-Me Agent</div>
+          <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Earn recurring commissions by signing businesses</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#fff;font-weight:900;font-size:18px;">%</div>
+          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Annual Commission</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#fff;font-weight:900;font-size:18px;">♾️</div>
+          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">No Limit on Earnings</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#fff;font-weight:900;font-size:18px;">🌍</div>
+          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Work Anywhere</div>
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#fff;font-weight:900;font-size:18px;">📱</div>
+          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Your Own Dashboard</div>
+        </div>
+      </div>
+      <button style="width:100%;padding:13px;background:#fff;color:#D97706;border:none;border-radius:13px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">
+        Apply Now →
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     AGENT APPLICATION
+════════════════════════════════ -->
+<div class="screen" id="agent">
+  <div class="screen-hdr">
+    <div class="back-btn" onclick="go('register')">← Back</div>
+    <div class="screen-hdr-txt">
+      <div class="stitle">Become an Agent</div>
+      <div class="ssub">Free to join · Earn recurring commissions</div>
+    </div>
+  </div>
+  <div class="reg-scroll" id="agent-form-wrap">
+
+    <!-- HOW IT WORKS -->
+    <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:18px;padding:18px;margin-bottom:20px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:8px;">🤝</div>
+      <div style="color:#fff;font-weight:900;font-size:18px;margin-bottom:4px;">Help-Me Agent Program</div>
+      <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Sign businesses — earn every year they stay</div>
+    </div>
+
+    <!-- HOW IT WORKS STEPS -->
+    <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">How it works</div>
+    <div style="display:flex;flex-direction:column;gap:0;margin-bottom:20px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);">
+      <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid #F3F4F6;">
+        <div style="width:36px;height:36px;background:#FEF3C7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">1️⃣</div>
+        <div><div style="font-weight:700;font-size:14px;">Apply & get approved</div><div style="font-size:12px;color:#6B7280;font-weight:600;">Fill the form below, we'll review within 48hrs</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid #F3F4F6;">
+        <div style="width:36px;height:36px;background:#D1FAE5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">2️⃣</div>
+        <div><div style="font-weight:700;font-size:14px;">Sign up businesses</div><div style="font-size:12px;color:#6B7280;font-weight:600;">Use your unique agent link to register businesses</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid #F3F4F6;">
+        <div style="width:36px;height:36px;background:#DBEAFE;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">3️⃣</div>
+        <div><div style="font-weight:700;font-size:14px;">Earn every year</div><div style="font-size:12px;color:#6B7280;font-weight:600;">Get your % commission annually as long as they stay</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;">
+        <div style="width:36px;height:36px;background:#EDE9FE;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">4️⃣</div>
+        <div><div style="font-weight:700;font-size:14px;">Track in your dashboard</div><div style="font-size:12px;color:#6B7280;font-weight:600;">See all your signed businesses & earnings live</div></div>
+      </div>
+    </div>
+
+    <!-- APPLICATION FORM -->
+    <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Your Application</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+
+      <!-- Full Name -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Full Name <span style="color:#FF4757">*</span></div>
+        <input id="ag-name" type="text" placeholder="e.g. Mohammed Al-Hassan"
+          style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
+          onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
+      </div>
+
+      <!-- Country -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Country <span style="color:#FF4757">*</span></div>
+        <input id="ag-country" type="text" placeholder="e.g. United Arab Emirates"
+          style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
+          onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
+      </div>
+
+      <!-- City -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">City <span style="color:#FF4757">*</span></div>
+        <input id="ag-city" type="text" placeholder="e.g. Dubai"
+          style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
+          onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Phone Number <span style="color:#FF4757">*</span></div>
+        <input id="ag-phone" type="tel" placeholder="e.g. +971 50 123 4567"
+          style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
+          onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
+      </div>
+
+      <!-- WhatsApp -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">WhatsApp Number <span style="color:#FF4757">*</span></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="ag-wa" type="tel" placeholder="Same as phone or different"
+            style="flex:1;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
+            onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
+          <button onclick="copyPhone()" style="padding:13px 14px;background:#D7F5E3;border:none;border-radius:13px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#1A6634;white-space:nowrap;">Same ✓</button>
+        </div>
+      </div>
+
+      <!-- ID Upload -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">ID / Passport <span style="color:#FF4757">*</span></div>
+        <div id="id-upload-box" onclick="toast('📎 File upload coming in Stage 3!')"
+          style="width:100%;padding:20px;border:2px dashed #D1D5DB;border-radius:13px;text-align:center;cursor:pointer;background:#F9F7F4;transition:border-color .18s;"
+          onmouseover="this.style.borderColor='#F59E0B'" onmouseout="this.style.borderColor='#D1D5DB'">
+          <div style="font-size:28px;margin-bottom:6px;">📄</div>
+          <div style="font-weight:700;font-size:14px;color:#374151;margin-bottom:3px;">Upload ID or Passport</div>
+          <div style="font-size:12px;color:#9CA3AF;font-weight:600;">JPG, PNG or PDF · Max 5MB</div>
+        </div>
+      </div>
+
+      <!-- Sales Experience -->
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Sales Experience</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
+          <label style="display:flex;align-items:center;gap:10px;background:#fff;padding:12px 14px;border-radius:12px;cursor:pointer;border:2px solid #E5E7EB;font-weight:700;font-size:13px;" onclick="selectExp(this)">
+            <span style="font-size:18px">🌱</span> No experience — I'm eager to learn
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;background:#fff;padding:12px 14px;border-radius:12px;cursor:pointer;border:2px solid #E5E7EB;font-weight:700;font-size:13px;" onclick="selectExp(this)">
+            <span style="font-size:18px">📋</span> 1–3 years in sales or business
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;background:#fff;padding:12px 14px;border-radius:12px;cursor:pointer;border:2px solid #E5E7EB;font-weight:700;font-size:13px;" onclick="selectExp(this)">
+            <span style="font-size:18px">🏆</span> 3+ years — experienced sales professional
+          </label>
+        </div>
+        <textarea id="ag-exp" rows="3" placeholder="Tell us briefly about your background and why you'd be a great agent..."
+          style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;resize:none;transition:border-color .18s;"
+          onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'"></textarea>
+      </div>
+
+      <!-- Agreement -->
+      <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:13px;padding:14px;display:flex;gap:12px;align-items:flex-start;">
+        <input type="checkbox" id="ag-agree" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#F59E0B;cursor:pointer;">
+        <label for="ag-agree" style="font-size:13px;font-weight:600;color:#92400E;cursor:pointer;line-height:1.5;">
+          I agree to the Help-Me Agent Terms & Conditions and understand that my commission is based on annual recurring subscription fees of the businesses I sign.
+        </label>
+      </div>
+
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="main-btn" onclick="submitAgent()"
+      style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-bottom:10px;">
+      🤝 Submit Application
+    </button>
+    <button class="main-btn btn-ghost" onclick="go('register')">Cancel</button>
+
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ══════════════════════════════════
+// SUPABASE CONNECTION
+// ══════════════════════════════════
+const SUPABASE_URL = 'https://mcduuatcrfjcuxhmktst.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_19cNoziJhEj53lbragMwBg_g-P6BmOv';
+
+async function sbFetch(table, params=''){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`,{
+      headers:{
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer '+SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    if(!res.ok) throw new Error('DB error');
+    return await res.json();
+  }catch(e){ console.error(e); return null; }
+}
+
+async function sbInsert(table, data){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{
+      method:'POST',
+      headers:{
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer '+SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(data)
+    });
+    if(!res.ok) throw new Error('Insert error');
+    return await res.json();
+  }catch(e){ console.error(e); return null; }
+}
+
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
+const CATS = {
+  doctors:{title:'Doctors & Healthcare',emoji:'🏥',color:'#FFE4E6',
+    photo:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80',
+    gradient:'rgba(220,38,38,.72),rgba(239,68,68,.3)',
+    tagline:'Find trusted doctors & specialists near you',
+    subcats:['All','GP','Dentist','Pediatrician','Dermatologist','Cardiologist']},
+  mechanics:{title:'Mechanics & Auto',emoji:'🔧',color:'#DBEAFE',
+    photo:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80',
+    gradient:'rgba(29,78,216,.72),rgba(59,130,246,.3)',
+    tagline:'Trusted garages & auto services nearby',
+    subcats:['All','Car Repair','Tires','Oil Change','Electrical','Body Work']},
+  pharmacy:{title:'Pharmacy',emoji:'💊',color:'#D1FAE5',
+    photo:'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80',
+    gradient:'rgba(4,120,87,.72),rgba(16,185,129,.3)',
+    tagline:'Pharmacies open now — including 24hr',
+    subcats:['All','24hr','Compounding','Vitamins','Homecare']},
+  restaurants:{title:'Restaurants & Cafes',emoji:'🍽️',color:'#FEF3C7',
+    photo:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    gradient:'rgba(180,83,9,.78),rgba(245,158,11,.3)',
+    tagline:'Great food from trusted local restaurants',
+    subcats:['All','Arabic','Lebanese','Indian','Italian','Cafes']},
+  hotels:{title:'Hotels & Stays',emoji:'🏨',color:'#EDE9FE',
+    photo:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+    gradient:'rgba(109,40,217,.72),rgba(167,139,250,.3)',
+    tagline:'Luxury & budget stays wherever you are',
+    subcats:['All','Luxury','Budget','Apartments','Resorts']},
+  beauty:{title:'Beauty & Salons',emoji:'💇',color:'#FCE7F3',
+    photo:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
+    gradient:'rgba(190,24,93,.72),rgba(244,114,182,.3)',
+    tagline:'Top-rated salons, spas & beauty services',
+    subcats:['All','Hair','Nails','Barber','Spa','Eyebrows']},
+  emergency:{title:'Emergency Services',emoji:'🚨',color:'#FFE4E6',
+    photo:'https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=800&q=80',
+    gradient:'rgba(185,28,28,.78),rgba(239,68,68,.3)',
+    tagline:'Immediate help — hospitals, police & more',
+    subcats:['All','Ambulance','Police','Fire','Roadside']}
+};
+
+const SAMPLE_SUPPLIERS = [
+  {id:1,cat:'doctors',name:'Dr. Ahmed Al-Rashidi',spec:'General Practitioner',emoji:'👨‍⚕️',
+   color:'#FFE4E6',rating:4.9,reviews:128,location:'Jumeirah, Dubai',open:true,
+   phone:'+971 50 123 4567',whatsapp:'+971 50 123 4567',address:'Al Wasl Road, Jumeirah, Dubai, UAE',
+   hours:['9:00 AM – 9:00 PM','9:00 AM – 9:00 PM','9:00 AM – 9:00 PM','9:00 AM – 9:00 PM','2:00 PM – 9:00 PM','9:00 AM – 6:00 PM','Closed']},
+  {id:2,cat:'doctors',name:'Smile Dental Clinic',spec:'Dentist',emoji:'🦷',
+   color:'#DBEAFE',rating:4.8,reviews:96,location:'Downtown Dubai',open:true,
+   phone:'+971 4 234 5678',whatsapp:'+971 50 234 5678',address:'Sheikh Mohammed Blvd, Downtown Dubai',
+   hours:['9:00 AM – 8:00 PM','9:00 AM – 8:00 PM','9:00 AM – 8:00 PM','9:00 AM – 8:00 PM','Closed','10:00 AM – 6:00 PM','Closed']},
+  {id:3,cat:'doctors',name:'Little Stars Pediatrics',spec:'Pediatrician',emoji:'👶',
+   color:'#D1FAE5',rating:4.7,reviews:73,location:'Marina, Dubai',open:false,
+   phone:'+971 4 345 6789',whatsapp:'+971 50 345 6789',address:'Marina Walk, Dubai Marina',
+   hours:['8:00 AM – 7:00 PM','8:00 AM – 7:00 PM','8:00 AM – 7:00 PM','8:00 AM – 7:00 PM','8:00 AM – 5:00 PM','Closed','Closed']},
+  {id:4,cat:'mechanics',name:'ProFix Garage',spec:'Full Auto Service',emoji:'🔧',
+   color:'#DBEAFE',rating:4.8,reviews:96,location:'Al Quoz, Dubai',open:true,
+   phone:'+971 4 456 7890',whatsapp:'+971 50 456 7890',address:'Al Quoz Industrial Area 3, Dubai',
+   hours:['8:00 AM – 9:00 PM','8:00 AM – 9:00 PM','8:00 AM – 9:00 PM','8:00 AM – 9:00 PM','8:00 AM – 9:00 PM','9:00 AM – 7:00 PM','Closed']},
+  {id:5,cat:'mechanics',name:'SpeedTires UAE',spec:'Tires & Alignment',emoji:'🚗',
+   color:'#FEF3C7',rating:4.6,reviews:54,location:'Deira, Dubai',open:true,
+   phone:'+971 4 567 8901',whatsapp:'+971 50 567 8901',address:'Al Rigga Road, Deira, Dubai',
+   hours:['8:00 AM – 10:00 PM','8:00 AM – 10:00 PM','8:00 AM – 10:00 PM','8:00 AM – 10:00 PM','8:00 AM – 10:00 PM','8:00 AM – 10:00 PM','10:00 AM – 8:00 PM']},
+  {id:6,cat:'mechanics',name:'FixIt Auto Electric',spec:'Auto Electrical',emoji:'⚡',
+   color:'#EDE9FE',rating:4.5,reviews:38,location:'Sharjah',open:false,
+   phone:'+971 6 678 9012',whatsapp:'+971 50 678 9012',address:'Industrial Area 6, Sharjah',
+   hours:['8:00 AM – 8:00 PM','8:00 AM – 8:00 PM','8:00 AM – 8:00 PM','8:00 AM – 8:00 PM','8:00 AM – 6:00 PM','Closed','Closed']},
+  {id:7,cat:'pharmacy',name:'LifeCare Pharmacy',spec:'24hr Pharmacy',emoji:'💊',
+   color:'#D1FAE5',rating:4.7,reviews:214,location:'Jumeirah, Dubai',open:true,
+   phone:'+971 4 789 0123',whatsapp:'+971 50 789 0123',address:'Jumeirah Beach Road, Dubai',
+   hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']},
+  {id:8,cat:'pharmacy',name:'Al Manara Pharmacy',spec:'Prescription & OTC',emoji:'🏥',
+   color:'#FFE4E6',rating:4.5,reviews:89,location:'Karama, Dubai',open:true,
+   phone:'+971 4 890 1234',whatsapp:'+971 50 890 1234',address:'Kuwait Street, Karama, Dubai',
+   hours:['8:00 AM – 11:00 PM','8:00 AM – 11:00 PM','8:00 AM – 11:00 PM','8:00 AM – 11:00 PM','8:00 AM – 11:00 PM','9:00 AM – 10:00 PM','10:00 AM – 9:00 PM']},
+  {id:9,cat:'restaurants',name:'Al Safadi Restaurant',spec:'Lebanese Cuisine',emoji:'🥙',
+   color:'#FEF3C7',rating:4.9,reviews:312,location:'Deira, Dubai',open:true,
+   phone:'+971 4 901 2345',whatsapp:'+971 50 901 2345',address:'Al Rigga Street, Deira, Dubai',
+   hours:['12:00 PM – 12:00 AM','12:00 PM – 12:00 AM','12:00 PM – 12:00 AM','12:00 PM – 12:00 AM','12:00 PM – 1:00 AM','12:00 PM – 1:00 AM','12:00 PM – 12:00 AM']},
+  {id:10,cat:'restaurants',name:'Bombay Garden',spec:'Indian Cuisine',emoji:'🍛',
+   color:'#FFE4E6',rating:4.7,reviews:178,location:'Bur Dubai',open:true,
+   phone:'+971 4 012 3456',whatsapp:'+971 50 012 3456',address:'Khalid Bin Al Waleed Road, Bur Dubai',
+   hours:['11:00 AM – 11:30 PM','11:00 AM – 11:30 PM','11:00 AM – 11:30 PM','11:00 AM – 11:30 PM','11:00 AM – 12:00 AM','11:00 AM – 12:00 AM','11:00 AM – 11:30 PM']},
+  {id:11,cat:'hotels',name:'Palm Grand Suites',spec:'Luxury Hotel',emoji:'🏨',
+   color:'#EDE9FE',rating:4.9,reviews:267,location:'Palm Jumeirah',open:true,
+   phone:'+971 4 123 4567',whatsapp:'+971 50 123 0000',address:'Palm Jumeirah, Dubai, UAE',
+   hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']},
+  {id:12,cat:'beauty',name:'Glow Beauty Lounge',spec:'Ladies Salon',emoji:'💅',
+   color:'#FCE7F3',rating:4.9,reviews:188,location:'Jumeirah, Dubai',open:true,
+   phone:'+971 4 234 5600',whatsapp:'+971 50 234 5600',address:'Jumeirah Road, Dubai',
+   hours:['10:00 AM – 9:00 PM','10:00 AM – 9:00 PM','10:00 AM – 9:00 PM','10:00 AM – 9:00 PM','10:00 AM – 9:00 PM','10:00 AM – 10:00 PM','12:00 PM – 8:00 PM']},
+  {id:13,cat:'emergency',name:'Dubai Ambulance',spec:'Emergency Medical',emoji:'🚑',
+   color:'#FFE4E6',rating:5.0,reviews:1240,location:'Citywide, Dubai',open:true,
+   phone:'998',whatsapp:'',address:'Citywide coverage, Dubai, UAE',
+   hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']},
+  {id:14,cat:'emergency',name:'Dubai Police',spec:'Emergency & Security',emoji:'👮',
+   color:'#DBEAFE',rating:4.9,reviews:890,location:'Citywide, Dubai',open:true,
+   phone:'999',whatsapp:'',address:'Citywide coverage, Dubai, UAE',
+   hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']}
+];
+
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const TODAY = new Date().getDay();
+
+// ══════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════
+// CATEGORY
+// ══════════════════════════════════
+async function openCat(catKey){
+  const cat = CATS[catKey];
+  document.getElementById('cat-title').textContent = cat.title;
+  document.getElementById('cat-sub').textContent = 'Loading...';
+
+  // Build hero banner immediately
+  const banners = {
+    doctors:{imgs:['https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80'],pos:'center 30%'},
+    mechanics:{imgs:['https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=900&q=80'],pos:'center 45%'},
+    pharmacy:{imgs:['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=900&q=80'],pos:'center 35%'},
+    restaurants:{imgs:['https://images.unsplash.com/photo-1552566626-52f8b828add9?w=900&q=80'],pos:'center 50%'},
+    hotels:{imgs:['https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=900&q=80'],pos:'center 40%'},
+    beauty:{imgs:['https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=900&q=80'],pos:'center 25%'},
+    emergency:{imgs:['https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=900&q=80'],pos:'center 40%'}
+  };
+  const b = banners[catKey]||banners.doctors;
+
+  document.getElementById('cat-hero').innerHTML = `
+    <div style="position:relative;height:240px;overflow:hidden;background:linear-gradient(135deg,${cat.gradient});">
+      <img src="${b.imgs[0]}" style="width:100%;height:100%;object-fit:cover;object-position:${b.pos};" onerror="this.style.display='none'">
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.1) 30%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.82) 100%);"></div>
+      <div style="position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px;margin-bottom:12px;width:fit-content;">
+          <span style="font-size:11px;color:#fff;font-weight:700;" id="cat-count-badge">⏳ Loading providers...</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <div style="width:46px;height:46px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(255,255,255,.3);">${cat.emoji}</div>
+          <div>
+            <div style="color:#fff;font-weight:900;font-size:22px;text-shadow:0 2px 12px rgba(0,0,0,.4);line-height:1.1;">${cat.title}</div>
+            <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.4);margin-top:2px;">${cat.tagline}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('subcat-scroll').innerHTML =
+    cat.subcats.map((s,i)=>`<div class="subcat${i===0?' active':''}" onclick="pickSubcat(this)">${s}</div>`).join('');
+
+  go('category');
+
+  // Load suppliers from Supabase
+  let suppliers = await sbFetch('suppliers', `?category_key=eq.${catKey}&active=eq.true&order=rating.desc`);
+
+  // Fall back to sample data if database is empty
+  if(!suppliers || suppliers.length===0){
+    suppliers = SAMPLE_SUPPLIERS.filter(s=>s.cat===catKey);
+  }
+
+  const badge = document.getElementById('cat-count-badge');
+  if(badge) badge.textContent = `✅ ${suppliers.length} verified providers nearby`;
+  document.getElementById('cat-sub').textContent = suppliers.length + ' providers found nearby';
+  document.getElementById('sup-list').innerHTML = suppliers.length
+    ? suppliers.map(s=>supplierCardHTML(s)).join('')
+    : `<div style="text-align:center;padding:40px 20px;">
+        <div style="font-size:48px;margin-bottom:12px;">🔍</div>
+        <div style="font-weight:800;font-size:16px;margin-bottom:6px;">No providers yet</div>
+        <div style="font-size:13px;color:#6B7280;font-weight:600;">Be the first to register your business in this category!</div>
+      </div>`;
+}
+function pickSubcat(el){
+  document.querySelectorAll('.subcat').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  toast('🔍 Filtering by '+el.textContent);
+}
+
+function supplierCardHTML(s){
+  const fav = isFav(s.name);
+  return `
+  <div class="sup-card">
+    <div class="sup-top" onclick="openDetail(getSup(${s.id}))">
+      <div class="sup-avatar" style="background:${s.color}">${s.emoji}</div>
+      <div style="flex:1">
+        <div class="sup-name">${s.name}</div>
+        <div class="sup-spec">${s.spec}</div>
+        <div class="sup-rating">
+          <span class="r-stars">★★★★${s.rating>=4.8?'★':'☆'}</span>
+          <span class="r-num">${s.rating}</span>
+          <span class="r-cnt">(${s.reviews})</span>
+        </div>
+      </div>
+      <div class="open-badge ${s.open?'open':'closed'}">${s.open?'Open':'Closed'}</div>
+    </div>
+    <button class="heart-btn" id="hb-${s.id}" onclick="toggleFav(${s.id},this)">${fav?'❤️':'🤍'}</button>
+    <div class="sup-loc">📍 ${s.location}</div>
+    <div class="act-row">
+      <button class="act-btn ab-wa" onclick="toast('💬 Opening WhatsApp for ${s.name.replace(/'/g,"\\'")}...')"><span class="bi">💬</span>WhatsApp</button>
+      <button class="act-btn ab-call" onclick="toast('📞 Calling ${s.phone}...')"><span class="bi">📞</span>Call</button>
+      <button class="act-btn ab-map" onclick="openMaps('${s.address}')"><span class="bi">📍</span>Maps</button>
+      <button class="act-btn ab-info" onclick="openDetail(getSup(${s.id}))"><span class="bi">ℹ️</span>Info</button>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════
+// DETAIL
+// ══════════════════════════════════
+let currentSup = null;
+
+function getSup(id){ return SAMPLE_SUPPLIERS.find(s=>s.id===id); }
+
+function openDetail(s){
+  if(!s) return;
+  currentSup = s;
+  const fav = isFav(s.name);
+  const starsHtml = '★★★★'+(s.rating>=4.8?'★':'☆');
+
+  document.getElementById('det-scroll').innerHTML = `
+    <div class="det-hero" style="background:${s.color}">
+      <span style="font-size:76px">${s.emoji}</span>
+      <div class="det-hero-back">
+        <div class="back-btn" onclick="go('category')">← Back</div>
+      </div>
+      <div class="det-hero-share" onclick="toast('📤 Link copied!')">📤</div>
+      <button class="det-hero-heart" id="det-heart" onclick="toggleFavDetail()">${fav?'❤️':'🤍'}</button>
+    </div>
+
+    <div class="det-body">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <div class="det-name">${s.name}</div>
+        <div class="open-badge ${s.open?'open':'closed'}">${s.open?'Open Now':'Closed'}</div>
+      </div>
+      <div class="det-spec">${s.spec}</div>
+      <div class="det-rating-row">
+        <div class="det-stars">${starsHtml}</div>
+        <div class="det-rnum">${s.rating}</div>
+        <div class="det-rcnt">${s.reviews} reviews</div>
+      </div>
+
+      <div class="det-acts">
+        <button class="det-act ab-wa" onclick="toast('💬 Opening WhatsApp for ${s.name.replace(/'/g,"\\'")}...')"><span class="di">💬</span>WhatsApp</button>
+        <button class="det-act ab-call" onclick="toast('📞 Calling ${s.phone}...')"><span class="di">📞</span>Call</button>
+        <button class="det-act ab-map" onclick="openMaps('${s.address}')"><span class="di">📍</span>Maps</button>
+        <button class="det-act ab-info" onclick="toast('🌐 Website coming soon!')"><span class="di">🌐</span>Website</button>
+      </div>
+
+      <div class="info-sec">
+        <div class="info-sec-ttl">Contact & Location</div>
+        <div class="info-row"><span class="ir-ic">📞</span><div><div class="ir-lbl">Phone</div><div class="ir-val">${s.phone}</div></div></div>
+        ${s.whatsapp?`<div class="info-row"><span class="ir-ic">💬</span><div><div class="ir-lbl">WhatsApp</div><div class="ir-val">${s.whatsapp}</div></div></div>`:''}
+        <div class="info-row"><span class="ir-ic">📍</span><div><div class="ir-lbl">Address</div><div class="ir-val">${s.address}</div></div></div>
+      </div>
+
+      <div class="info-sec">
+        <div class="info-sec-ttl">Opening Hours</div>
+        <div class="hrs-grid">
+          ${s.hours.map((h,i)=>`
+            <div class="hr-row ${i===TODAY?'hr-today':''}">
+              <span>${DAYS[i]}${i===TODAY?' (Today)':''}</span>
+              <span>${h}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="info-sec">
+        <div class="info-sec-ttl">Reviews</div>
+        <div class="rev-list">
+          <div class="rev-card">
+            <div class="rev-hdr">
+              <div class="rev-av" style="background:#FF6B35">A</div>
+              <div><div class="rev-nm">Ahmad K.</div><div class="rev-dt">2 days ago</div></div>
+              <div class="rev-stars">★★★★★</div>
+            </div>
+            <div class="rev-txt">Excellent service, very professional and caring. Highly recommended!</div>
+          </div>
+          <div class="rev-card">
+            <div class="rev-hdr">
+              <div class="rev-av" style="background:#4ECDC4">S</div>
+              <div><div class="rev-nm">Sara M.</div><div class="rev-dt">1 week ago</div></div>
+              <div class="rev-stars">★★★★★</div>
+            </div>
+            <div class="rev-txt">Clean, organized, and staff is very friendly. Best experience!</div>
+          </div>
+          <div class="rev-card">
+            <div class="rev-hdr">
+              <div class="rev-av" style="background:#A78BFA">R</div>
+              <div><div class="rev-nm">Rania H.</div><div class="rev-dt">2 weeks ago</div></div>
+              <div class="rev-stars">★★★★☆</div>
+            </div>
+            <div class="rev-txt">Very good overall. Waited a bit but totally worth it.</div>
+          </div>
+        </div>
+        <button class="add-rev-btn" onclick="go('login');toast('Please login to leave a review')">✍️ Write a Review</button>
+      </div>
+    </div>`;
+
+  go('detail');
+}
+
+// ══════════════════════════════════
+// FAVORITES
+// ══════════════════════════════════
+function getFavs(){
+  try{ return JSON.parse(localStorage.getItem('hm_favs')||'[]'); }
+  catch(e){ return []; }
+}
+function setFavs(f){ try{ localStorage.setItem('hm_favs',JSON.stringify(f)); }catch(e){} }
+function isFav(name){ return getFavs().some(f=>f.name===name); }
+
+function toggleFav(id, btn){
+  const s = getSup(id);
+  if(!s) return;
+  let favs = getFavs();
+  const idx = favs.findIndex(f=>f.name===s.name);
+  if(idx>-1){
+    favs.splice(idx,1);
+    setFavs(favs);
+    if(btn) btn.textContent='🤍';
+    toast('💔 Removed from favorites');
+  } else {
+    favs.push({...s, savedAt:new Date().toISOString(), note:''});
+    setFavs(favs);
+    if(btn) btn.textContent='❤️';
+    toast('❤️ Saved to favorites!');
+  }
+}
+
+function toggleFavDetail(){
+  if(!currentSup) return;
+  const favs = getFavs();
+  const idx = favs.findIndex(f=>f.name===currentSup.name);
+  const isSaved = idx>-1;
+  if(isSaved){ favs.splice(idx,1); setFavs(favs); toast('💔 Removed from favorites'); }
+  else { favs.push({...currentSup, savedAt:new Date().toISOString(), note:''}); setFavs(favs); toast('❤️ Saved!'); }
+  const h = document.getElementById('det-heart');
+  if(h) h.textContent = isSaved?'🤍':'❤️';
+  // sync card heart if visible
+  const cardHeart = document.getElementById('hb-'+currentSup.id);
+  if(cardHeart) cardHeart.textContent = isSaved?'🤍':'❤️';
+}
+
+function removeFav(name){
+  setFavs(getFavs().filter(f=>f.name!==name));
+  renderFavs();
+  toast('💔 Removed');
+}
+
+function updateNote(name,val){
+  const favs=getFavs();
+  const f=favs.find(f=>f.name===name);
+  if(f){f.note=val;setFavs(favs);}
+}
+
+function renderFavs(){
+  const favs=getFavs();
+  document.getElementById('fav-cnt').textContent=favs.length+' saved';
+  const list=document.getElementById('fav-list');
+  if(!favs.length){
+    list.innerHTML=`<div class="fav-empty">
+      <div class="fe-ic">🤍</div>
+      <div class="fe-t">No favorites yet</div>
+      <div class="fe-s">Tap ❤️ on any supplier to save them here.<br>Available even without internet!</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML=favs.map(s=>`
+    <div class="fav-card">
+      <button class="fav-remove" onclick="removeFav('${s.name}')">✕</button>
+      <div class="sup-top" style="padding-right:36px;cursor:pointer" onclick="openDetail(getSup(${s.id}))">
+        <div class="sup-avatar" style="background:${s.color}">${s.emoji}</div>
+        <div style="flex:1">
+          <div class="sup-name">${s.name}</div>
+          <div class="sup-spec">${s.spec}</div>
+          <div class="sup-rating">
+            <span class="r-stars">★★★★${s.rating>=4.8?'★':'☆'}</span>
+            <span class="r-num">${s.rating}</span>
+            <span class="r-cnt">(${s.reviews})</span>
+          </div>
+        </div>
+      </div>
+      <div class="sup-loc">📍 ${s.location}</div>
+      <div class="act-row">
+        <button class="act-btn ab-wa" onclick="toast('💬 WhatsApp: ${s.name.replace(/'/g,"\\'")}')"><span class="bi">💬</span>WhatsApp</button>
+        <button class="act-btn ab-call" onclick="toast('📞 Calling ${s.phone}')"><span class="bi">📞</span>Call</button>
+        <button class="act-btn ab-map" onclick="openMaps('${s.address}')"><span class="bi">📍</span>Maps</button>
+        <button class="act-btn ab-info" onclick="openDetail(getSup(${s.id}))"><span class="bi">ℹ️</span>Info</button>
+      </div>
+      <div class="fav-note-lbl">📝 My note</div>
+      <textarea class="fav-note-input" rows="2"
+        placeholder="e.g. 'Ask for Dr. Sara', 'Use entrance B'..."
+        onchange="updateNote('${s.name}',this.value)">${s.note||''}</textarea>
+      <div class="fav-saved-lbl">✅ Saved offline · ${new Date(s.savedAt).toLocaleDateString()}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════
+// MAPS
+// ══════════════════════════════════
+function openMaps(addr){
+  document.getElementById('maps-addr').textContent=addr||'Dubai, UAE';
+  document.getElementById('maps-modal').classList.add('open');
+}
+function closeMaps(){
+  document.getElementById('maps-modal').classList.remove('open');
+}
+
+// ══════════════════════════════════
+// SOS
+// ══════════════════════════════════
+let sosOpen=false;
+function toggleSOS(){
+  sosOpen=!sosOpen;
+  document.getElementById('sos-panel').classList.toggle('open',sosOpen);
+  document.getElementById('sos-overlay').classList.toggle('open',sosOpen);
+  const btn=document.getElementById('sos-btn');
+  btn.querySelector('.si').textContent=sosOpen?'✕':'SOS';
+  btn.style.animation=sosOpen?'none':'pulse 2s infinite';
+}
+function closeSOS(){
+  sosOpen=false;
+  document.getElementById('sos-panel').classList.remove('open');
+  document.getElementById('sos-overlay').classList.remove('open');
+  const btn=document.getElementById('sos-btn');
+  btn.querySelector('.si').textContent='SOS';
+  btn.style.animation='pulse 2s infinite';
+}
+function sosGo(e,msg){ closeSOS(); toast(e+' '+msg); }
+
+// ══════════════════════════════════
+// LOGIN
+// ══════════════════════════════════
+// ══════════════════════════════════
+// LOGIN — MANDATORY 3-STEP FLOW
+// ══════════════════════════════════
+function setStep(n){
+  [1,2,3].forEach(i=>{
+    const dot=document.getElementById('step-dot-'+i);
+    if(i===n){ dot.style.width='32px'; dot.style.background='#fff'; dot.style.opacity='1'; }
+    else if(i<n){ dot.style.width='8px'; dot.style.background='#fff'; dot.style.opacity='0.6'; }
+    else{ dot.style.width='8px'; dot.style.background='rgba(255,255,255,.4)'; dot.style.opacity='1'; }
+  });
+}
+
+function showOTP(){
+  const ph=document.getElementById('phone-input').value.trim();
+  if(!ph){ toast('⚠️ Please enter your phone number'); return; }
+  document.getElementById('otp-num').textContent=selectedCC.code+' '+ph;
+  document.getElementById('login-s1').style.display='none';
+  document.getElementById('login-s2').style.display='block';
+  setStep(2);
+  toast('💬 OTP sent to your WhatsApp!');
+  setTimeout(()=>{ document.querySelectorAll('.otp-input')[0].focus(); },300);
+}
+
+function otpNext(input, idx){
+  if(input.value.length===1){
+    const inputs=document.querySelectorAll('.otp-input');
+    if(idx<3) inputs[idx+1].focus();
+    // Auto-verify if all 4 filled
+    const vals=[...inputs].map(i=>i.value);
+    if(vals.every(v=>v.length===1)) setTimeout(showProfile,400);
+  }
+}
+
+function showProfile(){
+  document.getElementById('login-s2').style.display='none';
+  document.getElementById('login-s3').style.display='block';
+  setStep(3);
+  setTimeout(()=>document.getElementById('reg-name').focus(),300);
+}
+
+function detectLocation(){
+  const btn = document.getElementById('detect-btn');
+  btn.textContent = '⏳';
+  btn.style.background = '#FEF3C7';
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        // In real app this reverse-geocodes to city name
+        // For prototype, simulate a result
+        document.getElementById('reg-location').value = 'Dubai, UAE';
+        document.getElementById('reg-location').style.borderColor = '#34D399';
+        btn.textContent = '✅';
+        btn.style.background = '#D1FAE5';
+        toast('📍 Location detected!');
+        setTimeout(()=>{ btn.textContent='📍'; btn.style.background='#DBEAFE'; },2000);
+      },
+      err => {
+        toast('📍 Please enter your location manually');
+        btn.textContent = '📍';
+        btn.style.background = '#DBEAFE';
+      }
+    );
+  } else {
+    toast('📍 Please enter your location manually');
+    btn.textContent = '📍';
+    btn.style.background = '#DBEAFE';
+  }
+}
+
+function finishReg(){
+  const name     = document.getElementById('reg-name').value.trim();
+  const waNum    = document.getElementById('reg-wa').value.trim();
+  const country  = document.getElementById('reg-country').value.trim();
+  const location = document.getElementById('reg-location').value.trim();
+  if(!name)    { toast('⚠️ Please enter your name'); return; }
+  if(!waNum)   { toast('⚠️ Please enter your WhatsApp number'); return; }
+  if(!country) { toast('⚠️ Please enter where you live'); return; }
+  if(!location){ toast('⚠️ Please enter where you currently are'); return; }
+  try{
+    saveUser({
+      name, country, location,
+      phone: selectedCC.code+' '+document.getElementById('phone-input').value,
+      whatsapp: selectedWACC.code+' '+waNum,
+      loggedIn: true
+    });
+  }catch(e){}
+  // Save to Supabase
+  sbInsert('users',{
+    name, country, location,
+    phone: selectedCC.code+' '+document.getElementById('phone-input').value,
+    whatsapp: selectedWACC.code+' '+waNum
+  });
+
+  document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=name);
+  document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+location);
+  // Update home greeting
+  const greet = document.querySelector('.home-greet');
+  if(greet) greet.textContent = 'Welcome, '+name+' 👋';
+  // Update location bar
+  const locName = document.querySelector('.loc-name');
+  if(locName) locName.textContent = location;
+  toast('🎉 Welcome to Help-Me, '+name+'!');
+  resetLogin();
+  setTimeout(()=>go('home'),600);
+}
+
+function resetLogin(){
+  document.getElementById('login-s1').style.display='block';
+  document.getElementById('login-s2').style.display='none';
+  document.getElementById('login-s3').style.display='none';
+  document.getElementById('phone-input').value='';
+  document.querySelectorAll('.otp-input').forEach(i=>i.value='');
+  setStep(1);
+}
+
+function loginDone(){ finishReg(); }
+
+// ══════════════════════════════════
+// MISC
+// ══════════════════════════════════
+function setLang(el){
+  document.querySelectorAll('.lang-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  toast('🌍 Language: '+el.textContent);
+}
+
+let _tt;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ══════════════════════════════════
+// COUNTRY CODES (searchable)
+// ══════════════════════════════════
+const COUNTRY_CODES = [
+  {flag:'🇦🇫',name:'Afghanistan',code:'+93'},
+  {flag:'🇦🇱',name:'Albania',code:'+355'},
+  {flag:'🇩🇿',name:'Algeria',code:'+213'},
+  {flag:'🇦🇩',name:'Andorra',code:'+376'},
+  {flag:'🇦🇴',name:'Angola',code:'+244'},
+  {flag:'🇦🇷',name:'Argentina',code:'+54'},
+  {flag:'🇦🇲',name:'Armenia',code:'+374'},
+  {flag:'🇦🇺',name:'Australia',code:'+61'},
+  {flag:'🇦🇹',name:'Austria',code:'+43'},
+  {flag:'🇦🇿',name:'Azerbaijan',code:'+994'},
+  {flag:'🇧🇭',name:'Bahrain',code:'+973'},
+  {flag:'🇧🇩',name:'Bangladesh',code:'+880'},
+  {flag:'🇧🇪',name:'Belgium',code:'+32'},
+  {flag:'🇧🇷',name:'Brazil',code:'+55'},
+  {flag:'🇧🇳',name:'Brunei',code:'+673'},
+  {flag:'🇧🇬',name:'Bulgaria',code:'+359'},
+  {flag:'🇨🇦',name:'Canada',code:'+1'},
+  {flag:'🇨🇱',name:'Chile',code:'+56'},
+  {flag:'🇨🇳',name:'China',code:'+86'},
+  {flag:'🇨🇴',name:'Colombia',code:'+57'},
+  {flag:'🇭🇷',name:'Croatia',code:'+385'},
+  {flag:'🇨🇾',name:'Cyprus',code:'+357'},
+  {flag:'🇨🇿',name:'Czech Republic',code:'+420'},
+  {flag:'🇩🇰',name:'Denmark',code:'+45'},
+  {flag:'🇪🇬',name:'Egypt',code:'+20'},
+  {flag:'🇪🇹',name:'Ethiopia',code:'+251'},
+  {flag:'🇫🇮',name:'Finland',code:'+358'},
+  {flag:'🇫🇷',name:'France',code:'+33'},
+  {flag:'🇩🇪',name:'Germany',code:'+49'},
+  {flag:'🇬🇭',name:'Ghana',code:'+233'},
+  {flag:'🇬🇷',name:'Greece',code:'+30'},
+  {flag:'🇭🇰',name:'Hong Kong',code:'+852'},
+  {flag:'🇭🇺',name:'Hungary',code:'+36'},
+  {flag:'🇮🇳',name:'India',code:'+91'},
+  {flag:'🇮🇩',name:'Indonesia',code:'+62'},
+  {flag:'🇮🇷',name:'Iran',code:'+98'},
+  {flag:'🇮🇶',name:'Iraq',code:'+964'},
+  {flag:'🇮🇪',name:'Ireland',code:'+353'},
+  {flag:'🇮🇱',name:'Israel',code:'+972'},
+  {flag:'🇮🇹',name:'Italy',code:'+39'},
+  {flag:'🇯🇲',name:'Jamaica',code:'+1-876'},
+  {flag:'🇯🇵',name:'Japan',code:'+81'},
+  {flag:'🇯🇴',name:'Jordan',code:'+962'},
+  {flag:'🇰🇿',name:'Kazakhstan',code:'+7'},
+  {flag:'🇰🇪',name:'Kenya',code:'+254'},
+  {flag:'🇰🇼',name:'Kuwait',code:'+965'},
+  {flag:'🇱🇧',name:'Lebanon',code:'+961'},
+  {flag:'🇱🇾',name:'Libya',code:'+218'},
+  {flag:'🇲🇾',name:'Malaysia',code:'+60'},
+  {flag:'🇲🇻',name:'Maldives',code:'+960'},
+  {flag:'🇲🇹',name:'Malta',code:'+356'},
+  {flag:'🇲🇦',name:'Morocco',code:'+212'},
+  {flag:'🇲🇽',name:'Mexico',code:'+52'},
+  {flag:'🇳🇱',name:'Netherlands',code:'+31'},
+  {flag:'🇳🇿',name:'New Zealand',code:'+64'},
+  {flag:'🇳🇬',name:'Nigeria',code:'+234'},
+  {flag:'🇳🇴',name:'Norway',code:'+47'},
+  {flag:'🇴🇲',name:'Oman',code:'+968'},
+  {flag:'🇵🇰',name:'Pakistan',code:'+92'},
+  {flag:'🇵🇭',name:'Philippines',code:'+63'},
+  {flag:'🇵🇱',name:'Poland',code:'+48'},
+  {flag:'🇵🇹',name:'Portugal',code:'+351'},
+  {flag:'🇶🇦',name:'Qatar',code:'+974'},
+  {flag:'🇷🇴',name:'Romania',code:'+40'},
+  {flag:'🇷🇺',name:'Russia',code:'+7'},
+  {flag:'🇸🇦',name:'Saudi Arabia',code:'+966'},
+  {flag:'🇸🇬',name:'Singapore',code:'+65'},
+  {flag:'🇿🇦',name:'South Africa',code:'+27'},
+  {flag:'🇪🇸',name:'Spain',code:'+34'},
+  {flag:'🇱🇰',name:'Sri Lanka',code:'+94'},
+  {flag:'🇸🇩',name:'Sudan',code:'+249'},
+  {flag:'🇸🇪',name:'Sweden',code:'+46'},
+  {flag:'🇨🇭',name:'Switzerland',code:'+41'},
+  {flag:'🇸🇾',name:'Syria',code:'+963'},
+  {flag:'🇹🇼',name:'Taiwan',code:'+886'},
+  {flag:'🇹🇿',name:'Tanzania',code:'+255'},
+  {flag:'🇹🇭',name:'Thailand',code:'+66'},
+  {flag:'🇹🇳',name:'Tunisia',code:'+216'},
+  {flag:'🇹🇷',name:'Turkey',code:'+90'},
+  {flag:'🇺🇬',name:'Uganda',code:'+256'},
+  {flag:'🇺🇦',name:'Ukraine',code:'+380'},
+  {flag:'🇦🇪',name:'United Arab Emirates',code:'+971'},
+  {flag:'🇬🇧',name:'United Kingdom',code:'+44'},
+  {flag:'🇺🇸',name:'United States',code:'+1'},
+  {flag:'🇺🇿',name:'Uzbekistan',code:'+998'},
+  {flag:'🇻🇪',name:'Venezuela',code:'+58'},
+  {flag:'🇻🇳',name:'Vietnam',code:'+84'},
+  {flag:'🇾🇪',name:'Yemen',code:'+967'},
+  {flag:'🇿🇲',name:'Zambia',code:'+260'},
+  {flag:'🇿🇼',name:'Zimbabwe',code:'+263'},
+];
+
+let selectedCC = {flag:'🇦🇪', code:'+971'};
+let selectedWACC = {flag:'🇦🇪', code:'+971'};
+let ccDropOpen = false;
+let waCCDropOpen = false;
+
+function renderCCList(listId, filterText, onSelect){
+  const list = document.getElementById(listId);
+  const q = (filterText||'').toLowerCase();
+  const filtered = q ? COUNTRY_CODES.filter(c=>c.name.toLowerCase().includes(q)||c.code.includes(q)) : COUNTRY_CODES;
+  list.innerHTML = filtered.map(c=>`
+    <div onclick="${onSelect}('${c.flag}','${c.code}','${c.name}')"
+      style="padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1px solid #F3F4F6;"
+      onmouseover="this.style.background='#F9F7F4'" onmouseout="this.style.background='#fff'">
+      <span style="font-size:20px">${c.flag}</span>
+      <span style="font-size:13px;font-weight:700;flex:1">${c.name}</span>
+      <span style="font-size:13px;font-weight:800;color:#667EEA">${c.code}</span>
+    </div>`).join('');
+}
+
+function toggleCCDropdown(){
+  const dd = document.getElementById('dd-cc');
+  ccDropOpen = !ccDropOpen;
+  dd.style.display = ccDropOpen ? 'block' : 'none';
+  if(ccDropOpen){
+    renderCCList('cc-list','','selectCC');
+    setTimeout(()=>document.getElementById('cc-search').focus(),100);
+    document.addEventListener('click', closeCCOnOutside);
+  }
+}
+function closeCCOnOutside(e){
+  if(!e.target.closest('#dd-cc') && !e.target.closest('#cc-display')){
+    document.getElementById('dd-cc').style.display='none';
+    ccDropOpen=false;
+    document.removeEventListener('click',closeCCOnOutside);
+  }
+}
+function filterCC(q){ renderCCList('cc-list',q,'selectCC'); }
+function selectCC(flag,code,name){
+  selectedCC={flag,code};
+  document.getElementById('cc-display').innerHTML=`${flag} ${code} <span style="font-size:10px;color:#9CA3AF;">▼</span>`;
+  document.getElementById('dd-cc').style.display='none';
+  ccDropOpen=false;
+  document.removeEventListener('click',closeCCOnOutside);
+  toast('✅ '+flag+' '+name+' selected');
+}
+
+function toggleWACCDropdown(){
+  const dd=document.getElementById('dd-wa-cc');
+  waCCDropOpen=!waCCDropOpen;
+  dd.style.display=waCCDropOpen?'block':'none';
+  if(waCCDropOpen){
+    renderCCList('wa-cc-list','','selectWACC');
+    document.addEventListener('click',closeWACCOnOutside);
+  }
+}
+function closeWACCOnOutside(e){
+  if(!e.target.closest('#dd-wa-cc') && !e.target.closest('#wa-cc-display')){
+    document.getElementById('dd-wa-cc').style.display='none';
+    waCCDropOpen=false;
+    document.removeEventListener('click',closeWACCOnOutside);
+  }
+}
+function filterWACC(q){ renderCCList('wa-cc-list',q,'selectWACC'); }
+function selectWACC(flag,code,name){
+  selectedWACC={flag,code};
+  document.getElementById('wa-cc-display').innerHTML=`${flag} ${code} <span style="font-size:9px;color:#9CA3AF;">▼</span>`;
+  document.getElementById('dd-wa-cc').style.display='none';
+  waCCDropOpen=false;
+  document.removeEventListener('click',closeWACCOnOutside);
+}
+
+function copyLoginToWA(cb){
+  if(cb.checked){
+    const ph=document.getElementById('phone-input').value||'';
+    document.getElementById('reg-wa').value=ph;
+    document.getElementById('reg-wa').disabled=true;
+    document.getElementById('reg-wa').style.opacity='0.6';
+    // mirror the login country code to WA
+    document.getElementById('wa-cc-display').innerHTML=
+      `${selectedCC.flag} ${selectedCC.code} <span style="font-size:9px;color:#9CA3AF;">▼</span>`;
+    selectedWACC={...selectedCC};
+  } else {
+    document.getElementById('reg-wa').disabled=false;
+    document.getElementById('reg-wa').style.opacity='1';
+    document.getElementById('reg-wa').value='';
+  }
+}
+
+// ══════════════════════════════════
+// COUNTRY SEARCH DROPDOWN
+// ══════════════════════════════════
+const COUNTRIES = [
+  '🇦🇫 Afghanistan','🇦🇱 Albania','🇩🇿 Algeria','🇦🇩 Andorra','🇦🇴 Angola',
+  '🇦🇬 Antigua and Barbuda','🇦🇷 Argentina','🇦🇲 Armenia','🇦🇺 Australia','🇦🇹 Austria',
+  '🇦🇿 Azerbaijan','🇧🇸 Bahamas','🇧🇭 Bahrain','🇧🇩 Bangladesh','🇧🇧 Barbados',
+  '🇧🇾 Belarus','🇧🇪 Belgium','🇧🇿 Belize','🇧🇯 Benin','🇧🇹 Bhutan',
+  '🇧🇴 Bolivia','🇧🇦 Bosnia and Herzegovina','🇧🇼 Botswana','🇧🇷 Brazil','🇧🇳 Brunei',
+  '🇧🇬 Bulgaria','🇧🇫 Burkina Faso','🇧🇮 Burundi','🇨🇻 Cape Verde','🇰🇭 Cambodia',
+  '🇨🇲 Cameroon','🇨🇦 Canada','🇨🇫 Central African Republic','🇹🇩 Chad','🇨🇱 Chile',
+  '🇨🇳 China','🇨🇴 Colombia','🇰🇲 Comoros','🇨🇬 Congo','🇨🇷 Costa Rica',
+  '🇭🇷 Croatia','🇨🇺 Cuba','🇨🇾 Cyprus','🇨🇿 Czech Republic','🇩🇰 Denmark',
+  '🇩🇯 Djibouti','🇩🇲 Dominica','🇩🇴 Dominican Republic','🇪🇨 Ecuador','🇪🇬 Egypt',
+  '🇸🇻 El Salvador','🇬🇶 Equatorial Guinea','🇪🇷 Eritrea','🇪🇪 Estonia','🇸🇿 Eswatini',
+  '🇪🇹 Ethiopia','🇫🇯 Fiji','🇫🇮 Finland','🇫🇷 France','🇬🇦 Gabon',
+  '🇬🇲 Gambia','🇬🇪 Georgia','🇩🇪 Germany','🇬🇭 Ghana','🇬🇷 Greece',
+  '🇬🇩 Grenada','🇬🇹 Guatemala','🇬🇳 Guinea','🇬🇼 Guinea-Bissau','🇬🇾 Guyana',
+  '🇭🇹 Haiti','🇭🇳 Honduras','🇭🇺 Hungary','🇮🇸 Iceland','🇮🇳 India',
+  '🇮🇩 Indonesia','🇮🇷 Iran','🇮🇶 Iraq','🇮🇪 Ireland','🇮🇱 Israel',
+  '🇮🇹 Italy','🇯🇲 Jamaica','🇯🇵 Japan','🇯🇴 Jordan','🇰🇿 Kazakhstan',
+  '🇰🇪 Kenya','🇰🇮 Kiribati','🇰🇼 Kuwait','🇰🇬 Kyrgyzstan','🇱🇦 Laos',
+  '🇱🇻 Latvia','🇱🇧 Lebanon','🇱🇸 Lesotho','🇱🇷 Liberia','🇱🇾 Libya',
+  '🇱🇮 Liechtenstein','🇱🇹 Lithuania','🇱🇺 Luxembourg','🇲🇬 Madagascar','🇲🇼 Malawi',
+  '🇲🇾 Malaysia','🇲🇻 Maldives','🇲🇱 Mali','🇲🇹 Malta','🇲🇭 Marshall Islands',
+  '🇲🇷 Mauritania','🇲🇺 Mauritius','🇲🇽 Mexico','🇫🇲 Micronesia','🇲🇩 Moldova',
+  '🇲🇨 Monaco','🇲🇳 Mongolia','🇲🇪 Montenegro','🇲🇦 Morocco','🇲🇿 Mozambique',
+  '🇲🇲 Myanmar','🇳🇦 Namibia','🇳🇷 Nauru','🇳🇵 Nepal','🇳🇱 Netherlands',
+  '🇳🇿 New Zealand','🇳🇮 Nicaragua','🇳🇪 Niger','🇳🇬 Nigeria','🇳🇴 Norway',
+  '🇴🇲 Oman','🇵🇰 Pakistan','🇵🇼 Palau','🇵🇦 Panama','🇵🇬 Papua New Guinea',
+  '🇵🇾 Paraguay','🇵🇪 Peru','🇵🇭 Philippines','🇵🇱 Poland','🇵🇹 Portugal',
+  '🇶🇦 Qatar','🇷🇴 Romania','🇷🇺 Russia','🇷🇼 Rwanda','🇰🇳 Saint Kitts and Nevis',
+  '🇱🇨 Saint Lucia','🇻🇨 Saint Vincent','🇼🇸 Samoa','🇸🇲 San Marino',
+  '🇸🇹 Sao Tome and Principe','🇸🇦 Saudi Arabia','🇸🇳 Senegal','🇷🇸 Serbia',
+  '🇸🇨 Seychelles','🇸🇱 Sierra Leone','🇸🇬 Singapore','🇸🇰 Slovakia','🇸🇮 Slovenia',
+  '🇸🇧 Solomon Islands','🇸🇴 Somalia','🇿🇦 South Africa','🇸🇸 South Sudan','🇪🇸 Spain',
+  '🇱🇰 Sri Lanka','🇸🇩 Sudan','🇸🇷 Suriname','🇸🇪 Sweden','🇨🇭 Switzerland',
+  '🇸🇾 Syria','🇹🇼 Taiwan','🇹🇯 Tajikistan','🇹🇿 Tanzania','🇹🇭 Thailand',
+  '🇹🇱 Timor-Leste','🇹🇬 Togo','🇹🇴 Tonga','🇹🇹 Trinidad and Tobago','🇹🇳 Tunisia',
+  '🇹🇷 Turkey','🇹🇲 Turkmenistan','🇹🇻 Tuvalu','🇺🇬 Uganda','🇺🇦 Ukraine',
+  '🇦🇪 United Arab Emirates','🇬🇧 United Kingdom','🇺🇸 United States','🇺🇾 Uruguay',
+  '🇺🇿 Uzbekistan','🇻🇺 Vanuatu','🇻🇪 Venezuela','🇻🇳 Vietnam','🇾🇪 Yemen',
+  '🇿🇲 Zambia','🇿🇼 Zimbabwe'
+];
+
+function showDropdown(ddId, inputId){
+  filterDropdown(ddId, inputId);
+}
+function filterDropdown(ddId, inputId){
+  const input=document.getElementById(inputId);
+  const dd=document.getElementById(ddId);
+  const q=input.value.toLowerCase();
+  const filtered=q.length===0 ? COUNTRIES : COUNTRIES.filter(c=>c.toLowerCase().includes(q));
+  if(!filtered.length){ dd.style.display='none'; return; }
+  dd.style.display='block';
+  dd.innerHTML=filtered.slice(0,40).map(c=>`
+    <div onclick="selectCountry('${inputId}','${ddId}',\`${c}\`)"
+      style="padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;
+      border-bottom:1px solid #F3F4F6;"
+      onmouseover="this.style.background='#F9F7F4'"
+      onmouseout="this.style.background='#fff'">${c}</div>
+  `).join('');
+}
+function selectCountry(inputId, ddId, value){
+  document.getElementById(inputId).value=value;
+  document.getElementById(inputId).style.borderColor='#34D399';
+  hideDropdown(ddId);
+}
+function hideDropdown(ddId){
+  const dd=document.getElementById(ddId);
+  if(dd) dd.style.display='none';
+}
+
+// ══════════════════════════════════
+// AGENT FORM
+// ══════════════════════════════════
+function copyPhone(){
+  const ph=document.getElementById('ag-phone').value;
+  document.getElementById('ag-wa').value=ph||'';
+  toast('✅ Copied from phone number!');
+}
+function selectExp(el){
+  document.querySelectorAll('#agent label').forEach(l=>{
+    l.style.borderColor='#E5E7EB';l.style.background='#fff';
+  });
+  el.style.borderColor='#F59E0B';el.style.background='#FFFBEB';
+}
+function submitAgent(){
+  const name=document.getElementById('ag-name').value.trim();
+  const country=document.getElementById('ag-country').value.trim();
+  const city=document.getElementById('ag-city').value.trim();
+  const phone=document.getElementById('ag-phone').value.trim();
+  const agree=document.getElementById('ag-agree').checked;
+  if(!name||!country||!city||!phone){toast('⚠️ Please fill all required fields');return;}
+  if(!agree){toast('⚠️ Please agree to the terms first');return;}
+
+  // Save to Supabase
+  sbInsert('agents',{
+    name, country, city, phone,
+    whatsapp: document.getElementById('ag-wa').value.trim(),
+    experience: document.getElementById('ag-exp').value.trim(),
+    status: 'pending'
+  });
+
+  document.getElementById('agent-form-wrap').innerHTML=`
+    <div style="text-align:center;padding:40px 20px;">
+      <div style="font-size:72px;margin-bottom:20px;">🎉</div>
+      <div style="font-size:22px;font-weight:900;margin-bottom:10px;">Application Submitted!</div>
+      <div style="font-size:15px;font-weight:600;color:#6B7280;margin-bottom:28px;line-height:1.6;">
+        Thank you, <strong style="color:#1A1A2E">${name}</strong>!<br>
+        We'll review your application and contact you on WhatsApp within <strong>48 hours</strong>.
+      </div>
+      <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:16px;padding:18px;margin-bottom:24px;text-align:left;">
+        <div style="font-size:12px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">What happens next</div>
+        <div style="display:flex;flex-direction:column;gap:9px;">
+          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>📋</span><span>Our team reviews your application</span></div>
+          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>💬</span><span>We contact you on WhatsApp to discuss terms</span></div>
+          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>🔑</span><span>You receive your unique agent link & dashboard</span></div>
+          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>💰</span><span>Start signing businesses & earning commissions</span></div>
+        </div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#F59E0B,#D97706)" onclick="go('home')">Back to Home 🏠</button>
+    </div>`;
+}
+
+function logOut(){
+  try{ localStorage.removeItem('hm_user'); }catch(e){}
+  deleteCookie('hm_user');
+  toast('👋 Logged out successfully');
+  setTimeout(()=>{ resetLogin(); go('splash'); },600);
+}
+
+// ══════════════════════════════════
+// PERSISTENT STORAGE — cookies + localStorage
+// ══════════════════════════════════
+function setCookie(name, value, days){
+  try{
+    const d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    document.cookie = name+'='+encodeURIComponent(value)+';expires='+d.toUTCString()+';path=/;SameSite=Lax';
+  }catch(e){}
+}
+function getCookie(name){
+  try{
+    const n = name+'=';
+    const ca = document.cookie.split(';');
+    for(let c of ca){
+      c = c.trim();
+      if(c.indexOf(n)===0) return decodeURIComponent(c.substring(n.length));
+    }
+  }catch(e){}
+  return null;
+}
+function deleteCookie(name){
+  try{ document.cookie = name+'=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;'; }catch(e){}
+}
+function saveUser(data){
+  const str = JSON.stringify(data);
+  try{ localStorage.setItem('hm_user', str); }catch(e){}
+  setCookie('hm_user', str, 365); // stays for 1 year
+}
+function loadUser(){
+  // Try localStorage first, then cookie
+  try{
+    const ls = localStorage.getItem('hm_user');
+    if(ls) return JSON.parse(ls);
+  }catch(e){}
+  try{
+    const ck = getCookie('hm_user');
+    if(ck) return JSON.parse(ck);
+  }catch(e){}
+  return null;
+}
+
+// Offline detection
+window.addEventListener('online',()=>document.getElementById('offline-bar').classList.remove('show'));
+window.addEventListener('offline',()=>document.getElementById('offline-bar').classList.add('show'));
+if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show');
+
+// ── CHECK IF ALREADY LOGGED IN ──
+(function(){
+  try{
+    const user = loadUser();
+    if(user && user.loggedIn){
+      document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=user.name);
+      document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+(user.location||user.country));
+      const greet=document.querySelector('.home-greet');
+      if(greet) greet.textContent='Welcome back, '+user.name+' 👋';
+      const locName=document.querySelector('.loc-name');
+      if(locName && user.location) locName.textContent=user.location;
+      go('home');
+    } else {
+      go('splash');
+    }
+  }catch(e){ go('splash'); }
+  setStep(1);
+})();
+</script>
+</body>
+</html>
