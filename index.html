@@ -1,3 +1,6 @@
+
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -454,10 +457,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <button class="map-btn" style="background:#4285F4;" onclick="window.open(window._mapsUrls.google,'_blank');closeMaps()">
       <span style="font-size:20px">🗺️</span> Google Maps
     </button>
-    <button class="map-btn" style="background:#33CCFF;" onclick="window.open(window._mapsUrls.waze,'_blank');closeMaps()">
+    <button class="map-btn" style="background:#33CCFF;" onclick="window.location.href=window._mapsUrls.waze;closeMaps()">
       <span style="font-size:20px">🧭</span> Waze
     </button>
-    <button class="map-btn" style="background:#1A1A2E;" onclick="window.open(window._mapsUrls.apple,'_blank');closeMaps()">
+    <button class="map-btn" style="background:#1A1A2E;" onclick="window.location.href=window._mapsUrls.apple;closeMaps()">
       <span style="font-size:20px">🍎</span> Apple Maps
     </button>
     <button class="map-cancel" onclick="closeMaps()">Cancel</button>
@@ -1589,9 +1592,15 @@ function openMaps(addr, lat, lng){
   const hasCoords = lat && lng;
   const q = encodeURIComponent(addr||'');
   window._mapsUrls = {
-    google: hasCoords ? `https://www.google.com/maps?q=${lat},${lng}` : `https://www.google.com/maps/search/?api=1&query=${q}`,
-    waze:   hasCoords ? `https://waze.com/ul?ll=${lat},${lng}&navigate=yes` : `https://waze.com/ul?q=${q}`,
-    apple:  hasCoords ? `https://maps.apple.com/?ll=${lat},${lng}&q=${q}` : `https://maps.apple.com/?q=${q}`
+    google: hasCoords
+      ? `https://www.google.com/maps?q=${lat},${lng}`
+      : `https://www.google.com/maps/search/?api=1&query=${q}`,
+    waze: hasCoords
+      ? `waze://?ll=${lat},${lng}&navigate=yes`
+      : `waze://?q=${q}&navigate=yes`,
+    apple: hasCoords
+      ? `maps://maps.apple.com/?ll=${lat},${lng}&q=${q}`
+      : `maps://maps.apple.com/?q=${q}`
   };
   document.getElementById('maps-addr').textContent = addr||'Location';
   document.getElementById('maps-modal').classList.add('open');
