@@ -1,4 +1,4 @@
-<index.html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,13 +8,13 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x:hidden;}
-
+ 
 /* ── LAYOUT ── */
 .app{max-width:420px;margin:0 auto;min-height:100vh;position:relative;background:#F9F7F4;}
 .screen{display:none;flex-direction:column;min-height:100vh;animation:fadeUp .3s ease;}
 .screen.active{display:flex;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
+ 
 /* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
   background:#fff;display:flex;padding:10px 0 18px;box-shadow:0 -3px 16px rgba(0,0,0,.08);z-index:200;}
@@ -24,42 +24,42 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .bni .ic{font-size:22px;}
 .bni.active .ic{background:#FFF0EB;width:42px;height:42px;border-radius:13px;
   display:flex;align-items:center;justify-content:center;margin-bottom:-2px;}
-
+ 
 /* ── BACK BUTTON ── */
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:#FF6B35;color:#fff;
   padding:10px 18px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;
   box-shadow:0 3px 12px rgba(255,107,53,.35);transition:opacity .2s,transform .15s;user-select:none;}
 .back-btn:active{opacity:.85;transform:scale(.96);}
-
+ 
 /* ── CARDS / SHADOWS ── */
 .card{background:#fff;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.07);}
-
+ 
 /* ── SCROLL AREA ── */
 .scroll{flex:1;overflow-y:auto;padding-bottom:88px;scrollbar-width:none;}
 .scroll::-webkit-scrollbar{display:none;}
-
+ 
 /* ── SECTION HEADER ── */
 .sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:12px;}
 .sec-title{font-size:18px;font-weight:800;}
 .see-all{font-size:13px;font-weight:700;color:#FF6B35;cursor:pointer;}
-
+ 
 /* ── TOAST ── */
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
   background:#1A1A2E;color:#fff;padding:11px 22px;border-radius:30px;font-size:14px;
   font-weight:700;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
+ 
 /* ── OFFLINE BANNER ── */
 .offline-bar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:420px;background:#1F2937;color:#fff;text-align:center;
   padding:9px;font-size:13px;font-weight:700;z-index:9998;}
 .offline-bar.show{display:block;}
-
+ 
 /* ════════════════════════════════
    SOS FLOATING BUTTON
 ════════════════════════════════ */
 .sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
-
+ 
 .sos-btn{width:64px;height:64px;background:linear-gradient(135deg,#FF4757,#C0392B);
   border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
   box-shadow:0 5px 20px rgba(255,71,87,.5);animation:pulse 2s infinite;transition:transform .15s;}
@@ -68,7 +68,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .sos-btn .sl{display:none;}
 @keyframes pulse{0%,100%{box-shadow:0 5px 20px rgba(255,71,87,.5)}
   50%{box-shadow:0 5px 30px rgba(255,71,87,.8),0 0 0 10px rgba(255,71,87,.15)}}
-
+ 
 .sos-panel{display:none;flex-direction:column;gap:8px;align-items:flex-end;margin-top:4px;}
 .sos-panel.open{display:flex;}
 .sos-row{display:flex;align-items:center;gap:8px;cursor:pointer;animation:slideR .2s ease both;}
@@ -77,10 +77,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   box-shadow:0 3px 14px rgba(0,0,0,.12);white-space:nowrap;color:#1A1A2E;}
 .sos-ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:20px;box-shadow:0 3px 12px rgba(0,0,0,.15);flex-shrink:0;border:none;cursor:pointer;}
-
+ 
 .sos-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:4999;backdrop-filter:blur(2px);}
 .sos-overlay.open{display:block;}
-
+ 
 /* ════════════════════════════════
    SPLASH
 ════════════════════════════════ */
@@ -102,7 +102,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);
   font-family:'Nunito',sans-serif;transition:transform .15s;}
 .sp-btn:active{transform:scale(.96);}
-
+ 
 /* ════════════════════════════════
    HOME
 ════════════════════════════════ */
@@ -121,12 +121,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Nunito',sans-serif;
   font-weight:600;color:#1A1A2E;background:transparent;}
 .search-bar input::placeholder{color:#B0B8C4;}
-
+ 
 .loc-bar{display:flex;align-items:center;gap:7px;padding:13px 20px;font-size:14px;
   color:#6B7280;font-weight:600;}
 .loc-name{color:#1A1A2E;font-weight:700;}
 .loc-change{color:#FF6B35;font-weight:700;margin-left:auto;cursor:pointer;}
-
+ 
 /* Emergency Banner */
 .emg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#FF4757,#FF6B81);
   border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:12px;
@@ -135,7 +135,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .emg-banner .et{color:#fff;font-weight:800;font-size:15px;}
 .emg-banner .es{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;}
 .emg-banner .ea{margin-left:auto;color:#fff;font-size:22px;}
-
+ 
 /* Category Grid */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px;margin-bottom:22px;}
 .cat-card{background:#fff;border-radius:20px;padding:16px 10px;text-align:center;cursor:pointer;
@@ -145,7 +145,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .cat-ic{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;
   justify-content:center;font-size:26px;margin:0 auto 9px;}
 .cat-nm{font-size:11px;font-weight:800;color:#1A1A2E;line-height:1.3;}
-
+ 
 /* Supplier register */
 .reg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#667EEA,#764BA2);
   border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 18px rgba(102,126,234,.3);}
@@ -153,7 +153,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .reg-banner .rs{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;margin-bottom:12px;}
 .reg-banner .rb{background:#fff;color:#764BA2;border:none;padding:9px 18px;border-radius:10px;
   font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;}
-
+ 
 /* Featured */
 .feat-scroll{display:flex;gap:12px;padding:0 20px;overflow-x:auto;margin-bottom:22px;scrollbar-width:none;}
 .feat-scroll::-webkit-scrollbar{display:none;}
@@ -166,7 +166,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .feat-cat{font-size:11px;color:#6B7280;font-weight:600;margin-bottom:6px;}
 .feat-stars{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;}
 .stars{color:#FFB800;letter-spacing:-1px;}
-
+ 
 /* ════════════════════════════════
    CATEGORY SCREEN
 ════════════════════════════════ */
@@ -174,16 +174,16 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
 .screen-hdr-txt .stitle{font-size:19px;font-weight:800;}
 .screen-hdr-txt .ssub{font-size:12px;color:#6B7280;font-weight:600;}
-
+ 
 .subcat-scroll{display:flex;gap:8px;padding:14px 20px;overflow-x:auto;
   background:#fff;scrollbar-width:none;border-bottom:1px solid #F3F4F6;}
 .subcat-scroll::-webkit-scrollbar{display:none;}
 .subcat{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap;
   cursor:pointer;border:2px solid #E5E7EB;color:#6B7280;transition:all .18s;flex-shrink:0;}
 .subcat.active{background:#FF6B35;border-color:#FF6B35;color:#fff;}
-
+ 
 .sup-list{padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
-
+ 
 /* Supplier card */
 .sup-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);
   border:2px solid transparent;transition:transform .18s,border-color .18s;position:relative;}
@@ -202,13 +202,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .open-badge.open{background:#D1FAE5;color:#065F46;}
 .open-badge.closed{background:#FEE2E2;color:#991B1B;}
 .sup-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;font-weight:600;margin-bottom:12px;}
-
+ 
 /* Heart button on card */
 .heart-btn{position:absolute;top:14px;right:14px;width:32px;height:32px;background:#FEE2E2;
   border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;
   font-size:16px;cursor:pointer;transition:transform .18s;}
 .heart-btn:active{transform:scale(.85);}
-
+ 
 /* Action buttons row */
 .act-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .act-btn{padding:10px 6px;border-radius:12px;border:none;cursor:pointer;font-size:10px;
@@ -220,7 +220,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .ab-call{background:#DBEAFE;color:#1E40AF;}
 .ab-map{background:#FEF3C7;color:#92400E;}
 .ab-info{background:#F3E8FF;color:#6B21A8;}
-
+ 
 /* ════════════════════════════════
    DETAIL SCREEN
 ════════════════════════════════ */
@@ -236,7 +236,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .det-hero-heart{position:absolute;bottom:16px;right:16px;width:46px;height:46px;
   background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.14);border:none;}
-
+ 
 .det-body{background:#fff;border-radius:28px 28px 0 0;margin-top:-20px;padding:22px 18px 0;}
 .det-name{font-size:22px;font-weight:900;margin-bottom:4px;}
 .det-spec{font-size:13px;color:#6B7280;font-weight:600;margin-bottom:10px;}
@@ -244,14 +244,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .det-stars{color:#FFB800;font-size:18px;letter-spacing:-1px;}
 .det-rnum{font-weight:800;font-size:17px;}
 .det-rcnt{color:#6B7280;font-size:13px;font-weight:600;}
-
+ 
 .det-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
 .det-act{padding:13px 6px;border-radius:14px;border:none;cursor:pointer;font-size:11px;
   font-weight:800;display:flex;flex-direction:column;align-items:center;gap:5px;
   transition:transform .15s;font-family:'Nunito',sans-serif;}
 .det-act:active{transform:scale(.91);}
 .det-act .di{font-size:22px;}
-
+ 
 .info-sec{background:#F9F7F4;border-radius:14px;padding:14px;margin-bottom:14px;}
 .info-sec-ttl{font-size:11px;font-weight:800;color:#6B7280;text-transform:uppercase;
   letter-spacing:.5px;margin-bottom:10px;}
@@ -261,12 +261,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .ir-ic{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
 .ir-lbl{color:#6B7280;font-size:11px;font-weight:600;}
 .ir-val{font-weight:700;font-size:14px;}
-
+ 
 .hrs-grid{display:flex;flex-direction:column;gap:5px;}
 .hr-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;padding:3px 0;}
 .hr-day{color:#6B7280;}
 .hr-today{color:#FF6B35;font-weight:800;}
-
+ 
 .rev-list{display:flex;flex-direction:column;gap:12px;}
 .rev-card{background:#F9F7F4;border-radius:14px;padding:12px;}
 .rev-hdr{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
@@ -280,7 +280,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;
   font-family:'Nunito',sans-serif;transition:opacity .18s;}
 .add-rev-btn:active{opacity:.85;}
-
+ 
 /* ════════════════════════════════
    FAVORITES
 ════════════════════════════════ */
@@ -289,17 +289,17 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .fav-title{font-size:24px;font-weight:900;color:#fff;}
 .fav-cnt{font-size:13px;color:rgba(255,255,255,.8);font-weight:600;}
 .fav-sub{font-size:12px;color:rgba(255,255,255,.7);font-weight:600;}
-
+ 
 .offline-note{margin:14px 20px 0;background:#FFF7ED;border:2px solid #FED7AA;
   border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:9px;
   font-size:13px;font-weight:600;color:#92400E;}
-
+ 
 .fav-list{padding:14px 20px;display:flex;flex-direction:column;gap:14px;}
 .fav-empty{text-align:center;padding:56px 20px;}
 .fav-empty .fe-ic{font-size:60px;margin-bottom:14px;}
 .fav-empty .fe-t{font-size:19px;font-weight:800;margin-bottom:7px;}
 .fav-empty .fe-s{font-size:13px;color:#6B7280;font-weight:600;line-height:1.5;}
-
+ 
 .fav-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);position:relative;}
 .fav-remove{position:absolute;top:12px;right:12px;width:28px;height:28px;background:#FEE2E2;
   border-radius:50%;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
@@ -310,7 +310,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   background:#F9F7F4;transition:border-color .18s;}
 .fav-note-input:focus{border-color:#F472B6;}
 .fav-saved-lbl{font-size:11px;color:#9CA3AF;font-weight:600;margin-top:7px;}
-
+ 
 /* ════════════════════════════════
    LOGIN
 ════════════════════════════════ */
@@ -347,7 +347,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .otp-input:focus{border-color:#667EEA;background:#fff;}
 .resend-row{text-align:center;margin-top:14px;font-size:13px;color:#6B7280;font-weight:600;}
 .resend-row span{color:#667EEA;font-weight:700;cursor:pointer;}
-
+ 
 /* ════════════════════════════════
    PROFILE
 ════════════════════════════════ */
@@ -368,7 +368,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .pmi-ttl{font-weight:700;font-size:14px;}
 .pmi-sub{font-size:11px;color:#6B7280;font-weight:600;}
 .pmi-arr{margin-left:auto;color:#9CA3AF;font-size:18px;}
-
+ 
 /* ════════════════════════════════
    REGISTER
 ════════════════════════════════ */
@@ -385,7 +385,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .feat-item .fi-ic{font-size:22px;}
 .feat-item .fi-t{font-weight:700;font-size:14px;}
 .feat-item .fi-s{font-size:11px;color:#6B7280;font-weight:600;}
-
+ 
 /* ════════════════════════════════
    MAPS MODAL
 ════════════════════════════════ */
@@ -404,10 +404,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 </head>
 <body>
 <div class="app">
-
+ 
 <!-- ═══ OFFLINE BAR ═══ -->
 <div class="offline-bar" id="offline-bar">📵 You're offline — showing saved favorites only</div>
-
+ 
 <!-- ═══ SOS ═══ -->
 <div class="sos-overlay" id="sos-overlay" onclick="closeSOS()"></div>
 <div class="sos-fab">
@@ -445,7 +445,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
 </div>
-
+ 
 <!-- ═══ MAPS MODAL ═══ -->
 <div class="modal-overlay" id="maps-modal" onclick="closeMaps()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -463,10 +463,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <button class="map-cancel" onclick="closeMaps()">Cancel</button>
   </div>
 </div>
-
+ 
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
-
+ 
 <!-- ════════════════════════════════
      SPLASH
 ════════════════════════════════ -->
@@ -486,7 +486,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
   <button class="sp-btn" onclick="go('login')">Get Started 🚀</button>
 </div>
-
+ 
 <!-- ════════════════════════════════
      HOME
 ════════════════════════════════ -->
@@ -504,20 +504,20 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <span style="font-size:18px;cursor:pointer" onclick="toast('⚙️ Filters coming soon!')">⚙️</span>
     </div>
   </div>
-
+ 
   <div class="scroll">
     <div class="loc-bar">
       <span>📍</span>
       <span>You're in <span class="loc-name">Dubai, UAE</span></span>
       <span class="loc-change" onclick="toast('📍 Location detection coming in Stage 2!')">Change</span>
     </div>
-
+ 
     <div class="emg-banner" onclick="openCat('emergency')">
       <div class="ei">🚨</div>
       <div><div class="et">Emergency Services</div><div class="es">Ambulance · Police · Fire</div></div>
       <div class="ea">›</div>
     </div>
-
+ 
     <div class="sec-hdr">
       <div class="sec-title">Browse Categories</div>
       <div class="see-all" onclick="toast('All categories coming soon!')">See all</div>
@@ -548,13 +548,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div class="cat-nm">Beauty &amp; Salons</div>
       </div>
     </div>
-
+ 
     <div class="reg-banner" onclick="go('register')">
       <div class="rt">Are you a business owner? 🏪</div>
       <div class="rs">List your business and reach customers worldwide</div>
       <button class="rb">Register Your Business →</button>
     </div>
-
+ 
     <div class="sec-hdr"><div class="sec-title">⭐ Top Rated Nearby</div></div>
     <div class="feat-scroll">
       <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[0])">
@@ -582,7 +582,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
-
+ 
     <!-- AGENT BANNER -->
     <div style="margin:0 20px 22px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
@@ -596,9 +596,9 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Apply Now — It's Free →
       </button>
     </div>
-
+ 
   </div>
-
+ 
   <div class="bnav">
     <div class="bni active" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
     <div class="bni" onclick="toast('🔍 Explore coming soon!')"><div class="ic">🔍</div><span>Explore</span></div>
@@ -606,7 +606,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      CATEGORY
 ════════════════════════════════ -->
@@ -634,7 +634,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      DETAIL
 ════════════════════════════════ -->
@@ -647,7 +647,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      FAVORITES
 ════════════════════════════════ -->
@@ -670,7 +670,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      LOGIN
 ════════════════════════════════ -->
@@ -679,7 +679,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="login-ic">🆘</div>
     <div class="login-ttl">Help-Me</div>
     <div class="login-sub">Find trusted services anywhere in the world</div>
-
+ 
     <!-- Step indicators -->
     <div style="display:flex;align-items:center;gap:8px;margin-top:24px;">
       <div id="step-dot-1" style="width:32px;height:8px;border-radius:4px;background:#fff;transition:all .3s;"></div>
@@ -687,12 +687,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div id="step-dot-3" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
     </div>
   </div>
-
+ 
   <!-- STEP 1: Phone number -->
   <div id="login-s1" class="login-sheet">
     <div class="ls-title">Welcome! 👋</div>
     <div class="ls-sub">Enter your phone number to get started. We'll send a verification code via WhatsApp.</div>
-
+ 
     <!-- Searchable country code -->
     <div style="position:relative;margin-bottom:12px;">
       <div class="phone-wrap" style="cursor:pointer;" onclick="toggleCCDropdown()">
@@ -716,7 +716,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div id="cc-list" style="max-height:220px;overflow-y:auto;scrollbar-width:none;"></div>
       </div>
     </div>
-
+ 
     <button class="main-btn btn-purple" onclick="showOTP()" style="margin-bottom:14px;">
       💬 Send WhatsApp Code
     </button>
@@ -724,7 +724,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       🔒 Your number is only used for verification.<br>We never share it with anyone.
     </div>
   </div>
-
+ 
   <!-- STEP 2: OTP -->
   <div id="login-s2" class="login-sheet" style="display:none">
     <div class="ls-title">Check WhatsApp 💬</div>
@@ -743,12 +743,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <span style="font-size:13px;color:#9CA3AF;font-weight:600;cursor:pointer;" onclick="go('login');resetLogin()">← Change number</span>
     </div>
   </div>
-
+ 
   <!-- STEP 3: Name & Country -->
   <div id="login-s3" class="login-sheet" style="display:none">
     <div class="ls-title">Almost there! 🎉</div>
     <div class="ls-sub">Just two quick details and you're in. Everything else is optional.</div>
-
+ 
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Your Name <span style="color:#FF4757">*</span></div>
       <input id="reg-name" type="text" placeholder="e.g. Mohammed, Sara, John..."
@@ -756,7 +756,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
         onfocus="this.style.borderColor='#667EEA'" onblur="this.style.borderColor='#E5E7EB'">
     </div>
-
+ 
     <!-- WhatsApp number -->
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:2px;">💬 WhatsApp Number <span style="color:#FF4757">*</span></div>
@@ -795,7 +795,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </label>
       </div>
     </div>
-
+ 
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">🏠 I live in <span style="color:#FF4757">*</span></div>
       <div style="position:relative;">
@@ -810,7 +810,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
       </div>
     </div>
-
+ 
     <div style="margin-bottom:20px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">📍 I am currently in <span style="color:#FF4757">*</span></div>
       <div style="position:relative;">
@@ -835,7 +835,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Tap 📍 to auto-detect your current location
       </div>
     </div>
-
+ 
     <button class="main-btn btn-purple" onclick="finishReg()" style="margin-bottom:12px;">
       🚀 Enter Help-Me
     </button>
@@ -844,7 +844,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      PROFILE
 ════════════════════════════════ -->
@@ -907,7 +907,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni active"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      REGISTER
 ════════════════════════════════ -->
@@ -934,14 +934,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <button class="main-btn btn-purple" style="margin-bottom:10px" onclick="toast('📝 Full registration form coming in Stage 3!')">📝 Start Registration</button>
       <button class="main-btn btn-ghost" onclick="go('home')">Maybe Later</button>
     </div>
-
+ 
     <!-- AGENT DIVIDER -->
     <div style="display:flex;align-items:center;gap:12px;margin:28px 0 20px;">
       <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#E5E7EB)"></div>
       <div style="font-size:12px;font-weight:800;color:#9CA3AF;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;">Or become an agent</div>
       <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#E5E7EB)"></div>
     </div>
-
+ 
     <!-- AGENT BANNER -->
     <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:20px;margin-bottom:8px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
@@ -973,10 +973,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Apply Now →
       </button>
     </div>
-
+ 
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════
      AGENT APPLICATION
 ════════════════════════════════ -->
@@ -989,14 +989,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
   <div class="reg-scroll" id="agent-form-wrap">
-
+ 
     <!-- HOW IT WORKS -->
     <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:18px;padding:18px;margin-bottom:20px;text-align:center;">
       <div style="font-size:36px;margin-bottom:8px;">🤝</div>
       <div style="color:#fff;font-weight:900;font-size:18px;margin-bottom:4px;">Help-Me Agent Program</div>
       <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Sign businesses — earn every year they stay</div>
     </div>
-
+ 
     <!-- HOW IT WORKS STEPS -->
     <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">How it works</div>
     <div style="display:flex;flex-direction:column;gap:0;margin-bottom:20px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);">
@@ -1017,12 +1017,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div><div style="font-weight:700;font-size:14px;">Track in your dashboard</div><div style="font-size:12px;color:#6B7280;font-weight:600;">See all your signed businesses & earnings live</div></div>
       </div>
     </div>
-
+ 
     <!-- APPLICATION FORM -->
     <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Your Application</div>
-
+ 
     <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
-
+ 
       <!-- Full Name -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Full Name <span style="color:#FF4757">*</span></div>
@@ -1030,7 +1030,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
-
+ 
       <!-- Country -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Country <span style="color:#FF4757">*</span></div>
@@ -1038,7 +1038,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
-
+ 
       <!-- City -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">City <span style="color:#FF4757">*</span></div>
@@ -1046,7 +1046,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
-
+ 
       <!-- Phone -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Phone Number <span style="color:#FF4757">*</span></div>
@@ -1054,7 +1054,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
-
+ 
       <!-- WhatsApp -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">WhatsApp Number <span style="color:#FF4757">*</span></div>
@@ -1065,7 +1065,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           <button onclick="copyPhone()" style="padding:13px 14px;background:#D7F5E3;border:none;border-radius:13px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#1A6634;white-space:nowrap;">Same ✓</button>
         </div>
       </div>
-
+ 
       <!-- ID Upload -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">ID / Passport <span style="color:#FF4757">*</span></div>
@@ -1077,7 +1077,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           <div style="font-size:12px;color:#9CA3AF;font-weight:600;">JPG, PNG or PDF · Max 5MB</div>
         </div>
       </div>
-
+ 
       <!-- Sales Experience -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Sales Experience</div>
@@ -1096,7 +1096,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;resize:none;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'"></textarea>
       </div>
-
+ 
       <!-- Agreement -->
       <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:13px;padding:14px;display:flex;gap:12px;align-items:flex-start;">
         <input type="checkbox" id="ag-agree" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#F59E0B;cursor:pointer;">
@@ -1104,28 +1104,28 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           I agree to the Help-Me Agent Terms & Conditions and understand that my commission is based on annual recurring subscription fees of the businesses I sign.
         </label>
       </div>
-
+ 
     </div>
-
+ 
     <!-- SUBMIT -->
     <button class="main-btn" onclick="submitAgent()"
       style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-bottom:10px;">
       🤝 Submit Application
     </button>
     <button class="main-btn btn-ghost" onclick="go('register')">Cancel</button>
-
+ 
   </div>
 </div>
-
+ 
 </div><!-- /app -->
-
+ 
 <script>
 // ══════════════════════════════════
 // SUPABASE CONNECTION
 // ══════════════════════════════════
 const SUPABASE_URL = 'https://mcduuatcrfjcuxhmktst.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_19cNoziJhEj53lbragMwBg_g-P6BmOv';
-
+ 
 async function sbFetch(table, params=''){
   try{
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`,{
@@ -1139,7 +1139,7 @@ async function sbFetch(table, params=''){
     return await res.json();
   }catch(e){ console.error(e); return null; }
 }
-
+ 
 async function sbInsert(table, data){
   try{
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{
@@ -1156,7 +1156,7 @@ async function sbInsert(table, data){
     return await res.json();
   }catch(e){ console.error(e); return null; }
 }
-
+ 
 // ══════════════════════════════════
 // DATA
 // ══════════════════════════════════
@@ -1197,7 +1197,7 @@ const CATS = {
     tagline:'Immediate help — hospitals, police & more',
     subcats:['All','Ambulance','Police','Fire','Roadside']}
 };
-
+ 
 const SAMPLE_SUPPLIERS = [
   {id:1,cat:'doctors',name:'Dr. Ahmed Al-Rashidi',spec:'General Practitioner',emoji:'👨‍⚕️',
    color:'#FFE4E6',rating:4.9,reviews:128,location:'Jumeirah, Dubai',open:true,
@@ -1256,10 +1256,10 @@ const SAMPLE_SUPPLIERS = [
    phone:'999',whatsapp:'',address:'Citywide coverage, Dubai, UAE',
    hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']}
 ];
-
+ 
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const TODAY = new Date().getDay();
-
+ 
 // ══════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════
@@ -1268,7 +1268,7 @@ function go(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
-
+ 
 // ══════════════════════════════════
 // CATEGORY
 // ══════════════════════════════════
@@ -1276,7 +1276,7 @@ async function openCat(catKey){
   const cat = CATS[catKey];
   document.getElementById('cat-title').textContent = cat.title;
   document.getElementById('cat-sub').textContent = 'Loading...';
-
+ 
   // Build hero banner immediately
   const banners = {
     doctors:{imgs:['https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80'],pos:'center 30%'},
@@ -1288,7 +1288,7 @@ async function openCat(catKey){
     emergency:{imgs:['https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=900&q=80'],pos:'center 40%'}
   };
   const b = banners[catKey]||banners.doctors;
-
+ 
   document.getElementById('cat-hero').innerHTML = `
     <div style="position:relative;height:240px;overflow:hidden;background:linear-gradient(135deg,${cat.gradient});">
       <img src="${b.imgs[0]}" style="width:100%;height:100%;object-fit:cover;object-position:${b.pos};" onerror="this.style.display='none'">
@@ -1306,20 +1306,20 @@ async function openCat(catKey){
         </div>
       </div>
     </div>`;
-
+ 
   document.getElementById('subcat-scroll').innerHTML =
     cat.subcats.map((s,i)=>`<div class="subcat${i===0?' active':''}" onclick="pickSubcat(this)">${s}</div>`).join('');
-
+ 
   go('category');
-
+ 
   // Load suppliers from Supabase
   let suppliers = await sbFetch('suppliers', `?category_key=eq.${catKey}&active=eq.true&order=rating.desc`);
-
+ 
   // Fall back to sample data if database is empty
   if(!suppliers || suppliers.length===0){
     suppliers = SAMPLE_SUPPLIERS.filter(s=>s.cat===catKey);
   }
-
+ 
   const badge = document.getElementById('cat-count-badge');
   if(badge) badge.textContent = `✅ ${suppliers.length} verified providers nearby`;
   document.getElementById('cat-sub').textContent = suppliers.length + ' providers found nearby';
@@ -1336,48 +1336,74 @@ function pickSubcat(el){
   el.classList.add('active');
   toast('🔍 Filtering by '+el.textContent);
 }
-
+ 
+function getPhone(s){ return (s.phone||'+97336706010').replace(/\s+/g,''); }
+function getWA(s){ return (s.whatsapp||s.phone||'+97336706010').replace(/[\s+]/g,''); }
+ 
 function supplierCardHTML(s){
   const fav = isFav(s.name);
+  const phone = getPhone(s);
+  const wa = getWA(s);
+  const spec = s.spec || s.specialty || '';
+  const rating = s.rating || 0;
+  const reviews = s.review_count || s.reviews || 0;
+  const open = s.is_open !== undefined ? s.is_open : s.open;
+  const color = s.color || '#FFE4E6';
+  const emoji = s.emoji || '🏪';
+  const location = s.location || '';
+  const address = s.address || location;
   return `
   <div class="sup-card">
-    <div class="sup-top" onclick="openDetail(getSup(${s.id}))">
-      <div class="sup-avatar" style="background:${s.color}">${s.emoji}</div>
+    <div class="sup-top" onclick="openDetail(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+      <div class="sup-avatar" style="background:${color}">${emoji}</div>
       <div style="flex:1">
         <div class="sup-name">${s.name}</div>
-        <div class="sup-spec">${s.spec}</div>
+        <div class="sup-spec">${spec}</div>
         <div class="sup-rating">
-          <span class="r-stars">★★★★${s.rating>=4.8?'★':'☆'}</span>
-          <span class="r-num">${s.rating}</span>
-          <span class="r-cnt">(${s.reviews})</span>
+          <span class="r-stars">★★★★${rating>=4.8?'★':'☆'}</span>
+          <span class="r-num">${rating}</span>
+          <span class="r-cnt">(${reviews})</span>
         </div>
       </div>
-      <div class="open-badge ${s.open?'open':'closed'}">${s.open?'Open':'Closed'}</div>
+      <div class="open-badge ${open?'open':'closed'}">${open?'Open':'Closed'}</div>
     </div>
-    <button class="heart-btn" id="hb-${s.id}" onclick="toggleFav(${s.id},this)">${fav?'❤️':'🤍'}</button>
-    <div class="sup-loc">📍 ${s.location}</div>
+    <button class="heart-btn" id="hb-${s.id}" onclick="event.stopPropagation();toggleFavObj(${JSON.stringify(s).replace(/"/g,'&quot;')},this)">${fav?'❤️':'🤍'}</button>
+    <div class="sup-loc">📍 ${location}</div>
     <div class="act-row">
-      <button class="act-btn ab-wa" onclick="toast('💬 Opening WhatsApp for ${s.name.replace(/'/g,"\\'")}...')"><span class="bi">💬</span>WhatsApp</button>
-      <button class="act-btn ab-call" onclick="toast('📞 Calling ${s.phone}...')"><span class="bi">📞</span>Call</button>
-      <button class="act-btn ab-map" onclick="openMaps('${s.address}')"><span class="bi">📍</span>Maps</button>
-      <button class="act-btn ab-info" onclick="openDetail(getSup(${s.id}))"><span class="bi">ℹ️</span>Info</button>
+      <a class="act-btn ab-wa" href="https://wa.me/${wa}" target="_blank"><span class="bi">💬</span>WhatsApp</a>
+      <a class="act-btn ab-call" href="tel:${phone}"><span class="bi">📞</span>Call</a>
+      <button class="act-btn ab-map" onclick="openMaps('${address}')"><span class="bi">📍</span>Maps</button>
+      <button class="act-btn ab-info" onclick="openDetail(${JSON.stringify(s).replace(/"/g,'&quot;')})"><span class="bi">ℹ️</span>Info</button>
     </div>
-  </div>`;
+  </div>`;}
+ 
+function toggleFavObj(s, btn){
+  let favs = getFavs();
+  const idx = favs.findIndex(f=>f.name===s.name);
+  if(idx>-1){ favs.splice(idx,1); setFavs(favs); if(btn) btn.textContent='🤍'; toast('💔 Removed from favorites'); }
+  else { favs.push({...s, savedAt:new Date().toISOString(), note:''}); setFavs(favs); if(btn) btn.textContent='❤️'; toast('❤️ Saved!'); }
 }
-
+ 
 // ══════════════════════════════════
 // DETAIL
 // ══════════════════════════════════
 let currentSup = null;
-
+ 
 function getSup(id){ return SAMPLE_SUPPLIERS.find(s=>s.id===id); }
-
+ 
 function openDetail(s){
   if(!s) return;
+  // Handle both database format and sample data format
+  if(typeof s === 'string') try{ s=JSON.parse(s); }catch(e){ return; }
+  s.spec = s.spec || s.specialty || '';
+  s.open = s.is_open !== undefined ? s.is_open : s.open;
+  s.reviews = s.review_count || s.reviews || 0;
+  s.color = s.color || '#FFE4E6';
+  s.emoji = s.emoji || '🏪';
   currentSup = s;
   const fav = isFav(s.name);
   const starsHtml = '★★★★'+(s.rating>=4.8?'★':'☆');
-
+ 
   document.getElementById('det-scroll').innerHTML = `
     <div class="det-hero" style="background:${s.color}">
       <span style="font-size:76px">${s.emoji}</span>
@@ -1387,7 +1413,7 @@ function openDetail(s){
       <div class="det-hero-share" onclick="toast('📤 Link copied!')">📤</div>
       <button class="det-hero-heart" id="det-heart" onclick="toggleFavDetail()">${fav?'❤️':'🤍'}</button>
     </div>
-
+ 
     <div class="det-body">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
         <div class="det-name">${s.name}</div>
@@ -1399,21 +1425,21 @@ function openDetail(s){
         <div class="det-rnum">${s.rating}</div>
         <div class="det-rcnt">${s.reviews} reviews</div>
       </div>
-
+ 
       <div class="det-acts">
-        <button class="det-act ab-wa" onclick="toast('💬 Opening WhatsApp for ${s.name.replace(/'/g,"\\'")}...')"><span class="di">💬</span>WhatsApp</button>
-        <button class="det-act ab-call" onclick="toast('📞 Calling ${s.phone}...')"><span class="di">📞</span>Call</button>
-        <button class="det-act ab-map" onclick="openMaps('${s.address}')"><span class="di">📍</span>Maps</button>
+        <a class="det-act ab-wa" href="https://wa.me/${getWA(s)}" target="_blank"><span class="di">💬</span>WhatsApp</a>
+        <a class="det-act ab-call" href="tel:${getPhone(s)}"><span class="di">📞</span>Call</a>
+        <button class="det-act ab-map" onclick="openMaps('${s.address||s.location||''}')"><span class="di">📍</span>Maps</button>
         <button class="det-act ab-info" onclick="toast('🌐 Website coming soon!')"><span class="di">🌐</span>Website</button>
       </div>
-
+ 
       <div class="info-sec">
         <div class="info-sec-ttl">Contact & Location</div>
         <div class="info-row"><span class="ir-ic">📞</span><div><div class="ir-lbl">Phone</div><div class="ir-val">${s.phone}</div></div></div>
         ${s.whatsapp?`<div class="info-row"><span class="ir-ic">💬</span><div><div class="ir-lbl">WhatsApp</div><div class="ir-val">${s.whatsapp}</div></div></div>`:''}
         <div class="info-row"><span class="ir-ic">📍</span><div><div class="ir-lbl">Address</div><div class="ir-val">${s.address}</div></div></div>
       </div>
-
+ 
       <div class="info-sec">
         <div class="info-sec-ttl">Opening Hours</div>
         <div class="hrs-grid">
@@ -1424,7 +1450,7 @@ function openDetail(s){
             </div>`).join('')}
         </div>
       </div>
-
+ 
       <div class="info-sec">
         <div class="info-sec-ttl">Reviews</div>
         <div class="rev-list">
@@ -1456,10 +1482,10 @@ function openDetail(s){
         <button class="add-rev-btn" onclick="go('login');toast('Please login to leave a review')">✍️ Write a Review</button>
       </div>
     </div>`;
-
+ 
   go('detail');
 }
-
+ 
 // ══════════════════════════════════
 // FAVORITES
 // ══════════════════════════════════
@@ -1469,7 +1495,7 @@ function getFavs(){
 }
 function setFavs(f){ try{ localStorage.setItem('hm_favs',JSON.stringify(f)); }catch(e){} }
 function isFav(name){ return getFavs().some(f=>f.name===name); }
-
+ 
 function toggleFav(id, btn){
   const s = getSup(id);
   if(!s) return;
@@ -1487,7 +1513,7 @@ function toggleFav(id, btn){
     toast('❤️ Saved to favorites!');
   }
 }
-
+ 
 function toggleFavDetail(){
   if(!currentSup) return;
   const favs = getFavs();
@@ -1501,19 +1527,19 @@ function toggleFavDetail(){
   const cardHeart = document.getElementById('hb-'+currentSup.id);
   if(cardHeart) cardHeart.textContent = isSaved?'🤍':'❤️';
 }
-
+ 
 function removeFav(name){
   setFavs(getFavs().filter(f=>f.name!==name));
   renderFavs();
   toast('💔 Removed');
 }
-
+ 
 function updateNote(name,val){
   const favs=getFavs();
   const f=favs.find(f=>f.name===name);
   if(f){f.note=val;setFavs(favs);}
 }
-
+ 
 function renderFavs(){
   const favs=getFavs();
   document.getElementById('fav-cnt').textContent=favs.length+' saved';
@@ -1555,7 +1581,7 @@ function renderFavs(){
       <div class="fav-saved-lbl">✅ Saved offline · ${new Date(s.savedAt).toLocaleDateString()}</div>
     </div>`).join('');
 }
-
+ 
 // ══════════════════════════════════
 // MAPS
 // ══════════════════════════════════
@@ -1566,7 +1592,7 @@ function openMaps(addr){
 function closeMaps(){
   document.getElementById('maps-modal').classList.remove('open');
 }
-
+ 
 // ══════════════════════════════════
 // SOS
 // ══════════════════════════════════
@@ -1588,7 +1614,7 @@ function closeSOS(){
   btn.style.animation='pulse 2s infinite';
 }
 function sosGo(e,msg){ closeSOS(); toast(e+' '+msg); }
-
+ 
 // ══════════════════════════════════
 // LOGIN
 // ══════════════════════════════════
@@ -1603,7 +1629,7 @@ function setStep(n){
     else{ dot.style.width='8px'; dot.style.background='rgba(255,255,255,.4)'; dot.style.opacity='1'; }
   });
 }
-
+ 
 function showOTP(){
   const ph=document.getElementById('phone-input').value.trim();
   if(!ph){ toast('⚠️ Please enter your phone number'); return; }
@@ -1614,7 +1640,7 @@ function showOTP(){
   toast('💬 OTP sent to your WhatsApp!');
   setTimeout(()=>{ document.querySelectorAll('.otp-input')[0].focus(); },300);
 }
-
+ 
 function otpNext(input, idx){
   if(input.value.length===1){
     const inputs=document.querySelectorAll('.otp-input');
@@ -1624,14 +1650,14 @@ function otpNext(input, idx){
     if(vals.every(v=>v.length===1)) setTimeout(showProfile,400);
   }
 }
-
+ 
 function showProfile(){
   document.getElementById('login-s2').style.display='none';
   document.getElementById('login-s3').style.display='block';
   setStep(3);
   setTimeout(()=>document.getElementById('reg-name').focus(),300);
 }
-
+ 
 function detectLocation(){
   const btn = document.getElementById('detect-btn');
   btn.textContent = '⏳';
@@ -1660,7 +1686,7 @@ function detectLocation(){
     btn.style.background = '#DBEAFE';
   }
 }
-
+ 
 function finishReg(){
   const name     = document.getElementById('reg-name').value.trim();
   const waNum    = document.getElementById('reg-wa').value.trim();
@@ -1684,7 +1710,7 @@ function finishReg(){
     phone: selectedCC.code+' '+document.getElementById('phone-input').value,
     whatsapp: selectedWACC.code+' '+waNum
   });
-
+ 
   document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=name);
   document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+location);
   // Update home greeting
@@ -1697,7 +1723,7 @@ function finishReg(){
   resetLogin();
   setTimeout(()=>go('home'),600);
 }
-
+ 
 function resetLogin(){
   document.getElementById('login-s1').style.display='block';
   document.getElementById('login-s2').style.display='none';
@@ -1706,9 +1732,9 @@ function resetLogin(){
   document.querySelectorAll('.otp-input').forEach(i=>i.value='');
   setStep(1);
 }
-
+ 
 function loginDone(){ finishReg(); }
-
+ 
 // ══════════════════════════════════
 // MISC
 // ══════════════════════════════════
@@ -1717,14 +1743,14 @@ function setLang(el){
   el.classList.add('active');
   toast('🌍 Language: '+el.textContent);
 }
-
+ 
 let _tt;
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2800);
 }
-
+ 
 // ══════════════════════════════════
 // COUNTRY CODES (searchable)
 // ══════════════════════════════════
@@ -1820,12 +1846,12 @@ const COUNTRY_CODES = [
   {flag:'🇿🇲',name:'Zambia',code:'+260'},
   {flag:'🇿🇼',name:'Zimbabwe',code:'+263'},
 ];
-
+ 
 let selectedCC = {flag:'🇦🇪', code:'+971'};
 let selectedWACC = {flag:'🇦🇪', code:'+971'};
 let ccDropOpen = false;
 let waCCDropOpen = false;
-
+ 
 function renderCCList(listId, filterText, onSelect){
   const list = document.getElementById(listId);
   const q = (filterText||'').toLowerCase();
@@ -1839,7 +1865,7 @@ function renderCCList(listId, filterText, onSelect){
       <span style="font-size:13px;font-weight:800;color:#667EEA">${c.code}</span>
     </div>`).join('');
 }
-
+ 
 function toggleCCDropdown(){
   const dd = document.getElementById('dd-cc');
   ccDropOpen = !ccDropOpen;
@@ -1866,7 +1892,7 @@ function selectCC(flag,code,name){
   document.removeEventListener('click',closeCCOnOutside);
   toast('✅ '+flag+' '+name+' selected');
 }
-
+ 
 function toggleWACCDropdown(){
   const dd=document.getElementById('dd-wa-cc');
   waCCDropOpen=!waCCDropOpen;
@@ -1891,7 +1917,7 @@ function selectWACC(flag,code,name){
   waCCDropOpen=false;
   document.removeEventListener('click',closeWACCOnOutside);
 }
-
+ 
 function copyLoginToWA(cb){
   if(cb.checked){
     const ph=document.getElementById('phone-input').value||'';
@@ -1908,7 +1934,7 @@ function copyLoginToWA(cb){
     document.getElementById('reg-wa').value='';
   }
 }
-
+ 
 // ══════════════════════════════════
 // COUNTRY SEARCH DROPDOWN
 // ══════════════════════════════════
@@ -1953,7 +1979,7 @@ const COUNTRIES = [
   '🇺🇿 Uzbekistan','🇻🇺 Vanuatu','🇻🇪 Venezuela','🇻🇳 Vietnam','🇾🇪 Yemen',
   '🇿🇲 Zambia','🇿🇼 Zimbabwe'
 ];
-
+ 
 function showDropdown(ddId, inputId){
   filterDropdown(ddId, inputId);
 }
@@ -1981,7 +2007,7 @@ function hideDropdown(ddId){
   const dd=document.getElementById(ddId);
   if(dd) dd.style.display='none';
 }
-
+ 
 // ══════════════════════════════════
 // AGENT FORM
 // ══════════════════════════════════
@@ -2004,7 +2030,7 @@ function submitAgent(){
   const agree=document.getElementById('ag-agree').checked;
   if(!name||!country||!city||!phone){toast('⚠️ Please fill all required fields');return;}
   if(!agree){toast('⚠️ Please agree to the terms first');return;}
-
+ 
   // Save to Supabase
   sbInsert('agents',{
     name, country, city, phone,
@@ -2012,7 +2038,7 @@ function submitAgent(){
     experience: document.getElementById('ag-exp').value.trim(),
     status: 'pending'
   });
-
+ 
   document.getElementById('agent-form-wrap').innerHTML=`
     <div style="text-align:center;padding:40px 20px;">
       <div style="font-size:72px;margin-bottom:20px;">🎉</div>
@@ -2033,14 +2059,14 @@ function submitAgent(){
       <button class="main-btn" style="background:linear-gradient(135deg,#F59E0B,#D97706)" onclick="go('home')">Back to Home 🏠</button>
     </div>`;
 }
-
+ 
 function logOut(){
   try{ localStorage.removeItem('hm_user'); }catch(e){}
   deleteCookie('hm_user');
   toast('👋 Logged out successfully');
   setTimeout(()=>{ resetLogin(); go('splash'); },600);
 }
-
+ 
 // ══════════════════════════════════
 // PERSISTENT STORAGE — cookies + localStorage
 // ══════════════════════════════════
@@ -2082,12 +2108,12 @@ function loadUser(){
   }catch(e){}
   return null;
 }
-
+ 
 // Offline detection
 window.addEventListener('online',()=>document.getElementById('offline-bar').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offline-bar').classList.add('show'));
 if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show');
-
+ 
 // ── CHECK IF ALREADY LOGGED IN ──
 (function(){
   try{
