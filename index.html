@@ -3108,9 +3108,15 @@ function renderCCList(listId, filterText, onSelectFn){
   const list = document.getElementById(listId);
   if(!list) return;
   const q = (filterText||'').toLowerCase();
-  const filtered = q ? COUNTRY_CODES.filter(c=>c.name.toLowerCase().includes(q)||c.code.includes(q)) : COUNTRY_CODES;
+  const filtered = q
+    ? COUNTRY_CODES.map((c,i)=>({...c,_i:i})).filter(c=>c.name.toLowerCase().includes(q)||c.code.includes(q))
+    : COUNTRY_CODES.map((c,i)=>({...c,_i:i}));
+
+  // Store filtered list for lookup by index
+  list._filteredCC = filtered;
+
   list.innerHTML = filtered.map((c,i)=>`
-    <div data-idx="${i}" data-flag="${c.flag}" data-code="${c.code}" data-name="${c.name}" data-fn="${onSelectFn}"
+    <div data-fi="${i}" data-fn="${onSelectFn}"
       style="padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1px solid #F3F4F6;"
       onmousedown="handleCCSelect(this)" onmouseover="this.style.background='#F9F7F4'" onmouseout="this.style.background='#fff'">
       <span style="font-size:20px">${c.flag}</span>
@@ -3120,12 +3126,14 @@ function renderCCList(listId, filterText, onSelectFn){
 }
 
 function handleCCSelect(el){
-  const flag = el.dataset.flag;
-  const code = el.dataset.code;
-  const name = el.dataset.name;
-  const fn   = el.dataset.fn;
-  if(fn === 'selectCC') selectCC(flag, code, name);
-  else if(fn === 'selectWACC') selectWACC(flag, code, name);
+  const fi  = parseInt(el.dataset.fi);
+  const fn  = el.dataset.fn;
+  const listId = fn==='selectCC' ? 'cc-list' : 'wa-cc-list';
+  const list = document.getElementById(listId);
+  const c = list._filteredCC && list._filteredCC[fi];
+  if(!c) return;
+  if(fn === 'selectCC') selectCC(c.flag, c.code, c.name);
+  else if(fn === 'selectWACC') selectWACC(c.flag, c.code, c.name);
 }
 
 function toggleCCDropdown(){
