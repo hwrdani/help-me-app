@@ -8,13 +8,13 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x:hidden;}
- 
+
 /* ── LAYOUT ── */
 .app{max-width:420px;margin:0 auto;min-height:100vh;position:relative;background:#F9F7F4;}
 .screen{display:none;flex-direction:column;min-height:100vh;animation:fadeUp .3s ease;}
 .screen.active{display:flex;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
- 
+
 /* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
   background:#fff;display:flex;padding:10px 0 18px;box-shadow:0 -3px 16px rgba(0,0,0,.08);z-index:200;}
@@ -24,42 +24,42 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .bni .ic{font-size:22px;}
 .bni.active .ic{background:#FFF0EB;width:42px;height:42px;border-radius:13px;
   display:flex;align-items:center;justify-content:center;margin-bottom:-2px;}
- 
+
 /* ── BACK BUTTON ── */
 .back-btn{display:inline-flex;align-items:center;gap:6px;background:#FF6B35;color:#fff;
   padding:10px 18px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;
   box-shadow:0 3px 12px rgba(255,107,53,.35);transition:opacity .2s,transform .15s;user-select:none;}
 .back-btn:active{opacity:.85;transform:scale(.96);}
- 
+
 /* ── CARDS / SHADOWS ── */
 .card{background:#fff;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.07);}
- 
+
 /* ── SCROLL AREA ── */
 .scroll{flex:1;overflow-y:auto;padding-bottom:88px;scrollbar-width:none;}
 .scroll::-webkit-scrollbar{display:none;}
- 
+
 /* ── SECTION HEADER ── */
 .sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:12px;}
 .sec-title{font-size:18px;font-weight:800;}
 .see-all{font-size:13px;font-weight:700;color:#FF6B35;cursor:pointer;}
- 
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
   background:#1A1A2E;color:#fff;padding:11px 22px;border-radius:30px;font-size:14px;
   font-weight:700;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
- 
+
 /* ── OFFLINE BANNER ── */
 .offline-bar{display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:420px;background:#1F2937;color:#fff;text-align:center;
   padding:9px;font-size:13px;font-weight:700;z-index:9998;}
 .offline-bar.show{display:block;}
- 
+
 /* ════════════════════════════════
    SOS FLOATING BUTTON
 ════════════════════════════════ */
 .sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
- 
+
 .sos-btn{width:64px;height:64px;background:linear-gradient(135deg,#FF4757,#C0392B);
   border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
   box-shadow:0 5px 20px rgba(255,71,87,.5);animation:pulse 2s infinite;transition:transform .15s;}
@@ -68,7 +68,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .sos-btn .sl{display:none;}
 @keyframes pulse{0%,100%{box-shadow:0 5px 20px rgba(255,71,87,.5)}
   50%{box-shadow:0 5px 30px rgba(255,71,87,.8),0 0 0 10px rgba(255,71,87,.15)}}
- 
+
 .sos-panel{display:none;flex-direction:column;gap:8px;align-items:flex-end;margin-top:4px;}
 .sos-panel.open{display:flex;}
 .sos-row{display:flex;align-items:center;gap:8px;cursor:pointer;animation:slideR .2s ease both;}
@@ -77,10 +77,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   box-shadow:0 3px 14px rgba(0,0,0,.12);white-space:nowrap;color:#1A1A2E;}
 .sos-ic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:20px;box-shadow:0 3px 12px rgba(0,0,0,.15);flex-shrink:0;border:none;cursor:pointer;}
- 
+
 .sos-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:4999;backdrop-filter:blur(2px);}
 .sos-overlay.open{display:block;}
- 
+
 /* ════════════════════════════════
    SPLASH
 ════════════════════════════════ */
@@ -102,7 +102,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);
   font-family:'Nunito',sans-serif;transition:transform .15s;}
 .sp-btn:active{transform:scale(.96);}
- 
+
 /* ════════════════════════════════
    HOME
 ════════════════════════════════ */
@@ -121,12 +121,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .search-bar input{flex:1;border:none;outline:none;font-size:15px;font-family:'Nunito',sans-serif;
   font-weight:600;color:#1A1A2E;background:transparent;}
 .search-bar input::placeholder{color:#B0B8C4;}
- 
+
 .loc-bar{display:flex;align-items:center;gap:7px;padding:13px 20px;font-size:14px;
   color:#6B7280;font-weight:600;}
 .loc-name{color:#1A1A2E;font-weight:700;}
 .loc-change{color:#FF6B35;font-weight:700;margin-left:auto;cursor:pointer;}
- 
+
 /* Emergency Banner */
 .emg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#FF4757,#FF6B81);
   border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:12px;
@@ -135,7 +135,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .emg-banner .et{color:#fff;font-weight:800;font-size:15px;}
 .emg-banner .es{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;}
 .emg-banner .ea{margin-left:auto;color:#fff;font-size:22px;}
- 
+
 /* Category Grid */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px;margin-bottom:22px;}
 .cat-card{background:#fff;border-radius:20px;padding:16px 10px;text-align:center;cursor:pointer;
@@ -145,7 +145,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .cat-ic{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;
   justify-content:center;font-size:26px;margin:0 auto 9px;}
 .cat-nm{font-size:11px;font-weight:800;color:#1A1A2E;line-height:1.3;}
- 
+
 /* Supplier register */
 .reg-banner{margin:0 20px 22px;background:linear-gradient(135deg,#667EEA,#764BA2);
   border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 18px rgba(102,126,234,.3);}
@@ -153,7 +153,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .reg-banner .rs{color:rgba(255,255,255,.8);font-size:12px;font-weight:600;margin-bottom:12px;}
 .reg-banner .rb{background:#fff;color:#764BA2;border:none;padding:9px 18px;border-radius:10px;
   font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;}
- 
+
 /* Featured */
 .feat-scroll{display:flex;gap:12px;padding:0 20px;overflow-x:auto;margin-bottom:22px;scrollbar-width:none;}
 .feat-scroll::-webkit-scrollbar{display:none;}
@@ -166,7 +166,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .feat-cat{font-size:11px;color:#6B7280;font-weight:600;margin-bottom:6px;}
 .feat-stars{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;}
 .stars{color:#FFB800;letter-spacing:-1px;}
- 
+
 /* ════════════════════════════════
    CATEGORY SCREEN
 ════════════════════════════════ */
@@ -174,16 +174,16 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;}
 .screen-hdr-txt .stitle{font-size:19px;font-weight:800;}
 .screen-hdr-txt .ssub{font-size:12px;color:#6B7280;font-weight:600;}
- 
+
 .subcat-scroll{display:flex;gap:8px;padding:14px 20px;overflow-x:auto;
   background:#fff;scrollbar-width:none;border-bottom:1px solid #F3F4F6;}
 .subcat-scroll::-webkit-scrollbar{display:none;}
 .subcat{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap;
   cursor:pointer;border:2px solid #E5E7EB;color:#6B7280;transition:all .18s;flex-shrink:0;}
 .subcat.active{background:#FF6B35;border-color:#FF6B35;color:#fff;}
- 
+
 .sup-list{padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
- 
+
 /* Supplier card */
 .sup-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);
   border:2px solid transparent;transition:transform .18s,border-color .18s;position:relative;}
@@ -202,13 +202,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .open-badge.open{background:#D1FAE5;color:#065F46;}
 .open-badge.closed{background:#FEE2E2;color:#991B1B;}
 .sup-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;font-weight:600;margin-bottom:12px;}
- 
+
 /* Heart button on card */
 .heart-btn{position:absolute;top:14px;right:14px;width:32px;height:32px;background:#FEE2E2;
   border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;
   font-size:16px;cursor:pointer;transition:transform .18s;}
 .heart-btn:active{transform:scale(.85);}
- 
+
 /* Action buttons row */
 .act-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .act-btn{padding:10px 6px;border-radius:12px;border:none;cursor:pointer;font-size:10px;
@@ -220,7 +220,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .ab-call{background:#DBEAFE;color:#1E40AF;}
 .ab-map{background:#FEF3C7;color:#92400E;}
 .ab-info{background:#F3E8FF;color:#6B21A8;}
- 
+
 /* ════════════════════════════════
    DETAIL SCREEN
 ════════════════════════════════ */
@@ -236,7 +236,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .det-hero-heart{position:absolute;bottom:16px;right:16px;width:46px;height:46px;
   background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.14);border:none;}
- 
+
 .det-body{background:#fff;border-radius:28px 28px 0 0;margin-top:-20px;padding:22px 18px 0;}
 .det-name{font-size:22px;font-weight:900;margin-bottom:4px;}
 .det-spec{font-size:13px;color:#6B7280;font-weight:600;margin-bottom:10px;}
@@ -244,14 +244,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .det-stars{color:#FFB800;font-size:18px;letter-spacing:-1px;}
 .det-rnum{font-weight:800;font-size:17px;}
 .det-rcnt{color:#6B7280;font-size:13px;font-weight:600;}
- 
+
 .det-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
 .det-act{padding:13px 6px;border-radius:14px;border:none;cursor:pointer;font-size:11px;
   font-weight:800;display:flex;flex-direction:column;align-items:center;gap:5px;
   transition:transform .15s;font-family:'Nunito',sans-serif;}
 .det-act:active{transform:scale(.91);}
 .det-act .di{font-size:22px;}
- 
+
 .info-sec{background:#F9F7F4;border-radius:14px;padding:14px;margin-bottom:14px;}
 .info-sec-ttl{font-size:11px;font-weight:800;color:#6B7280;text-transform:uppercase;
   letter-spacing:.5px;margin-bottom:10px;}
@@ -261,12 +261,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .ir-ic{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
 .ir-lbl{color:#6B7280;font-size:11px;font-weight:600;}
 .ir-val{font-weight:700;font-size:14px;}
- 
+
 .hrs-grid{display:flex;flex-direction:column;gap:5px;}
 .hr-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;padding:3px 0;}
 .hr-day{color:#6B7280;}
 .hr-today{color:#FF6B35;font-weight:800;}
- 
+
 .rev-list{display:flex;flex-direction:column;gap:12px;}
 .rev-card{background:#F9F7F4;border-radius:14px;padding:12px;}
 .rev-hdr{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
@@ -280,7 +280,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;
   font-family:'Nunito',sans-serif;transition:opacity .18s;}
 .add-rev-btn:active{opacity:.85;}
- 
+
 /* ════════════════════════════════
    FAVORITES
 ════════════════════════════════ */
@@ -289,17 +289,17 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .fav-title{font-size:24px;font-weight:900;color:#fff;}
 .fav-cnt{font-size:13px;color:rgba(255,255,255,.8);font-weight:600;}
 .fav-sub{font-size:12px;color:rgba(255,255,255,.7);font-weight:600;}
- 
+
 .offline-note{margin:14px 20px 0;background:#FFF7ED;border:2px solid #FED7AA;
   border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:9px;
   font-size:13px;font-weight:600;color:#92400E;}
- 
+
 .fav-list{padding:14px 20px;display:flex;flex-direction:column;gap:14px;}
 .fav-empty{text-align:center;padding:56px 20px;}
 .fav-empty .fe-ic{font-size:60px;margin-bottom:14px;}
 .fav-empty .fe-t{font-size:19px;font-weight:800;margin-bottom:7px;}
 .fav-empty .fe-s{font-size:13px;color:#6B7280;font-weight:600;line-height:1.5;}
- 
+
 .fav-card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);position:relative;}
 .fav-remove{position:absolute;top:12px;right:12px;width:28px;height:28px;background:#FEE2E2;
   border-radius:50%;border:none;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
@@ -310,7 +310,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   background:#F9F7F4;transition:border-color .18s;}
 .fav-note-input:focus{border-color:#F472B6;}
 .fav-saved-lbl{font-size:11px;color:#9CA3AF;font-weight:600;margin-top:7px;}
- 
+
 /* ════════════════════════════════
    LOGIN
 ════════════════════════════════ */
@@ -347,7 +347,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .otp-input:focus{border-color:#667EEA;background:#fff;}
 .resend-row{text-align:center;margin-top:14px;font-size:13px;color:#6B7280;font-weight:600;}
 .resend-row span{color:#667EEA;font-weight:700;cursor:pointer;}
- 
+
 /* ════════════════════════════════
    PROFILE
 ════════════════════════════════ */
@@ -368,7 +368,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .pmi-ttl{font-weight:700;font-size:14px;}
 .pmi-sub{font-size:11px;color:#6B7280;font-weight:600;}
 .pmi-arr{margin-left:auto;color:#9CA3AF;font-size:18px;}
- 
+
 /* ════════════════════════════════
    REGISTER
 ════════════════════════════════ */
@@ -385,7 +385,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .feat-item .fi-ic{font-size:22px;}
 .feat-item .fi-t{font-weight:700;font-size:14px;}
 .feat-item .fi-s{font-size:11px;color:#6B7280;font-weight:600;}
- 
+
 /* ════════════════════════════════
    MAPS MODAL
 ════════════════════════════════ */
@@ -404,10 +404,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 </head>
 <body>
 <div class="app">
- 
+
 <!-- ═══ OFFLINE BAR ═══ -->
 <div class="offline-bar" id="offline-bar">📵 You're offline — showing saved favorites only</div>
- 
+
 <!-- ═══ SOS ═══ -->
 <div class="sos-overlay" id="sos-overlay" onclick="closeSOS()"></div>
 <div class="sos-fab">
@@ -415,37 +415,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <span class="si">SOS</span>
   </button>
   <div class="sos-panel" id="sos-panel">
-    <div class="sos-row" style="animation-delay:.04s" onclick="sosGo('🏥','Finding nearest hospital...')">
-      <div class="sos-lbl">🏥 Closest Hospital</div>
-      <button class="sos-ic" style="background:#FFE4E6;">🏥</button>
+    <div id="sos-location-bar" style="padding:8px 14px;background:rgba(255,255,255,.15);border-radius:10px;margin-bottom:8px;font-size:11px;font-weight:700;color:#fff;text-align:center;display:none;">
+      📍 <span id="sos-location-name">Detecting location...</span>
     </div>
-    <div class="sos-row" style="animation-delay:.08s" onclick="sosGo('🚑','Calling ambulance...')">
-      <div class="sos-lbl">🚑 Ambulance</div>
-      <button class="sos-ic" style="background:#FEE2E2;">🚑</button>
-    </div>
-    <div class="sos-row" style="animation-delay:.12s" onclick="sosGo('👮','Connecting to police...')">
-      <div class="sos-lbl">👮 Police</div>
-      <button class="sos-ic" style="background:#DBEAFE;">👮</button>
-    </div>
-    <div class="sos-row" style="animation-delay:.16s" onclick="sosGo('🔥','Calling fire department...')">
-      <div class="sos-lbl">🔥 Fire Department</div>
-      <button class="sos-ic" style="background:#FEF3C7;">🔥</button>
-    </div>
-    <div class="sos-row" style="animation-delay:.20s" onclick="sosGo('🔧','Finding nearest mechanic...')">
-      <div class="sos-lbl">🔧 Closest Mechanic</div>
-      <button class="sos-ic" style="background:#D1FAE5;">🔧</button>
-    </div>
-    <div class="sos-row" style="animation-delay:.24s" onclick="sosGo('🚗','Finding nearest tow truck...')">
-      <div class="sos-lbl">🚗 Tow Truck</div>
-      <button class="sos-ic" style="background:#EDE9FE;">🚗</button>
-    </div>
-    <div class="sos-row" style="animation-delay:.28s" onclick="sosGo('💊','Finding nearest 24hr pharmacy...')">
-      <div class="sos-lbl">💊 24hr Pharmacy</div>
-      <button class="sos-ic" style="background:#D1FAE5;">💊</button>
-    </div>
+    <div id="sos-rows"></div>
   </div>
 </div>
- 
+
 <!-- ═══ MAPS MODAL ═══ -->
 <div class="modal-overlay" id="maps-modal" onclick="closeMaps()">
   <div class="modal-sheet" onclick="event.stopPropagation()">
@@ -463,10 +439,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <button class="map-cancel" onclick="closeMaps()">Cancel</button>
   </div>
 </div>
- 
+
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
- 
+
 <!-- ════════════════════════════════
      SPLASH
 ════════════════════════════════ -->
@@ -486,7 +462,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
   <button class="sp-btn" onclick="go('login')">Get Started 🚀</button>
 </div>
- 
+
 <!-- ════════════════════════════════
      HOME
 ════════════════════════════════ -->
@@ -504,32 +480,32 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <span style="font-size:18px;cursor:pointer" onclick="toast('⚙️ Filters coming soon!')">⚙️</span>
     </div>
   </div>
- 
+
   <div class="scroll">
     <div class="loc-bar">
       <span>📍</span>
-      <span>You're in <span class="loc-name">Dubai, UAE</span></span>
+      <span>You're in <span class="loc-name" id="loc-name-bar">Detecting...</span></span>
       <span class="loc-change" onclick="toast('📍 Location detection coming in Stage 2!')">Change</span>
     </div>
- 
+
     <div class="emg-banner" onclick="openCat('emergency')">
       <div class="ei">🚨</div>
       <div><div class="et">Emergency Services</div><div class="es">Ambulance · Police · Fire</div></div>
       <div class="ea">›</div>
     </div>
- 
+
     <div class="sec-hdr">
       <div class="sec-title">Browse Categories</div>
-      <div class="see-all" onclick="toast('All categories coming soon!')">See all</div>
+      <div class="see-all" onclick="go('all-cats')">See all →</div>
     </div>
     <div class="cat-grid">
       <div class="cat-card" onclick="openCat('doctors')">
         <div class="cat-ic" style="background:#FFE4E6">🏥</div>
-        <div class="cat-nm">Doctors &amp; Healthcare</div>
+        <div class="cat-nm">Doctors & Healthcare</div>
       </div>
       <div class="cat-card" onclick="openCat('mechanics')">
         <div class="cat-ic" style="background:#DBEAFE">🔧</div>
-        <div class="cat-nm">Mechanics &amp; Auto</div>
+        <div class="cat-nm">Mechanics & Auto</div>
       </div>
       <div class="cat-card" onclick="openCat('pharmacy')">
         <div class="cat-ic" style="background:#D1FAE5">💊</div>
@@ -537,52 +513,45 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       </div>
       <div class="cat-card" onclick="openCat('restaurants')">
         <div class="cat-ic" style="background:#FEF3C7">🍽️</div>
-        <div class="cat-nm">Restaurants &amp; Cafes</div>
+        <div class="cat-nm">Restaurants & Cafes</div>
       </div>
       <div class="cat-card" onclick="openCat('hotels')">
         <div class="cat-ic" style="background:#EDE9FE">🏨</div>
-        <div class="cat-nm">Hotels &amp; Stays</div>
+        <div class="cat-nm">Hotels & Stays</div>
       </div>
       <div class="cat-card" onclick="openCat('beauty')">
         <div class="cat-ic" style="background:#FCE7F3">💇</div>
-        <div class="cat-nm">Beauty &amp; Salons</div>
+        <div class="cat-nm">Beauty & Salons</div>
+      </div>
+      <div class="cat-card" onclick="openCat('homeservices')">
+        <div class="cat-ic" style="background:#D1FAE5">🏠</div>
+        <div class="cat-nm">Home Services</div>
+      </div>
+      <div class="cat-card" onclick="openCat('shopping')">
+        <div class="cat-ic" style="background:#FEF3C7">🛒</div>
+        <div class="cat-nm">Shopping</div>
+      </div>
+      <div class="cat-card" onclick="openCat('professional')">
+        <div class="cat-ic" style="background:#DBEAFE">⚖️</div>
+        <div class="cat-nm">Professional Services</div>
+      </div>
+      <div class="cat-card" onclick="openCat('travel')">
+        <div class="cat-ic" style="background:#EDE9FE">✈️</div>
+        <div class="cat-nm">Travel & Tourism</div>
       </div>
     </div>
- 
+
     <div class="reg-banner" onclick="go('register')">
       <div class="rt">Are you a business owner? 🏪</div>
       <div class="rs">List your business and reach customers worldwide</div>
       <button class="rb">Register Your Business →</button>
     </div>
- 
+
     <div class="sec-hdr"><div class="sec-title">⭐ Top Rated Nearby</div></div>
-    <div class="feat-scroll">
-      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[0])">
-        <div class="feat-img" style="background:#FFE4E6">🏥</div>
-        <div class="feat-info">
-          <div class="feat-nm">Dr. Ahmed Clinic</div>
-          <div class="feat-cat">General Practitioner</div>
-          <div class="feat-stars"><span class="stars">★★★★★</span> 4.9 (128)</div>
-        </div>
-      </div>
-      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[3])">
-        <div class="feat-img" style="background:#DBEAFE">🔧</div>
-        <div class="feat-info">
-          <div class="feat-nm">ProFix Garage</div>
-          <div class="feat-cat">Auto Mechanic</div>
-          <div class="feat-stars"><span class="stars">★★★★★</span> 4.8 (96)</div>
-        </div>
-      </div>
-      <div class="feat-card" onclick="openDetail(SAMPLE_SUPPLIERS[6])">
-        <div class="feat-img" style="background:#D1FAE5">💊</div>
-        <div class="feat-info">
-          <div class="feat-nm">LifeCare Pharmacy</div>
-          <div class="feat-cat">24hr Pharmacy</div>
-          <div class="feat-stars"><span class="stars">★★★★☆</span> 4.7 (214)</div>
-        </div>
-      </div>
+    <div class="feat-scroll" id="feat-scroll">
+      <div style="padding:20px;color:#9CA3AF;font-size:13px;font-weight:600;">⏳ Loading...</div>
     </div>
- 
+
     <!-- AGENT BANNER -->
     <div style="margin:0 20px 22px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:18px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
@@ -596,17 +565,79 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Apply Now — It's Free →
       </button>
     </div>
- 
+
   </div>
- 
+
   <div class="bnav">
     <div class="bni active" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
-    <div class="bni" onclick="toast('🔍 Explore coming soon!')"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('all-cats')"><div class="ic">🔍</div><span>Explore</span></div>
     <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
+<!-- ════════════════════════════════
+     BUSINESS REGISTRATION
+════════════════════════════════ -->
+<div class="screen" id="biz-reg">
+  <div class="screen-hdr" id="bizreg-hdr">
+    <div class="back-btn" id="bizreg-back" onclick="bizRegBack()">← Back</div>
+    <div class="screen-hdr-txt">
+      <div class="stitle" id="bizreg-title">Register Business</div>
+      <div class="ssub" id="bizreg-sub">Step 1 of 4</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div style="padding:0 20px;background:#fff;border-bottom:1px solid #F3F4F6;">
+    <div style="height:4px;background:#F3F4F6;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div id="bizreg-progress" style="height:100%;background:linear-gradient(90deg,#FF6B35,#F59E0B);border-radius:4px;transition:width .4s ease;width:25%;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+      <div class="reg-step-dot active" id="rdot-1" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FF6B35;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;">1</div>
+        <div style="font-size:10px;font-weight:700;color:#FF6B35;">Basics</div>
+      </div>
+      <div class="reg-step-dot" id="rdot-2" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E5E7EB;color:#9CA3AF;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;">2</div>
+        <div style="font-size:10px;font-weight:700;color:#9CA3AF;">Contact</div>
+      </div>
+      <div class="reg-step-dot" id="rdot-3" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E5E7EB;color:#9CA3AF;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;">3</div>
+        <div style="font-size:10px;font-weight:700;color:#9CA3AF;">Details</div>
+      </div>
+      <div class="reg-step-dot" id="rdot-4" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E5E7EB;color:#9CA3AF;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;">4</div>
+        <div style="font-size:10px;font-weight:700;color:#9CA3AF;">Confirm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reg-scroll" id="bizreg-content"></div>
+</div>
+
+<!-- ════════════════════════════════
+     ALL CATEGORIES
+════════════════════════════════ -->
+<div class="screen" id="all-cats">
+  <div class="screen-hdr">
+    <div class="back-btn" onclick="go('home')">← Back</div>
+    <div class="screen-hdr-txt">
+      <div class="stitle">All Categories</div>
+      <div class="ssub">Browse all services</div>
+    </div>
+  </div>
+  <div class="scroll" style="padding:16px;">
+    <div id="all-cats-grid"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni active"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
+  </div>
+</div>
+
 <!-- ════════════════════════════════
      CATEGORY
 ════════════════════════════════ -->
@@ -634,7 +665,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      DETAIL
 ════════════════════════════════ -->
@@ -647,7 +678,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      FAVORITES
 ════════════════════════════════ -->
@@ -670,7 +701,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      LOGIN
 ════════════════════════════════ -->
@@ -679,7 +710,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="login-ic">🆘</div>
     <div class="login-ttl">Help-Me</div>
     <div class="login-sub">Find trusted services anywhere in the world</div>
- 
+
     <!-- Step indicators -->
     <div style="display:flex;align-items:center;gap:8px;margin-top:24px;">
       <div id="step-dot-1" style="width:32px;height:8px;border-radius:4px;background:#fff;transition:all .3s;"></div>
@@ -687,12 +718,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div id="step-dot-3" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
     </div>
   </div>
- 
+
   <!-- STEP 1: Phone number -->
   <div id="login-s1" class="login-sheet">
     <div class="ls-title">Welcome! 👋</div>
     <div class="ls-sub">Enter your phone number to get started. We'll send a verification code via WhatsApp.</div>
- 
+
     <!-- Searchable country code -->
     <div style="position:relative;margin-bottom:12px;">
       <div class="phone-wrap" style="cursor:pointer;" onclick="toggleCCDropdown()">
@@ -716,7 +747,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div id="cc-list" style="max-height:220px;overflow-y:auto;scrollbar-width:none;"></div>
       </div>
     </div>
- 
+
     <button class="main-btn btn-purple" onclick="showOTP()" style="margin-bottom:14px;">
       💬 Send WhatsApp Code
     </button>
@@ -724,7 +755,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       🔒 Your number is only used for verification.<br>We never share it with anyone.
     </div>
   </div>
- 
+
   <!-- STEP 2: OTP -->
   <div id="login-s2" class="login-sheet" style="display:none">
     <div class="ls-title">Check WhatsApp 💬</div>
@@ -743,12 +774,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <span style="font-size:13px;color:#9CA3AF;font-weight:600;cursor:pointer;" onclick="go('login');resetLogin()">← Change number</span>
     </div>
   </div>
- 
+
   <!-- STEP 3: Name & Country -->
   <div id="login-s3" class="login-sheet" style="display:none">
     <div class="ls-title">Almost there! 🎉</div>
     <div class="ls-sub">Just two quick details and you're in. Everything else is optional.</div>
- 
+
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Your Name <span style="color:#FF4757">*</span></div>
       <input id="reg-name" type="text" placeholder="e.g. Mohammed, Sara, John..."
@@ -756,7 +787,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
         onfocus="this.style.borderColor='#667EEA'" onblur="this.style.borderColor='#E5E7EB'">
     </div>
- 
+
     <!-- WhatsApp number -->
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:2px;">💬 WhatsApp Number <span style="color:#FF4757">*</span></div>
@@ -795,7 +826,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </label>
       </div>
     </div>
- 
+
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">🏠 I live in <span style="color:#FF4757">*</span></div>
       <div style="position:relative;">
@@ -810,7 +841,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
       </div>
     </div>
- 
+
     <div style="margin-bottom:20px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">📍 I am currently in <span style="color:#FF4757">*</span></div>
       <div style="position:relative;">
@@ -835,7 +866,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Tap 📍 to auto-detect your current location
       </div>
     </div>
- 
+
     <button class="main-btn btn-purple" onclick="finishReg()" style="margin-bottom:12px;">
       🚀 Enter Help-Me
     </button>
@@ -844,7 +875,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      PROFILE
 ════════════════════════════════ -->
@@ -907,7 +938,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni active"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      REGISTER
 ════════════════════════════════ -->
@@ -920,7 +951,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
   <div class="reg-scroll">
- 
+
     <!-- LOCATION DETECTED BANNER -->
     <div id="reg-location-banner" style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:16px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
       <span style="font-size:22px;">📍</span>
@@ -930,7 +961,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       </div>
       <div style="margin-left:auto;font-size:20px;" id="reg-country-flag">🌍</div>
     </div>
- 
+
     <!-- PLAN TOGGLE -->
     <div style="display:flex;gap:4px;background:#F0F4F8;padding:4px;border-radius:14px;margin-bottom:20px;">
       <button id="tab-plans" onclick="showRegTab('plans')" style="flex:1;padding:10px;border:none;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;background:#fff;color:#FF6B35;box-shadow:0 2px 8px rgba(0,0,0,.08);">
@@ -940,10 +971,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         📊 Compare
       </button>
     </div>
- 
+
     <!-- PLANS TAB -->
     <div id="reg-tab-plans">
- 
+
       <!-- BASIC PLAN -->
       <div id="plan-basic" style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:14px;border:2px solid #E5E7EB;cursor:pointer;transition:border-color .2s;" onclick="selectPlan('basic')">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -970,7 +1001,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           Select Basic
         </button>
       </div>
- 
+
       <!-- PREMIUM PLAN -->
       <div id="plan-premium" style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:14px;border:2px solid #667EEA;cursor:pointer;position:relative;" onclick="selectPlan('premium')">
         <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#667EEA;color:#fff;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:800;">MOST POPULAR</div>
@@ -1000,7 +1031,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           Select Premium
         </button>
       </div>
- 
+
       <!-- PLATINUM PLAN -->
       <div id="plan-platinum" style="background:linear-gradient(135deg,#1A1A2E,#2E3A5F);border-radius:20px;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,.2);margin-bottom:20px;border:2px solid transparent;cursor:pointer;" onclick="selectPlan('platinum')">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -1029,9 +1060,9 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           Select Platinum ⭐
         </button>
       </div>
- 
+
     </div>
- 
+
     <!-- COMPARE TAB -->
     <div id="reg-tab-compare" style="display:none;">
       <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;">
@@ -1094,7 +1125,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
- 
+
     <!-- SELECTED PLAN CTA -->
     <div id="reg-cta" style="display:none;background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;border:2px solid #34D399;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
@@ -1105,18 +1136,18 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
         <div style="margin-left:auto;background:#D1FAE5;color:#065F46;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:800;">Selected ✓</div>
       </div>
-      <button class="main-btn" style="background:linear-gradient(135deg,#34D399,#059669);margin-bottom:10px;" onclick="toast('📝 Full registration form coming in Stage 3!')">
-        📝 Continue to Registration
+      <button class="main-btn" style="background:linear-gradient(135deg,#34D399,#059669);margin-bottom:10px;" onclick="startBizReg()">
+        📝 Continue to Registration →
       </button>
     </div>
- 
+
     <!-- AGENT DIVIDER -->
     <div style="display:flex;align-items:center;gap:12px;margin:8px 0 20px;">
       <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#E5E7EB)"></div>
       <div style="font-size:12px;font-weight:800;color:#9CA3AF;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;">Or become an agent</div>
       <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#E5E7EB)"></div>
     </div>
- 
+
     <!-- AGENT BANNER -->
     <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:18px;margin-bottom:8px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
@@ -1130,10 +1161,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         Apply Now — It's Free →
       </button>
     </div>
- 
+
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      AGENT APPLICATION
 ════════════════════════════════ -->
@@ -1146,14 +1177,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
   </div>
   <div class="reg-scroll" id="agent-form-wrap">
- 
+
     <!-- HOW IT WORKS -->
     <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:18px;padding:18px;margin-bottom:20px;text-align:center;">
       <div style="font-size:36px;margin-bottom:8px;">🤝</div>
       <div style="color:#fff;font-weight:900;font-size:18px;margin-bottom:4px;">Help-Me Agent Program</div>
       <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Sign businesses — earn every year they stay</div>
     </div>
- 
+
     <!-- HOW IT WORKS STEPS -->
     <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">How it works</div>
     <div style="display:flex;flex-direction:column;gap:0;margin-bottom:20px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);">
@@ -1174,12 +1205,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div><div style="font-weight:700;font-size:14px;">Track in your dashboard</div><div style="font-size:12px;color:#6B7280;font-weight:600;">See all your signed businesses & earnings live</div></div>
       </div>
     </div>
- 
+
     <!-- APPLICATION FORM -->
     <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Your Application</div>
- 
+
     <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
- 
+
       <!-- Full Name -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Full Name <span style="color:#FF4757">*</span></div>
@@ -1187,7 +1218,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
- 
+
       <!-- Country -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Country <span style="color:#FF4757">*</span></div>
@@ -1195,7 +1226,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
- 
+
       <!-- City -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">City <span style="color:#FF4757">*</span></div>
@@ -1203,7 +1234,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
- 
+
       <!-- Phone -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Phone Number <span style="color:#FF4757">*</span></div>
@@ -1211,7 +1242,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'">
       </div>
- 
+
       <!-- WhatsApp -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">WhatsApp Number <span style="color:#FF4757">*</span></div>
@@ -1222,7 +1253,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           <button onclick="copyPhone()" style="padding:13px 14px;background:#D7F5E3;border:none;border-radius:13px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#1A6634;white-space:nowrap;">Same ✓</button>
         </div>
       </div>
- 
+
       <!-- ID Upload -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">ID / Passport <span style="color:#FF4757">*</span></div>
@@ -1234,7 +1265,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           <div style="font-size:12px;color:#9CA3AF;font-weight:600;">JPG, PNG or PDF · Max 5MB</div>
         </div>
       </div>
- 
+
       <!-- Sales Experience -->
       <div>
         <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Sales Experience</div>
@@ -1253,7 +1284,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           style="width:100%;padding:13px 14px;border:2px solid #E5E7EB;border-radius:13px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;resize:none;transition:border-color .18s;"
           onfocus="this.style.borderColor='#F59E0B'" onblur="this.style.borderColor='#E5E7EB'"></textarea>
       </div>
- 
+
       <!-- Agreement -->
       <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:13px;padding:14px;display:flex;gap:12px;align-items:flex-start;">
         <input type="checkbox" id="ag-agree" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#F59E0B;cursor:pointer;">
@@ -1261,19 +1292,19 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           I agree to the Help-Me Agent Terms & Conditions and understand that my commission is based on annual recurring subscription fees of the businesses I sign.
         </label>
       </div>
- 
+
     </div>
- 
+
     <!-- SUBMIT -->
     <button class="main-btn" onclick="submitAgent()"
       style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-bottom:10px;">
       🚀 Join Now — It's Free
     </button>
     <button class="main-btn btn-ghost" onclick="go('register')">Cancel</button>
- 
+
   </div>
 </div>
- 
+
 <!-- ════════════════════════════════
      AGENT DASHBOARD
 ════════════════════════════════ -->
@@ -1290,7 +1321,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div style="color:rgba(255,255,255,.9);font-size:11px;font-weight:700;text-align:center;" id="ag-prob-count">1/3 done</div>
       </div>
     </div>
- 
+
     <!-- Stats row -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
       <div style="background:rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;">
@@ -1307,9 +1338,9 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       </div>
     </div>
   </div>
- 
+
   <div class="scroll" style="padding:20px;">
- 
+
     <!-- Probation notice -->
     <div id="ag-probation-notice" style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:16px;padding:16px;margin-bottom:20px;display:none;">
       <div style="font-weight:800;font-size:14px;color:#92400E;margin-bottom:6px;">⏳ Probation Period</div>
@@ -1324,12 +1355,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div style="font-weight:900;font-size:16px;color:#D97706;" id="ag-prob-text">0 / 3</div>
       </div>
     </div>
- 
+
     <!-- QR Code section -->
     <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
       <div style="font-weight:800;font-size:16px;margin-bottom:4px;">📱 Your Agent QR Code</div>
       <div style="font-size:13px;color:#6B7280;font-weight:600;margin-bottom:16px;">Show this to business owners — they scan it and your name appears on their screen</div>
- 
+
       <!-- QR Code display -->
       <div style="background:#F9F7F4;border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;">
         <div id="ag-qr-code" style="width:160px;height:160px;background:#fff;border-radius:12px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.1);padding:10px;">
@@ -1339,13 +1370,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div style="font-weight:800;font-size:14px;margin-bottom:2px;" id="ag-qr-name">Ahmed Al-Mansoori</div>
         <div style="font-size:12px;color:#6B7280;font-weight:600;">Help-Me Agent · ID: <span id="ag-qr-id">HM-00001</span></div>
       </div>
- 
+
       <!-- Agent link -->
       <div style="background:#F0FDF4;border:2px solid #BBF7D0;border-radius:12px;padding:12px;margin-bottom:12px;">
         <div style="font-size:11px;font-weight:800;color:#065F46;margin-bottom:4px;">🔗 YOUR AGENT LINK</div>
         <div style="font-size:13px;font-weight:700;color:#065F46;word-break:break-all;" id="ag-link">helpmeapp.io/join?agent=HM00001</div>
       </div>
- 
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <button class="main-btn" style="background:#25D366;font-size:13px;padding:12px;" onclick="toast('💬 Sharing via WhatsApp...')">
           💬 Share via WhatsApp
@@ -1355,7 +1386,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </button>
       </div>
     </div>
- 
+
     <!-- How the QR works -->
     <div style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:16px;padding:16px;margin-bottom:16px;">
       <div style="font-weight:800;font-size:14px;color:#1E40AF;margin-bottom:10px;">💡 How to use your QR code</div>
@@ -1382,7 +1413,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
- 
+
     <!-- My businesses -->
     <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -1397,7 +1428,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
- 
+
     <!-- Renewal reminders -->
     <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
       <div style="font-weight:800;font-size:16px;margin-bottom:4px;">🔔 Renewal Reminders</div>
@@ -1409,7 +1440,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
- 
+
     <!-- Commission history -->
     <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:80px;">
       <div style="font-weight:800;font-size:16px;margin-bottom:14px;">💰 Commission History</div>
@@ -1419,9 +1450,9 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
       </div>
     </div>
- 
+
   </div>
- 
+
   <div class="bnav">
     <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
     <div class="bni active"><div class="ic">🤝</div><span>Agent</span></div>
@@ -1429,16 +1460,16 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
- 
+
 </div><!-- /app -->
- 
+
 <script>
 // ══════════════════════════════════
 // SUPABASE CONNECTION
 // ══════════════════════════════════
 const SUPABASE_URL = 'https://mcduuatcrfjcuxhmktst.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_19cNoziJhEj53lbragMwBg_g-P6BmOv';
- 
+
 async function sbFetch(table, params=''){
   try{
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`,{
@@ -1452,7 +1483,7 @@ async function sbFetch(table, params=''){
     return await res.json();
   }catch(e){ console.error(e); return null; }
 }
- 
+
 async function sbInsert(table, data){
   try{
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{
@@ -1469,7 +1500,7 @@ async function sbInsert(table, data){
     return await res.json();
   }catch(e){ console.error(e); return null; }
 }
- 
+
 // ══════════════════════════════════
 // DATA
 // ══════════════════════════════════
@@ -1557,15 +1588,136 @@ const CATS = {
     gradient:'rgba(185,28,28,.78),rgba(239,68,68,.3)',
     tagline:'Immediate help — hospitals, police & more',
     subcats:[
-      {key:'all',      label:'All',           emoji:'🚨', color:'#FFE4E6', photo:'https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=400&q=80'},
-      {key:'ambulance',label:'Ambulance',     emoji:'🚑', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=400&q=80'},
-      {key:'hospital', label:'Hospital',      emoji:'🏥', color:'#FFE4E6', photo:'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&q=80'},
-      {key:'police',   label:'Police',        emoji:'👮', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=400&q=80'},
-      {key:'fire',     label:'Fire Dept',     emoji:'🔥', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&q=80'},
-      {key:'roadside', label:'Roadside Help', emoji:'🚗', color:'#EDE9FE', photo:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80'},
+      {key:'all',      label:'All',           emoji:'🚨', color:'#FFE4E6'},
+      {key:'ambulance',label:'Ambulance',     emoji:'🚑', color:'#FEE2E2'},
+      {key:'hospital', label:'Hospital',      emoji:'🏥', color:'#FFE4E6'},
+      {key:'police',   label:'Police',        emoji:'👮', color:'#DBEAFE'},
+      {key:'fire',     label:'Fire Dept',     emoji:'🔥', color:'#FEF3C7'},
+      {key:'roadside', label:'Roadside Help', emoji:'🚗', color:'#EDE9FE'},
+    ]},
+  homeservices:{title:'Home Services',emoji:'🏠',color:'#D1FAE5',
+    photo:'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900&q=80',
+    gradient:'rgba(4,120,87,.72),rgba(52,211,153,.3)',
+    tagline:'Trusted home maintenance & repairs',
+    subcats:[
+      {key:'all',       label:'All',            emoji:'🏠', color:'#D1FAE5'},
+      {key:'plumbing',  label:'Plumbing',       emoji:'🔧', color:'#DBEAFE'},
+      {key:'electric',  label:'Electrician',    emoji:'⚡', color:'#FEF3C7'},
+      {key:'ac',        label:'AC Repair',      emoji:'❄️', color:'#EFF6FF'},
+      {key:'cleaning',  label:'Cleaning',       emoji:'🧹', color:'#D1FAE5'},
+      {key:'pest',      label:'Pest Control',   emoji:'🐛', color:'#FEF3C7'},
+      {key:'painting',  label:'Painting',       emoji:'🎨', color:'#FCE7F3'},
+      {key:'carpenter', label:'Carpentry',      emoji:'🪚', color:'#FFF7ED'},
+      {key:'locksmith', label:'Locksmith',      emoji:'🔑', color:'#FEE2E2'},
+      {key:'moving',    label:'Moving',         emoji:'📦', color:'#EDE9FE'},
+      {key:'garden',    label:'Gardening',      emoji:'🌿', color:'#ECFDF5'},
+      {key:'handyman',  label:'Handyman',       emoji:'🛠️', color:'#F3F4F6'},
+    ]},
+  shopping:{title:'Shopping',emoji:'🛒',color:'#FEF3C7',
+    photo:'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=900&q=80',
+    gradient:'rgba(180,83,9,.78),rgba(251,191,36,.3)',
+    tagline:'Malls, markets & everything you need',
+    subcats:[
+      {key:'all',       label:'All',            emoji:'🛒', color:'#FEF3C7'},
+      {key:'mall',      label:'Malls',          emoji:'🏬', color:'#EDE9FE'},
+      {key:'grocery',   label:'Groceries',      emoji:'🥦', color:'#D1FAE5'},
+      {key:'fashion',   label:'Fashion',        emoji:'👗', color:'#FCE7F3'},
+      {key:'electronics',label:'Electronics',   emoji:'📱', color:'#DBEAFE'},
+      {key:'jewelry',   label:'Jewelry',        emoji:'💍', color:'#FEF3C7'},
+      {key:'perfume',   label:'Perfumes',       emoji:'🧴', color:'#EDE9FE'},
+      {key:'furniture', label:'Furniture',      emoji:'🛋️', color:'#FFF7ED'},
+      {key:'gifts',     label:'Gifts',          emoji:'🎁', color:'#FEE2E2'},
+      {key:'kids',      label:'Kids & Baby',    emoji:'👶', color:'#D1FAE5'},
+      {key:'sports',    label:'Sports',         emoji:'⚽', color:'#ECFDF5'},
+      {key:'tailoring', label:'Tailoring',      emoji:'🧵', color:'#FCE7F3'},
+    ]},
+  professional:{title:'Professional Services',emoji:'⚖️',color:'#DBEAFE',
+    photo:'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&q=80',
+    gradient:'rgba(29,78,216,.72),rgba(96,165,250,.3)',
+    tagline:'Legal, financial & business services',
+    subcats:[
+      {key:'all',       label:'All',            emoji:'⚖️', color:'#DBEAFE'},
+      {key:'legal',     label:'Legal & Law',    emoji:'⚖️', color:'#DBEAFE'},
+      {key:'accounting',label:'Accounting',     emoji:'📊', color:'#D1FAE5'},
+      {key:'visa',      label:'Visa & PRO',     emoji:'📋', color:'#EDE9FE'},
+      {key:'translation',label:'Translation',   emoji:'🌐', color:'#FEF3C7'},
+      {key:'realestate',label:'Real Estate',    emoji:'🏢', color:'#EFF6FF'},
+      {key:'insurance', label:'Insurance',      emoji:'🛡️', color:'#D1FAE5'},
+      {key:'bizsetup',  label:'Business Setup', emoji:'🚀', color:'#FCE7F3'},
+      {key:'photo',     label:'Photography',    emoji:'📸', color:'#FFF7ED'},
+      {key:'events',    label:'Events',         emoji:'🎉', color:'#FEE2E2'},
+      {key:'printing',  label:'Printing',       emoji:'🖨️', color:'#F3F4F6'},
+      {key:'security',  label:'Security',       emoji:'🔐', color:'#DBEAFE'},
+    ]},
+  travel:{title:'Travel & Tourism',emoji:'✈️',color:'#EDE9FE',
+    photo:'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=900&q=80',
+    gradient:'rgba(109,40,217,.72),rgba(167,139,250,.3)',
+    tagline:'Tours, transport & travel services',
+    subcats:[
+      {key:'all',       label:'All',            emoji:'✈️', color:'#EDE9FE'},
+      {key:'agency',    label:'Travel Agency',  emoji:'🗺️', color:'#EDE9FE'},
+      {key:'tours',     label:'Tours & Guides', emoji:'🧭', color:'#D1FAE5'},
+      {key:'transfer',  label:'Airport Transfer',emoji:'🚗', color:'#DBEAFE'},
+      {key:'rental',    label:'Car Rental',     emoji:'🔑', color:'#FEF3C7'},
+      {key:'yacht',     label:'Boat & Yacht',   emoji:'⛵', color:'#EFF6FF'},
+      {key:'currency',  label:'Currency Exch.', emoji:'💱', color:'#D1FAE5'},
+      {key:'desert',    label:'Desert Safari',  emoji:'🏜️', color:'#FFF7ED'},
+      {key:'adventure', label:'Adventure',      emoji:'🧗', color:'#FEE2E2'},
+    ]},
+  fitness:{title:'Sports & Fitness',emoji:'💪',color:'#D1FAE5',
+    photo:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900&q=80',
+    gradient:'rgba(4,120,87,.72),rgba(52,211,153,.3)',
+    tagline:'Gyms, sports & wellness centres',
+    subcats:[
+      {key:'all',      label:'All',             emoji:'💪', color:'#D1FAE5'},
+      {key:'gym',      label:'Gym & Fitness',   emoji:'🏋️', color:'#D1FAE5'},
+      {key:'yoga',     label:'Yoga & Pilates',  emoji:'🧘', color:'#EDE9FE'},
+      {key:'swim',     label:'Swimming',        emoji:'🏊', color:'#DBEAFE'},
+      {key:'football', label:'Football',        emoji:'⚽', color:'#ECFDF5'},
+      {key:'tennis',   label:'Tennis',          emoji:'🎾', color:'#FEF3C7'},
+      {key:'martial',  label:'Martial Arts',    emoji:'🥋', color:'#FEE2E2'},
+      {key:'trainer',  label:'Personal Trainer',emoji:'🏃', color:'#D1FAE5'},
+    ]},
+  education:{title:'Education & Training',emoji:'🎓',color:'#FEF3C7',
+    photo:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&q=80',
+    gradient:'rgba(180,83,9,.72),rgba(251,191,36,.3)',
+    tagline:'Schools, courses & private lessons',
+    subcats:[
+      {key:'all',      label:'All',             emoji:'🎓', color:'#FEF3C7'},
+      {key:'school',   label:'Schools',         emoji:'🏫', color:'#DBEAFE'},
+      {key:'nursery',  label:'Nursery',         emoji:'🧒', color:'#D1FAE5'},
+      {key:'tutoring', label:'Tutoring',        emoji:'📚', color:'#FEF3C7'},
+      {key:'language', label:'Language',        emoji:'🌐', color:'#EDE9FE'},
+      {key:'driving',  label:'Driving School',  emoji:'🚗', color:'#FFF7ED'},
+      {key:'music',    label:'Music & Arts',    emoji:'🎵', color:'#FCE7F3'},
+      {key:'sports',   label:'Sports Academy',  emoji:'⚽', color:'#ECFDF5'},
+    ]},
+  pets:{title:'Pets & Animals',emoji:'🐾',color:'#FFF7ED',
+    photo:'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900&q=80',
+    gradient:'rgba(180,83,9,.6),rgba(251,146,60,.3)',
+    tagline:'Vet care, grooming & pet supplies',
+    subcats:[
+      {key:'all',      label:'All',             emoji:'🐾', color:'#FFF7ED'},
+      {key:'vet',      label:'Veterinary',      emoji:'🐕', color:'#D1FAE5'},
+      {key:'grooming', label:'Grooming',        emoji:'✂️', color:'#FCE7F3'},
+      {key:'petshop',  label:'Pet Shop',        emoji:'🦴', color:'#FEF3C7'},
+      {key:'boarding', label:'Pet Boarding',    emoji:'🏠', color:'#EDE9FE'},
+      {key:'training', label:'Dog Training',    emoji:'🎯', color:'#DBEAFE'},
+    ]},
+  family:{title:'Family & Kids',emoji:'👨‍👩‍👧',color:'#FCE7F3',
+    photo:'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=900&q=80',
+    gradient:'rgba(190,24,93,.6),rgba(244,114,182,.3)',
+    tagline:'Activities, childcare & family services',
+    subcats:[
+      {key:'all',      label:'All',             emoji:'👨‍👩‍👧', color:'#FCE7F3'},
+      {key:'nursery',  label:'Nursery',         emoji:'🧒', color:'#D1FAE5'},
+      {key:'kids',     label:'Kids Activities', emoji:'🎠', color:'#FEF3C7'},
+      {key:'nanny',    label:'Nanny',           emoji:'👶', color:'#FCE7F3'},
+      {key:'toys',     label:'Toy Stores',      emoji:'🧸', color:'#EDE9FE'},
+      {key:'family',   label:'Family Centres',  emoji:'🏛️', color:'#DBEAFE'},
     ]},
 };
- 
+
 const SAMPLE_SUPPLIERS = [
   {id:1,cat:'doctors',name:'Dr. Ahmed Al-Rashidi',spec:'General Practitioner',emoji:'👨‍⚕️',
    color:'#FFE4E6',rating:4.9,reviews:128,location:'Jumeirah, Dubai',open:true,
@@ -1624,31 +1776,92 @@ const SAMPLE_SUPPLIERS = [
    phone:'999',whatsapp:'',address:'Citywide coverage, Dubai, UAE',
    hours:['Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours','Open 24 Hours']}
 ];
- 
+
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const TODAY = new Date().getDay();
- 
+
 // ══════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const screen = document.getElementById(id);
+  if(screen) screen.classList.add('active');
   window.scrollTo(0,0);
-  // Trigger pricing detection when register opens
   if(id==='register') detectCountryPricing();
+  if(id==='all-cats') renderAllCats();
+  // Update active nav based on screen
+  const exploreScreens = ['all-cats','category','detail','biz-reg'];
+  const savedScreens = ['favorites'];
+  const profileScreens = ['profile','agent','agent-dashboard','register'];
+  document.querySelectorAll('.bnav .bni').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.screen.active .bnav .bni').forEach((b,i)=>{
+    if(exploreScreens.includes(id) && i===1) b.classList.add('active');
+    else if(savedScreens.includes(id) && i===2) b.classList.add('active');
+    else if(profileScreens.includes(id) && i===3) b.classList.add('active');
+    else if(id==='home' && i===0) b.classList.add('active');
+  });
 }
- 
+
+function renderAllCats(){
+  const gradients = [
+    'linear-gradient(135deg,#FF6B6B,#FF8E53)',
+    'linear-gradient(135deg,#4ECDC4,#44A08D)',
+    'linear-gradient(135deg,#667EEA,#764BA2)',
+    'linear-gradient(135deg,#F093FB,#F5576C)',
+    'linear-gradient(135deg,#4FACFE,#00F2FE)',
+    'linear-gradient(135deg,#43E97B,#38F9D7)',
+    'linear-gradient(135deg,#FA709A,#FEE140)',
+    'linear-gradient(135deg,#A18CD1,#FBC2EB)',
+    'linear-gradient(135deg,#FD7043,#FF8F00)',
+    'linear-gradient(135deg,#26C6DA,#00ACC1)',
+    'linear-gradient(135deg,#FF9A9E,#FECFEF)',
+    'linear-gradient(135deg,#96FBC4,#F9F586)',
+    'linear-gradient(135deg,#F6D365,#FDA085)',
+    'linear-gradient(135deg,#89F7FE,#66A6FF)',
+    'linear-gradient(135deg,#FDDB92,#D1FDFF)',
+    'linear-gradient(135deg,#A1C4FD,#C2E9FB)',
+  ];
+
+  const keys = Object.keys(CATS);
+  const grid = document.getElementById('all-cats-grid');
+  if(!grid) return;
+
+  grid.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-bottom:80px;">
+      ${keys.map((key,i) => {
+        const cat = CATS[key];
+        return `
+          <div onclick="openCat('${key}')"
+            style="border-radius:20px;cursor:pointer;height:120px;
+            background:${gradients[i % gradients.length]};
+            box-shadow:0 6px 20px rgba(0,0,0,.15);
+            display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+            position:relative;overflow:hidden;
+            transition:transform .15s;"
+            onmousedown="this.style.transform='scale(.96)'"
+            onmouseup="this.style.transform='scale(1)'"
+            ontouchstart="this.style.transform='scale(.96)'"
+            ontouchend="this.style.transform='scale(1)'">
+            <div style="position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.15);border-radius:20px 20px 60% 60%;"></div>
+            <div style="font-size:40px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));z-index:1;">${cat.emoji}</div>
+            <div style="color:#fff;font-weight:800;font-size:12px;text-align:center;
+              text-shadow:0 1px 4px rgba(0,0,0,.3);z-index:1;padding:0 8px;line-height:1.3;">${cat.title}</div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
 // ══════════════════════════════════
 // CATEGORY & SUBCATEGORY GRID
 // ══════════════════════════════════
 let currentCatKey = null;
 let currentSuppliers = [];
- 
+
 async function openCat(catKey){
   currentCatKey = catKey;
   const cat = CATS[catKey];
- 
+
   // Build hero banner
   document.getElementById('cat-title').textContent = cat.title;
   document.getElementById('cat-sub').textContent = cat.tagline;
@@ -1666,35 +1879,35 @@ async function openCat(catKey){
         </div>
       </div>
     </div>`;
- 
+
   // Hide subcat scroll bar and supplier list, show subcat grid
   document.getElementById('subcat-scroll').style.display = 'none';
   document.getElementById('sup-list').innerHTML = '';
- 
+
   // Build subcategory visual grid
   document.getElementById('subcat-scroll').innerHTML = '';
   buildSubcatGrid(cat);
- 
+
   go('category');
- 
+
   // Load all suppliers in background
   let suppliers = await sbFetch('suppliers', `?category_key=eq.${catKey}&active=eq.true&order=rating.desc`);
   if(!suppliers || suppliers.length===0){
     suppliers = SAMPLE_SUPPLIERS.filter(s=>s.cat===catKey);
   }
   currentSuppliers = suppliers;
- 
+
   // Update count on grid
   const countEl = document.getElementById('subcat-total-count');
   if(countEl) countEl.textContent = suppliers.length + ' verified providers';
 }
- 
+
 function buildSubcatGrid(cat){
   const scroll = document.getElementById('subcat-scroll');
   scroll.style.display = 'block';
   scroll.style.overflowX = 'unset';
   scroll.style.padding = '0';
- 
+
   // Vibrant gradient pairs for each subcategory card
   const gradients = [
     'linear-gradient(135deg,#FF6B6B,#FF8E53)',
@@ -1708,7 +1921,7 @@ function buildSubcatGrid(cat){
     'linear-gradient(135deg,#FD7043,#FF8F00)',
     'linear-gradient(135deg,#26C6DA,#00ACC1)',
   ];
- 
+
   scroll.innerHTML = `
     <div style="padding:16px 16px 8px;">
       <div style="font-weight:800;font-size:15px;margin-bottom:4px;">What are you looking for?</div>
@@ -1735,15 +1948,15 @@ function buildSubcatGrid(cat){
       `).join('')}
     </div>`;
 }
- 
+
 function pickSubcatGrid(key, label){
   const cat = CATS[currentCatKey];
- 
+
   // Update header
   document.getElementById('cat-sub').textContent = label === 'All'
     ? cat.tagline
     : label + ' · ' + cat.title;
- 
+
   // Filter suppliers
   let filtered = currentSuppliers;
   if(key !== 'all'){
@@ -1755,7 +1968,7 @@ function pickSubcatGrid(key, label){
     // If no match on specialty, show all (fallback)
     if(filtered.length === 0) filtered = currentSuppliers;
   }
- 
+
   // Hide subcat grid, show supplier list
   const scroll = document.getElementById('subcat-scroll');
   scroll.innerHTML = `
@@ -1773,7 +1986,7 @@ function pickSubcatGrid(key, label){
       `).join('')}
     </div>`;
   scroll.style.overflowX = 'auto';
- 
+
   // Show badge
   document.getElementById('cat-hero').querySelector('div').insertAdjacentHTML('beforeend',
     `<div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);
@@ -1781,7 +1994,7 @@ function pickSubcatGrid(key, label){
       <span style="font-size:11px;color:#fff;font-weight:700;">✅ ${filtered.length} providers</span>
     </div>`
   );
- 
+
   // Render suppliers
   document.getElementById('sup-list').innerHTML = filtered.length
     ? filtered.map(s=>supplierCardHTML(s)).join('')
@@ -1791,15 +2004,15 @@ function pickSubcatGrid(key, label){
         <div style="font-size:13px;color:#6B7280;font-weight:600;">Be the first to register in this subcategory!</div>
       </div>`;
 }
- 
+
 function pickSubcat(el){
   document.querySelectorAll('.subcat').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
 }
- 
+
 function getPhone(s){ return (s.phone||'+97336706010').replace(/\s+/g,''); }
 function getWA(s){ return (s.whatsapp||s.phone||'+97336706010').replace(/[\s+]/g,''); }
- 
+
 function supplierCardHTML(s){
   const fav = isFav(s.name);
   const phone = getPhone(s);
@@ -1840,7 +2053,7 @@ function supplierCardHTML(s){
       <button class="act-btn ab-info" onclick="openDetailById('${sid}')"><span class="bi">ℹ️</span>Info</button>
     </div>
   </div>`;}
- 
+
 function openDetailById(sid){
   const s = (window._supCache||{})[sid] || getSup(sid);
   if(s) openDetail(s);
@@ -1849,34 +2062,71 @@ function toggleFavById(sid, btn){
   const s = (window._supCache||{})[sid] || getSup(sid);
   if(s) toggleFavObj(s, btn);
 }
- 
+
 function toggleFavObj(s, btn){
   let favs = getFavs();
   const idx = favs.findIndex(f=>f.name===s.name);
   if(idx>-1){ favs.splice(idx,1); setFavs(favs); if(btn) btn.textContent='🤍'; toast('💔 Removed from favorites'); }
   else { favs.push({...s, savedAt:new Date().toISOString(), note:''}); setFavs(favs); if(btn) btn.textContent='❤️'; toast('❤️ Saved!'); }
 }
- 
+
 // ══════════════════════════════════
 // DETAIL
 // ══════════════════════════════════
 let currentSup = null;
- 
-function getSup(id){ return SAMPLE_SUPPLIERS.find(s=>s.id===id); }
- 
+
+async function loadFeaturedSuppliers(){
+  const scroll = document.getElementById('feat-scroll');
+  if(!scroll) return;
+  let suppliers = await sbFetch('suppliers','?active=eq.true&order=rating.desc&limit=10');
+  if(!suppliers || suppliers.length===0){
+    suppliers = SAMPLE_SUPPLIERS.slice(0,6);
+  }
+  // Store in cache
+  window._supCache = window._supCache || {};
+  suppliers.forEach(s=>{ window._supCache[s.id]=s; });
+
+  scroll.innerHTML = suppliers.map(s=>{
+    const rating = s.rating||0;
+    const reviews = s.review_count||s.reviews||0;
+    const spec = s.spec||s.specialty||'';
+    const stars = '★'.repeat(Math.round(rating))+'☆'.repeat(5-Math.round(rating));
+    const sid = s.id||Math.random();
+    return `
+    <div class="feat-card" onclick="openDetailById('${sid}')">
+      <div class="feat-img" style="background:${s.color||'#F3F4F6'}">${s.emoji||'🏪'}</div>
+      <div class="feat-info">
+        <div class="feat-nm">${s.name}</div>
+        <div class="feat-cat">${spec}</div>
+        <div class="feat-stars"><span class="stars">${stars}</span> ${rating} (${reviews})</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getSup(id){ return SAMPLE_SUPPLIERS.find(s=>s.id==id) || (window._supCache||{})[id]; }
+
 function openDetail(s){
   if(!s) return;
-  // Handle both database format and sample data format
   if(typeof s === 'string') try{ s=JSON.parse(s); }catch(e){ return; }
-  s.spec = s.spec || s.specialty || '';
-  s.open = s.is_open !== undefined ? s.is_open : s.open;
+  // Normalise fields — handle both database and sample data formats
+  s.spec    = s.spec    || s.specialty || '';
+  s.open    = s.is_open !== undefined ? s.is_open : (s.open || false);
   s.reviews = s.review_count || s.reviews || 0;
-  s.color = s.color || '#FFE4E6';
-  s.emoji = s.emoji || '🏪';
+  s.color   = s.color  || '#F3F4F6';
+  s.emoji   = s.emoji  || '🏪';
+  s.phone   = s.phone  || '+97336706010';
+  s.whatsapp= s.whatsapp || s.phone;
+  s.address = s.address || s.location || '';
+  s.location= s.location || '';
+  s.hours   = s.opening_hours || s.hours || [];
+  // Cache it
+  window._supCache = window._supCache || {};
+  if(s.id) window._supCache[s.id] = s;
   currentSup = s;
   const fav = isFav(s.name);
   const starsHtml = '★★★★'+(s.rating>=4.8?'★':'☆');
- 
+
   document.getElementById('det-scroll').innerHTML = `
     <div class="det-hero" style="background:${s.color}">
       <span style="font-size:76px">${s.emoji}</span>
@@ -1886,7 +2136,7 @@ function openDetail(s){
       <div class="det-hero-share" onclick="toast('📤 Link copied!')">📤</div>
       <button class="det-hero-heart" id="det-heart" onclick="toggleFavDetail()">${fav?'❤️':'🤍'}</button>
     </div>
- 
+
     <div class="det-body">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
         <div class="det-name">${s.name}</div>
@@ -1898,21 +2148,21 @@ function openDetail(s){
         <div class="det-rnum">${s.rating}</div>
         <div class="det-rcnt">${s.reviews} reviews</div>
       </div>
- 
+
       <div class="det-acts">
         <a class="det-act ab-wa" href="https://wa.me/${getWA(s)}" target="_blank"><span class="di">💬</span>WhatsApp</a>
         <a class="det-act ab-call" href="tel:${getPhone(s)}"><span class="di">📞</span>Call</a>
         <button class="det-act ab-map" onclick="openMaps(this.dataset.addr,this.dataset.lat,this.dataset.lng)" data-addr="${(s.address||s.location||'').replace(/"/g,'')}" data-lat="${s.latitude||''}" data-lng="${s.longitude||''}"><span class="di">📍</span>Maps</button>
         <button class="det-act ab-info" onclick="toast('🌐 Website coming soon!')"><span class="di">🌐</span>Website</button>
       </div>
- 
+
       <div class="info-sec">
         <div class="info-sec-ttl">Contact & Location</div>
         <div class="info-row"><span class="ir-ic">📞</span><div><div class="ir-lbl">Phone</div><div class="ir-val">${s.phone}</div></div></div>
         ${s.whatsapp?`<div class="info-row"><span class="ir-ic">💬</span><div><div class="ir-lbl">WhatsApp</div><div class="ir-val">${s.whatsapp}</div></div></div>`:''}
         <div class="info-row"><span class="ir-ic">📍</span><div><div class="ir-lbl">Address</div><div class="ir-val">${s.address}</div></div></div>
       </div>
- 
+
       <div class="info-sec">
         <div class="info-sec-ttl">Opening Hours</div>
         <div class="hrs-grid">
@@ -1923,7 +2173,7 @@ function openDetail(s){
             </div>`).join('')}
         </div>
       </div>
- 
+
       <div class="info-sec">
         <div class="info-sec-ttl">Reviews</div>
         <div class="rev-list">
@@ -1955,10 +2205,10 @@ function openDetail(s){
         <button class="add-rev-btn" onclick="go('login');toast('Please login to leave a review')">✍️ Write a Review</button>
       </div>
     </div>`;
- 
+
   go('detail');
 }
- 
+
 // ══════════════════════════════════
 // FAVORITES
 // ══════════════════════════════════
@@ -1968,7 +2218,7 @@ function getFavs(){
 }
 function setFavs(f){ try{ localStorage.setItem('hm_favs',JSON.stringify(f)); }catch(e){} }
 function isFav(name){ return getFavs().some(f=>f.name===name); }
- 
+
 function toggleFav(id, btn){
   const s = getSup(id);
   if(!s) return;
@@ -1986,7 +2236,7 @@ function toggleFav(id, btn){
     toast('❤️ Saved to favorites!');
   }
 }
- 
+
 function toggleFavDetail(){
   if(!currentSup) return;
   const favs = getFavs();
@@ -2000,19 +2250,387 @@ function toggleFavDetail(){
   const cardHeart = document.getElementById('hb-'+currentSup.id);
   if(cardHeart) cardHeart.textContent = isSaved?'🤍':'❤️';
 }
- 
+
 function removeFav(name){
   setFavs(getFavs().filter(f=>f.name!==name));
   renderFavs();
   toast('💔 Removed');
 }
- 
+
 function updateNote(name,val){
   const favs=getFavs();
   const f=favs.find(f=>f.name===name);
   if(f){f.note=val;setFavs(favs);}
 }
- 
+
+// ══════════════════════════════════
+// BUSINESS REGISTRATION FLOW
+// ══════════════════════════════════
+let bizRegStep = 1;
+let bizRegData = {};
+
+function startBizReg(){
+  if(!selectedPlanType){ toast('⚠️ Please select a plan first'); return; }
+  bizRegData = {
+    plan: selectedPlanType,
+    price: (window._currentPricing||PRICING_MAP['DEFAULT'])[selectedPlanType],
+    categories: [], subcategories: []
+  };
+  bizRegStep = 1;
+  go('biz-reg');
+  renderBizRegStep(1);
+}
+
+function bizRegBack(){
+  if(bizRegStep <= 1){ go('register'); return; }
+  bizRegStep--;
+  renderBizRegStep(bizRegStep);
+}
+
+function updateBizRegProgress(step){
+  const pct = (step/4)*100;
+  const bar = document.getElementById('bizreg-progress');
+  if(bar) bar.style.width = pct+'%';
+  for(let i=1;i<=4;i++){
+    const dot = document.getElementById('rdot-'+i);
+    if(!dot) continue;
+    const circle = dot.querySelector('div');
+    const label = dot.querySelectorAll('div')[1];
+    if(i < step){
+      circle.style.background='#34D399'; circle.style.color='#fff'; circle.textContent='✓'; label.style.color='#34D399';
+    } else if(i===step){
+      circle.style.background='#FF6B35'; circle.style.color='#fff'; circle.textContent=i; label.style.color='#FF6B35';
+    } else {
+      circle.style.background='#E5E7EB'; circle.style.color='#9CA3AF'; circle.textContent=i; label.style.color='#9CA3AF';
+    }
+  }
+  const titles=['Business Basics','Contact & Location','Hours & Details','Review & Confirm'];
+  const t=document.getElementById('bizreg-title'); if(t) t.textContent=titles[step-1];
+  const s=document.getElementById('bizreg-sub'); if(s) s.textContent='Step '+step+' of 4';
+}
+
+function renderBizRegStep(step){
+  bizRegStep=step;
+  updateBizRegProgress(step);
+  const content=document.getElementById('bizreg-content');
+  const maxCats={basic:1,premium:2,platinum:3}[bizRegData.plan]||1;
+  const maxSubcats={basic:3,premium:5,platinum:8}[bizRegData.plan]||3;
+  const planColor={basic:'#FF6B35',premium:'#667EEA',platinum:'#1A1A2E'}[bizRegData.plan];
+
+  if(step===1){
+    const catKeys=Object.keys(CATS).filter(k=>k!=='emergency');
+    content.innerHTML=`
+      <div style="background:linear-gradient(135deg,${planColor},${planColor}CC);border-radius:16px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">${bizRegData.plan==='basic'?'🏪':bizRegData.plan==='premium'?'⭐':'👑'}</span>
+        <div>
+          <div style="color:#fff;font-weight:800;font-size:14px;">${bizRegData.plan.charAt(0).toUpperCase()+bizRegData.plan.slice(1)} Plan · ${bizRegData.price}/year</div>
+          <div style="color:rgba(255,255,255,.8);font-size:12px;font-weight:600;">Up to ${maxCats} ${maxCats===1?'category':'categories'} · ${maxSubcats} subcategories</div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Business Name <span style="color:#FF4757">*</span></label>
+        <input type="text" id="br-name" placeholder="e.g. Ahmed Medical Centre" value="${bizRegData.name||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Business Type / Specialty <span style="color:#FF4757">*</span></label>
+        <input type="text" id="br-spec" placeholder="e.g. General Practitioner, Italian Restaurant..." value="${bizRegData.spec||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Select Category <span style="color:#FF4757">*</span> <span style="font-size:11px;color:#6B7280;font-weight:600;">(max ${maxCats})</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="br-cats">
+          ${catKeys.map(key=>{
+            const cat=CATS[key];
+            const sel=(bizRegData.categories||[]).includes(key);
+            return '<div data-catkey="'+key+'" onclick="toggleBizCat(this,\''+key+'\')" style="border-radius:14px;padding:12px;border:2px solid '+(sel?planColor:'#E5E7EB')+';background:'+(sel?planColor+'15':'#fff')+';cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;"><span style="font-size:20px;">'+cat.emoji+'</span><span style="font-size:12px;font-weight:700;color:'+(sel?planColor:'#374151')+';line-height:1.3;">'+cat.title+'</span></div>';
+          }).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:20px;display:none;" id="br-subcats-wrap">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Subcategories <span style="font-size:11px;color:#6B7280;font-weight:600;">(max ${maxSubcats})</span></label>
+        <div id="br-subcats" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);" onclick="bizRegNext1()">Continue → Contact & Location</button>`;
+    if((bizRegData.categories||[]).length>0) renderBizSubcats();
+
+  } else if(step===2){
+    content.innerHTML=`
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Phone Number <span style="color:#FF4757">*</span></label>
+        <input type="tel" id="br-phone" placeholder="+973 3670 6010" value="${bizRegData.phone||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">WhatsApp Number</label>
+        <div style="display:flex;gap:8px;">
+          <input type="tel" id="br-wa" placeholder="+973 3670 6010" value="${bizRegData.whatsapp||''}"
+            style="flex:1;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+          <button onclick="document.getElementById('br-wa').value=document.getElementById('br-phone').value;toast('Copied!')"
+            style="padding:13px 14px;background:#F0FDF4;border:2px solid #BBF7D0;border-radius:14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#065F46;white-space:nowrap;">Same ✓</button>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Website (optional)</label>
+        <input type="url" id="br-web" placeholder="https://www.yourbusiness.com" value="${bizRegData.website||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Country <span style="color:#FF4757">*</span></label>
+        <input type="text" id="br-country" placeholder="e.g. Bahrain, UAE, Turkey..." value="${bizRegData.country||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">City / Area <span style="color:#FF4757">*</span></label>
+        <input type="text" id="br-city" placeholder="e.g. Manama, Dubai, Istanbul..." value="${bizRegData.city||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Full Address <span style="color:#FF4757">*</span></label>
+        <input type="text" id="br-addr" placeholder="Building, Street, Area, City, Country" value="${bizRegData.address||''}"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Location Coordinates</label>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input type="number" id="br-lat" placeholder="Latitude" step="any" value="${bizRegData.lat||''}"
+            style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+          <input type="number" id="br-lng" placeholder="Longitude" step="any" value="${bizRegData.lng||''}"
+            style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        </div>
+        <button onclick="autoBizGeocode()" id="br-geo-btn"
+          style="width:100%;padding:11px;background:#EFF6FF;border:2px solid #BFDBFE;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#1E40AF;">
+          📍 Auto-detect from address
+        </button>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);" onclick="bizRegNext2()">Continue → Hours & Details</button>`;
+
+  } else if(step===3){
+    const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const savedHours=bizRegData.hours||days.map((_,i)=>({open:'09:00',close:'21:00',closed:i===6}));
+    const maxPhotos={basic:3,premium:8,platinum:15}[bizRegData.plan]||3;
+    content.innerHTML=`
+      <div style="margin-bottom:20px;">
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Business Description</label>
+        <textarea id="br-desc" placeholder="Tell customers about your services and what makes you special..." rows="4"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;resize:vertical;">${bizRegData.desc||''}</textarea>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <label style="font-size:13px;font-weight:800;color:#374151;">Opening Hours</label>
+          <button onclick="setBizHoursAll()"
+            style="padding:6px 12px;background:#F0FDF4;border:2px solid #BBF7D0;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#065F46;">Set all 9AM–9PM</button>
+        </div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;border:2px solid #F3F4F6;">
+          ${days.map((day,i)=>`
+            <div style="display:grid;grid-template-columns:70px 1fr 1fr 65px;gap:6px;align-items:center;padding:10px 12px;border-bottom:${i<6?'1px solid #F3F4F6':''}">
+              <div style="font-size:12px;font-weight:800;color:#374151;">${day.slice(0,3)}</div>
+              <input type="time" id="hr-open-${i}" value="${savedHours[i].open}" ${savedHours[i].closed?'disabled':''}
+                style="padding:7px;border:2px solid #E5E7EB;border-radius:8px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;opacity:${savedHours[i].closed?'0.4':'1'};">
+              <input type="time" id="hr-close-${i}" value="${savedHours[i].close}" ${savedHours[i].closed?'disabled':''}
+                style="padding:7px;border:2px solid #E5E7EB;border-radius:8px;font-size:12px;font-family:'Nunito',sans-serif;outline:none;opacity:${savedHours[i].closed?'0.4':'1'};">
+              <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#6B7280;cursor:pointer;">
+                <input type="checkbox" id="hr-closed-${i}" ${savedHours[i].closed?'checked':''} onchange="toggleBizDay(${i})"
+                  style="width:14px;height:14px;accent-color:#EF4444;"> Closed
+              </label>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div style="background:#F9F7F4;border:2px dashed #D1D5DB;border-radius:14px;padding:24px;text-align:center;margin-bottom:20px;">
+        <div style="font-size:36px;margin-bottom:8px;">📸</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">Up to ${maxPhotos} Photos</div>
+        <div style="font-size:12px;color:#9CA3AF;font-weight:600;">Photo upload available after listing approval</div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);" onclick="bizRegNext3()">Continue → Review & Confirm</button>`;
+
+  } else if(step===4){
+    const planIcons={basic:'🏪',premium:'⭐',platinum:'👑'};
+    const catNames=(bizRegData.categories||[]).map(k=>CATS[k]?.emoji+' '+CATS[k]?.title).join(', ')||'—';
+    const subcatNames=(bizRegData.subcategories||[]).join(', ')||'None selected';
+    content.innerHTML=`
+      <div style="background:linear-gradient(135deg,${planColor},${planColor}CC);border-radius:16px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:32px;">${planIcons[bizRegData.plan]}</span>
+        <div>
+          <div style="color:#fff;font-weight:900;font-size:17px;">${bizRegData.plan.charAt(0).toUpperCase()+bizRegData.plan.slice(1)} Plan</div>
+          <div style="color:rgba(255,255,255,.85);font-size:14px;font-weight:700;">${bizRegData.price} / year</div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.06);margin-bottom:14px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:12px;border-bottom:2px solid #F3F4F6;padding-bottom:10px;">📋 Business Details</div>
+        ${[['Business Name',bizRegData.name||'—'],['Type',bizRegData.spec||'—'],['Category',catNames],['Subcategories',subcatNames]]
+          .map(([l,v])=>`<div style="display:flex;justify-content:space-between;margin-bottom:10px;gap:12px;"><div style="font-size:13px;font-weight:700;color:#6B7280;white-space:nowrap;">${l}</div><div style="font-size:13px;font-weight:700;color:#1A1A2E;text-align:right;">${v}</div></div>`).join('')}
+      </div>
+      <div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.06);margin-bottom:14px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:12px;border-bottom:2px solid #F3F4F6;padding-bottom:10px;">📞 Contact & Location</div>
+        ${[['Phone',bizRegData.phone||'—'],['WhatsApp',bizRegData.whatsapp||'—'],['Website',bizRegData.website||'—'],['Country',bizRegData.country||'—'],['City',bizRegData.city||'—'],['Address',bizRegData.address||'—'],['Coordinates',bizRegData.lat?bizRegData.lat+', '+bizRegData.lng:'—']]
+          .map(([l,v])=>`<div style="display:flex;justify-content:space-between;margin-bottom:10px;gap:12px;"><div style="font-size:13px;font-weight:700;color:#6B7280;white-space:nowrap;">${l}</div><div style="font-size:13px;font-weight:700;color:#1A1A2E;text-align:right;word-break:break-all;">${v}</div></div>`).join('')}
+      </div>
+      <div style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:16px;padding:16px;margin-bottom:20px;">
+        <div style="font-weight:800;font-size:14px;color:#1E40AF;margin-bottom:10px;">📬 What happens next</div>
+        ${['Our team reviews within 24-48 hours','WhatsApp confirmation & payment link sent to '+bizRegData.phone,'After payment your listing goes live worldwide','GCC travelers worldwide can find and contact you']
+          .map((t,i)=>`<div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#1E3A8A;margin-bottom:7px;"><span>${['1️⃣','2️⃣','3️⃣','4️⃣'][i]}</span><span>${t}</span></div>`).join('')}
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#34D399,#059669);margin-bottom:10px;" onclick="submitBizReg()">🚀 Submit Registration</button>
+      <button class="main-btn btn-ghost" onclick="bizRegBack()">← Edit Details</button>`;
+  }
+}
+
+function toggleBizCat(el, key){
+  const maxCats={basic:1,premium:2,platinum:3}[bizRegData.plan]||1;
+  const planColor={basic:'#FF6B35',premium:'#667EEA',platinum:'#1A1A2E'}[bizRegData.plan];
+  const cats=bizRegData.categories||[];
+  const idx=cats.indexOf(key);
+  if(idx>-1){
+    cats.splice(idx,1);
+    el.style.borderColor='#E5E7EB'; el.style.background='#fff';
+    el.querySelector('span:last-child').style.color='#374151';
+  } else {
+    if(cats.length>=maxCats){ toast('⚠️ Max '+maxCats+' '+(maxCats===1?'category':'categories')+' for your plan'); return; }
+    cats.push(key);
+    el.style.borderColor=planColor; el.style.background=planColor+'15';
+    el.querySelector('span:last-child').style.color=planColor;
+  }
+  bizRegData.categories=cats;
+  renderBizSubcats();
+}
+
+function renderBizSubcats(){
+  const wrap=document.getElementById('br-subcats-wrap');
+  const container=document.getElementById('br-subcats');
+  if(!wrap||!container) return;
+  const cats=bizRegData.categories||[];
+  if(!cats.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const maxSubcats={basic:3,premium:5,platinum:8}[bizRegData.plan]||3;
+  const selected=bizRegData.subcategories||[];
+  const planColor={basic:'#FF6B35',premium:'#667EEA',platinum:'#1A1A2E'}[bizRegData.plan];
+  let allSubs=[];
+  cats.forEach(k=>{ const cat=CATS[k]; if(cat) cat.subcats.filter(s=>s.key!=='all').forEach(s=>{ if(!allSubs.find(x=>x.label===s.label)) allSubs.push(s); }); });
+  container.innerHTML=allSubs.map(s=>{
+    const isSel=selected.includes(s.label);
+    return '<div data-label="'+s.label+'" onclick="toggleBizSubcat(this,\''+s.label+'\')" style="padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid '+(isSel?planColor:'#E5E7EB')+';background:'+(isSel?planColor+'15':'#fff')+';color:'+(isSel?planColor:'#374151')+';display:flex;align-items:center;gap:6px;">'+s.emoji+' '+s.label+'</div>';
+  }).join('');
+}
+
+function toggleBizSubcat(el, label){
+  const maxSubcats={basic:3,premium:5,platinum:8}[bizRegData.plan]||3;
+  const planColor={basic:'#FF6B35',premium:'#667EEA',platinum:'#1A1A2E'}[bizRegData.plan];
+  const subs=bizRegData.subcategories||[];
+  const idx=subs.indexOf(label);
+  if(idx>-1){ subs.splice(idx,1); el.style.borderColor='#E5E7EB'; el.style.background='#fff'; el.style.color='#374151'; }
+  else {
+    if(subs.length>=maxSubcats){ toast('⚠️ Max '+maxSubcats+' subcategories for your plan'); return; }
+    subs.push(label); el.style.borderColor=planColor; el.style.background=planColor+'15'; el.style.color=planColor;
+  }
+  bizRegData.subcategories=subs;
+}
+
+function bizRegNext1(){
+  const name=document.getElementById('br-name')?.value.trim();
+  const spec=document.getElementById('br-spec')?.value.trim();
+  if(!name){ toast('⚠️ Please enter your business name'); return; }
+  if(!spec){ toast('⚠️ Please enter your business type'); return; }
+  if(!(bizRegData.categories||[]).length){ toast('⚠️ Please select at least one category'); return; }
+  bizRegData.name=name; bizRegData.spec=spec;
+  renderBizRegStep(2);
+}
+
+function bizRegNext2(){
+  const phone=document.getElementById('br-phone')?.value.trim();
+  const addr=document.getElementById('br-addr')?.value.trim();
+  const country=document.getElementById('br-country')?.value.trim();
+  const city=document.getElementById('br-city')?.value.trim();
+  if(!phone){ toast('⚠️ Phone number is required'); return; }
+  if(!country){ toast('⚠️ Country is required'); return; }
+  if(!city){ toast('⚠️ City is required'); return; }
+  if(!addr){ toast('⚠️ Address is required'); return; }
+  bizRegData.phone=phone;
+  bizRegData.whatsapp=document.getElementById('br-wa')?.value.trim()||phone;
+  bizRegData.website=document.getElementById('br-web')?.value.trim();
+  bizRegData.address=addr; bizRegData.country=country; bizRegData.city=city;
+  bizRegData.lat=parseFloat(document.getElementById('br-lat')?.value)||null;
+  bizRegData.lng=parseFloat(document.getElementById('br-lng')?.value)||null;
+  renderBizRegStep(3);
+}
+
+function bizRegNext3(){
+  bizRegData.desc=document.getElementById('br-desc')?.value.trim();
+  bizRegData.hours=[];
+  for(let i=0;i<7;i++){
+    bizRegData.hours.push({
+      open:document.getElementById('hr-open-'+i)?.value||'09:00',
+      close:document.getElementById('hr-close-'+i)?.value||'21:00',
+      closed:document.getElementById('hr-closed-'+i)?.checked||false
+    });
+  }
+  renderBizRegStep(4);
+}
+
+function toggleBizDay(i){
+  const closed=document.getElementById('hr-closed-'+i).checked;
+  const o=document.getElementById('hr-open-'+i); const c=document.getElementById('hr-close-'+i);
+  o.disabled=closed; o.style.opacity=closed?'0.4':'1';
+  c.disabled=closed; c.style.opacity=closed?'0.4':'1';
+}
+
+function setBizHoursAll(){
+  for(let i=0;i<7;i++){
+    document.getElementById('hr-closed-'+i).checked=false;
+    document.getElementById('hr-open-'+i).value='09:00'; document.getElementById('hr-open-'+i).disabled=false; document.getElementById('hr-open-'+i).style.opacity='1';
+    document.getElementById('hr-close-'+i).value='21:00'; document.getElementById('hr-close-'+i).disabled=false; document.getElementById('hr-close-'+i).style.opacity='1';
+  }
+  toast('✅ All days set to 9AM–9PM');
+}
+
+async function autoBizGeocode(){
+  const addr=document.getElementById('br-addr')?.value.trim();
+  const country=document.getElementById('br-country')?.value.trim();
+  if(!addr){ toast('⚠️ Enter address first'); return; }
+  const btn=document.getElementById('br-geo-btn');
+  if(btn){ btn.textContent='⏳ Detecting...'; btn.disabled=true; }
+  try{
+    const q=encodeURIComponent(addr+(country?', '+country:''));
+    const res=await fetch('https://nominatim.openstreetmap.org/search?q='+q+'&format=json&limit=1',{headers:{'User-Agent':'HelpMeApp/1.0'}});
+    const data=await res.json();
+    if(data&&data.length){
+      document.getElementById('br-lat').value=parseFloat(data[0].lat).toFixed(6);
+      document.getElementById('br-lng').value=parseFloat(data[0].lon).toFixed(6);
+      document.getElementById('br-lat').style.borderColor='#34D399';
+      document.getElementById('br-lng').style.borderColor='#34D399';
+      toast('📍 Coordinates found!');
+    } else toast('📍 Not found — enter manually');
+  }catch(e){ toast('📍 Detection failed'); }
+  finally{ if(btn){ btn.textContent='📍 Auto-detect from address'; btn.disabled=false; } }
+}
+
+async function submitBizReg(){
+  const hoursArr=(bizRegData.hours||[]).map(h=>{
+    if(h.closed) return 'Closed';
+    const fmt=t=>{ const[hr,mn]=t.split(':'); const h12=parseInt(hr)%12||12; return h12+':'+mn+' '+(parseInt(hr)>=12?'PM':'AM'); };
+    return fmt(h.open)+' – '+fmt(h.close);
+  });
+  await sbInsert('suppliers',{
+    name:bizRegData.name, category_key:(bizRegData.categories||[])[0]||'',
+    specialty:bizRegData.spec, phone:bizRegData.phone, whatsapp:bizRegData.whatsapp,
+    website:bizRegData.website, address:bizRegData.address, location:bizRegData.city,
+    country:bizRegData.country, latitude:bizRegData.lat, longitude:bizRegData.lng,
+    opening_hours:hoursArr, plan:bizRegData.plan, active:false, is_verified:false
+  });
+  document.getElementById('bizreg-content').innerHTML=`
+    <div style="text-align:center;padding:40px 20px;">
+      <div style="font-size:72px;margin-bottom:16px;">🎉</div>
+      <div style="font-size:22px;font-weight:900;margin-bottom:8px;">Registration Submitted!</div>
+      <div style="font-size:15px;font-weight:600;color:#6B7280;margin-bottom:24px;line-height:1.6;">Thank you, <strong>${bizRegData.name}</strong>!<br>Your listing is pending review.</div>
+      <div style="background:#D1FAE5;border-radius:16px;padding:16px;margin-bottom:16px;text-align:left;">
+        <div style="font-weight:800;font-size:14px;color:#065F46;margin-bottom:10px;">✅ What happens next</div>
+        <div style="font-size:13px;font-weight:600;color:#065F46;line-height:2;">📋 Team reviews within 24-48 hours<br>💬 WhatsApp confirmation sent to ${bizRegData.phone}<br>💳 Payment link sent after approval<br>🌍 Listing goes live worldwide after payment</div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);" onclick="go('home')">🏠 Back to Home</button>
+    </div>`;
+  const bar=document.getElementById('bizreg-progress'); if(bar) bar.style.width='100%';
+  toast('🎉 Registration submitted successfully!');
+}
+
 function renderFavs(){
   const favs=getFavs();
   document.getElementById('fav-cnt').textContent=favs.length+' saved';
@@ -2054,19 +2672,19 @@ function renderFavs(){
       <div class="fav-saved-lbl">✅ Saved offline · ${new Date(s.savedAt).toLocaleDateString()}</div>
     </div>`).join('');
 }
- 
+
 function openDetailFromFav(id){
   const favs = getFavs();
   const s = favs.find(f=>f.id==id) || getSup(id);
   if(s) openDetail(s);
 }
- 
+
 function updateNoteById(id, val){
   const favs = getFavs();
   const f = favs.find(f=>f.id==id);
   if(f){ f.note=val; setFavs(favs); }
 }
- 
+
 // ══════════════════════════════════
 // MAPS
 // ══════════════════════════════════
@@ -2090,10 +2708,146 @@ function openMaps(addr, lat, lng){
 function closeMaps(){
   document.getElementById('maps-modal').classList.remove('open');
 }
- 
+
 // ══════════════════════════════════
-// SOS
+// SOS & EMERGENCY NUMBERS
 // ══════════════════════════════════
+
+// Emergency numbers by country code
+const EMERGENCY_NUMBERS = {
+  // GCC
+  'BH':{ country:'Bahrain', flag:'🇧🇭', ambulance:'999', police:'999', fire:'999', roadside:'1600' },
+  'SA':{ country:'Saudi Arabia', flag:'🇸🇦', ambulance:'997', police:'999', fire:'998', roadside:'920000560' },
+  'AE':{ country:'UAE', flag:'🇦🇪', ambulance:'998', police:'999', fire:'997', roadside:'800AATRIP' },
+  'KW':{ country:'Kuwait', flag:'🇰🇼', ambulance:'112', police:'112', fire:'112', roadside:'1800100' },
+  'QA':{ country:'Qatar', flag:'🇶🇦', ambulance:'999', police:'999', fire:'999', roadside:'8008000' },
+  'OM':{ country:'Oman', flag:'🇴🇲', ambulance:'9999', police:'9999', fire:'9999', roadside:'1234' },
+  // Middle East
+  'JO':{ country:'Jordan', flag:'🇯🇴', ambulance:'911', police:'911', fire:'911', roadside:'110' },
+  'LB':{ country:'Lebanon', flag:'🇱🇧', ambulance:'140', police:'112', fire:'175', roadside:'1214' },
+  'EG':{ country:'Egypt', flag:'🇪🇬', ambulance:'123', police:'122', fire:'180', roadside:'124' },
+  'MA':{ country:'Morocco', flag:'🇲🇦', ambulance:'15', police:'19', fire:'15', roadside:'177' },
+  'TR':{ country:'Turkey', flag:'🇹🇷', ambulance:'112', police:'155', fire:'110', roadside:'154' },
+  'AZ':{ country:'Azerbaijan', flag:'🇦🇿', ambulance:'103', police:'102', fire:'101', roadside:'113' },
+  'GE':{ country:'Georgia', flag:'🇬🇪', ambulance:'112', police:'112', fire:'112', roadside:'113' },
+  'IQ':{ country:'Iraq', flag:'🇮🇶', ambulance:'115', police:'104', fire:'115', roadside:'115' },
+  'SY':{ country:'Syria', flag:'🇸🇾', ambulance:'110', police:'112', fire:'113', roadside:'110' },
+  // Europe
+  'GB':{ country:'United Kingdom', flag:'🇬🇧', ambulance:'999', police:'999', fire:'999', roadside:'0800887766' },
+  'FR':{ country:'France', flag:'🇫🇷', ambulance:'15', police:'17', fire:'18', roadside:'0800207070' },
+  'DE':{ country:'Germany', flag:'🇩🇪', ambulance:'112', police:'110', fire:'112', roadside:'01802222222' },
+  'IT':{ country:'Italy', flag:'🇮🇹', ambulance:'118', police:'113', fire:'115', roadside:'116' },
+  'ES':{ country:'Spain', flag:'🇪🇸', ambulance:'112', police:'112', fire:'112', roadside:'900123505' },
+  'GR':{ country:'Greece', flag:'🇬🇷', ambulance:'166', police:'100', fire:'199', roadside:'10400' },
+  'NL':{ country:'Netherlands', flag:'🇳🇱', ambulance:'112', police:'112', fire:'112', roadside:'0800 0888' },
+  'CY':{ country:'Cyprus', flag:'🇨🇾', ambulance:'112', police:'112', fire:'112', roadside:'22588111' },
+  // Asia
+  'TH':{ country:'Thailand', flag:'🇹🇭', ambulance:'1669', police:'191', fire:'199', roadside:'1193' },
+  'MY':{ country:'Malaysia', flag:'🇲🇾', ambulance:'999', police:'999', fire:'994', roadside:'15999' },
+  'SG':{ country:'Singapore', flag:'🇸🇬', ambulance:'995', police:'999', fire:'995', roadside:'18006378778' },
+  'ID':{ country:'Indonesia', flag:'🇮🇩', ambulance:'118', police:'110', fire:'113', roadside:'021 500 112' },
+  'PH':{ country:'Philippines', flag:'🇵🇭', ambulance:'911', police:'911', fire:'911', roadside:'136' },
+  'IN':{ country:'India', flag:'🇮🇳', ambulance:'108', police:'100', fire:'101', roadside:'1033' },
+  // Americas
+  'US':{ country:'USA', flag:'🇺🇸', ambulance:'911', police:'911', fire:'911', roadside:'*47' },
+  'CA':{ country:'Canada', flag:'🇨🇦', ambulance:'911', police:'911', fire:'911', roadside:'*47' },
+  // Africa
+  'ZA':{ country:'South Africa', flag:'🇿🇦', ambulance:'10177', police:'10111', fire:'10111', roadside:'0800033007' },
+  // Default (International)
+  'DEFAULT':{ country:'International', flag:'🌍', ambulance:'112', police:'112', fire:'112', roadside:'112' }
+};
+
+let currentEmergencyData = EMERGENCY_NUMBERS['DEFAULT'];
+
+async function detectEmergencyNumbers(){
+  try{
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    const code = data.country_code || 'DEFAULT';
+    const city = data.city || '';
+    const country = data.country_name || '';
+    currentEmergencyData = EMERGENCY_NUMBERS[code] || EMERGENCY_NUMBERS['DEFAULT'];
+    currentEmergencyData._city = city;
+    currentEmergencyData._fullName = city ? city+', '+country : country;
+
+    // Update location bar on home screen
+    const locBar = document.getElementById('loc-name-bar');
+    if(locBar) locBar.textContent = currentEmergencyData._fullName || country || 'Your location';
+
+    // Update all loc-name elements
+    document.querySelectorAll('.loc-name').forEach(el=>{
+      el.textContent = currentEmergencyData._fullName || country || 'Your location';
+    });
+
+    renderSOSPanel();
+    updateEmergencyBanner();
+  }catch(e){
+    currentEmergencyData = EMERGENCY_NUMBERS['DEFAULT'];
+    // Fallback to user's saved location
+    try{
+      const user = loadUser();
+      if(user && user.location){
+        const locBar = document.getElementById('loc-name-bar');
+        if(locBar) locBar.textContent = user.location;
+        document.querySelectorAll('.loc-name').forEach(el=>el.textContent=user.location);
+      }
+    }catch(e2){}
+    renderSOSPanel();
+  }
+}
+
+function renderSOSPanel(){
+  const e = currentEmergencyData;
+  const loc = document.getElementById('sos-location-name');
+  const bar = document.getElementById('sos-location-bar');
+  const rows = document.getElementById('sos-rows');
+  if(!rows) return;
+
+  if(loc) loc.textContent = e._fullName || e.country;
+  if(bar) bar.style.display = 'block';
+
+  const services = [
+    { emoji:'🏥', label:'Hospital',      num: e.ambulance,  bg:'#FFE4E6', delay:'.04s', action:'hospital'  },
+    { emoji:'🚑', label:'Ambulance',     num: e.ambulance,  bg:'#FEE2E2', delay:'.08s', action:'ambulance' },
+    { emoji:'👮', label:'Police',        num: e.police,     bg:'#DBEAFE', delay:'.12s', action:'police'    },
+    { emoji:'🔥', label:'Fire Dept',     num: e.fire,       bg:'#FEF3C7', delay:'.16s', action:'fire'      },
+    { emoji:'🔧', label:'Mechanic',      num: null,         bg:'#D1FAE5', delay:'.20s', action:'mechanic'  },
+    { emoji:'🚗', label:'Tow Truck',     num: e.roadside,   bg:'#EDE9FE', delay:'.24s', action:'tow'       },
+    { emoji:'💊', label:'24hr Pharmacy', num: null,         bg:'#D1FAE5', delay:'.28s', action:'pharmacy'  },
+  ];
+
+  rows.innerHTML = services.map(s=>`
+    <div class="sos-row" style="animation-delay:${s.delay};">
+      <div style="flex:1;">
+        <div class="sos-lbl">${s.emoji} ${s.label}</div>
+        ${s.num ? `<div style="font-size:11px;font-weight:800;color:#FF6B35;margin-top:2px;">📞 ${s.num}</div>` : ''}
+      </div>
+      ${s.num
+        ? `<a href="tel:${s.num.replace(/\s/g,'')}" class="sos-ic" style="background:${s.bg};text-decoration:none;display:flex;align-items:center;justify-content:center;" onclick="closeSOS()">${s.emoji}</a>`
+        : `<button class="sos-ic" style="background:${s.bg};" onclick="sosGoSearch('${s.action}')">${s.emoji}</button>`
+      }
+    </div>`).join('');
+}
+
+function updateEmergencyBanner(){
+  const e = currentEmergencyData;
+  const banner = document.querySelector('.emg-banner .es');
+  if(banner){
+    banner.textContent = `Ambulance ${e.ambulance} · Police ${e.police} · Fire ${e.fire}`;
+  }
+}
+
+function sosGoSearch(action){
+  closeSOS();
+  const searches = {
+    hospital: 'hospital',
+    mechanic: 'mechanics',
+    pharmacy: 'pharmacy'
+  };
+  if(searches[action]) openCat(searches[action]);
+  else toast('🔍 Searching for '+action+'...');
+}
+
 let sosOpen=false;
 function toggleSOS(){
   sosOpen=!sosOpen;
@@ -2112,7 +2866,7 @@ function closeSOS(){
   btn.style.animation='pulse 2s infinite';
 }
 function sosGo(e,msg){ closeSOS(); toast(e+' '+msg); }
- 
+
 // ══════════════════════════════════
 // LOGIN
 // ══════════════════════════════════
@@ -2127,7 +2881,7 @@ function setStep(n){
     else{ dot.style.width='8px'; dot.style.background='rgba(255,255,255,.4)'; dot.style.opacity='1'; }
   });
 }
- 
+
 function showOTP(){
   const ph=document.getElementById('phone-input').value.trim();
   if(!ph){ toast('⚠️ Please enter your phone number'); return; }
@@ -2138,7 +2892,7 @@ function showOTP(){
   toast('💬 OTP sent to your WhatsApp!');
   setTimeout(()=>{ document.querySelectorAll('.otp-input')[0].focus(); },300);
 }
- 
+
 function otpNext(input, idx){
   if(input.value.length===1){
     const inputs=document.querySelectorAll('.otp-input');
@@ -2148,14 +2902,14 @@ function otpNext(input, idx){
     if(vals.every(v=>v.length===1)) setTimeout(showProfile,400);
   }
 }
- 
+
 function showProfile(){
   document.getElementById('login-s2').style.display='none';
   document.getElementById('login-s3').style.display='block';
   setStep(3);
   setTimeout(()=>document.getElementById('reg-name').focus(),300);
 }
- 
+
 function detectLocation(){
   const btn = document.getElementById('detect-btn');
   btn.textContent = '⏳';
@@ -2184,7 +2938,7 @@ function detectLocation(){
     btn.style.background = '#DBEAFE';
   }
 }
- 
+
 function finishReg(){
   const name     = document.getElementById('reg-name').value.trim();
   const waNum    = document.getElementById('reg-wa').value.trim();
@@ -2208,7 +2962,7 @@ function finishReg(){
     phone: selectedCC.code+' '+document.getElementById('phone-input').value,
     whatsapp: selectedWACC.code+' '+waNum
   });
- 
+
   document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=name);
   document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+location);
   // Update home greeting
@@ -2221,7 +2975,7 @@ function finishReg(){
   resetLogin();
   setTimeout(()=>go('home'),600);
 }
- 
+
 function resetLogin(){
   document.getElementById('login-s1').style.display='block';
   document.getElementById('login-s2').style.display='none';
@@ -2230,9 +2984,9 @@ function resetLogin(){
   document.querySelectorAll('.otp-input').forEach(i=>i.value='');
   setStep(1);
 }
- 
+
 function loginDone(){ finishReg(); }
- 
+
 // ══════════════════════════════════
 // MISC
 // ══════════════════════════════════
@@ -2241,14 +2995,14 @@ function setLang(el){
   el.classList.add('active');
   toast('🌍 Language: '+el.textContent);
 }
- 
+
 let _tt;
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2800);
 }
- 
+
 // ══════════════════════════════════
 // COUNTRY CODES (searchable)
 // ══════════════════════════════════
@@ -2344,12 +3098,12 @@ const COUNTRY_CODES = [
   {flag:'🇿🇲',name:'Zambia',code:'+260'},
   {flag:'🇿🇼',name:'Zimbabwe',code:'+263'},
 ];
- 
+
 let selectedCC = {flag:'🇦🇪', code:'+971'};
 let selectedWACC = {flag:'🇦🇪', code:'+971'};
 let ccDropOpen = false;
 let waCCDropOpen = false;
- 
+
 function renderCCList(listId, filterText, onSelect){
   const list = document.getElementById(listId);
   const q = (filterText||'').toLowerCase();
@@ -2363,7 +3117,7 @@ function renderCCList(listId, filterText, onSelect){
       <span style="font-size:13px;font-weight:800;color:#667EEA">${c.code}</span>
     </div>`).join('');
 }
- 
+
 function toggleCCDropdown(){
   const dd = document.getElementById('dd-cc');
   ccDropOpen = !ccDropOpen;
@@ -2390,7 +3144,7 @@ function selectCC(flag,code,name){
   document.removeEventListener('click',closeCCOnOutside);
   toast('✅ '+flag+' '+name+' selected');
 }
- 
+
 function toggleWACCDropdown(){
   const dd=document.getElementById('dd-wa-cc');
   waCCDropOpen=!waCCDropOpen;
@@ -2415,7 +3169,7 @@ function selectWACC(flag,code,name){
   waCCDropOpen=false;
   document.removeEventListener('click',closeWACCOnOutside);
 }
- 
+
 function copyLoginToWA(cb){
   if(cb.checked){
     const ph=document.getElementById('phone-input').value||'';
@@ -2432,7 +3186,7 @@ function copyLoginToWA(cb){
     document.getElementById('reg-wa').value='';
   }
 }
- 
+
 // ══════════════════════════════════
 // COUNTRY SEARCH DROPDOWN
 // ══════════════════════════════════
@@ -2477,7 +3231,7 @@ const COUNTRIES = [
   '🇺🇿 Uzbekistan','🇻🇺 Vanuatu','🇻🇪 Venezuela','🇻🇳 Vietnam','🇾🇪 Yemen',
   '🇿🇲 Zambia','🇿🇼 Zimbabwe'
 ];
- 
+
 function showDropdown(ddId, inputId){
   filterDropdown(ddId, inputId);
 }
@@ -2507,7 +3261,7 @@ function hideDropdown(ddId){
   const dd=document.getElementById(ddId);
   if(dd) dd.style.display='none';
 }
- 
+
 // ══════════════════════════════════
 // BUSINESS REGISTRATION & PRICING
 // ══════════════════════════════════
@@ -2545,9 +3299,9 @@ const PRICING_MAP = {
   'AZ':{name:'Azerbaijan',flag:'🇦🇿',sym:'USD',basic:'$30',premium:'$45',platinum:'$60'},
   'DEFAULT':{name:'International',flag:'🌍',sym:'USD',basic:'$20',premium:'$30',platinum:'$40'}
 };
- 
+
 let selectedPlanType = null;
- 
+
 async function detectCountryPricing(){
   let countryCode = 'DEFAULT';
   try{
@@ -2573,11 +3327,11 @@ async function detectCountryPricing(){
       }
     }catch(e2){}
   }
- 
+
   const pricing = PRICING_MAP[countryCode] || PRICING_MAP['DEFAULT'];
   applyPricing(pricing);
 }
- 
+
 function applyPricing(p){
   // Update location banner
   const banner = document.getElementById('reg-country-name');
@@ -2586,7 +3340,7 @@ function applyPricing(p){
   if(banner) banner.textContent = p.name;
   if(flag) flag.textContent = p.flag;
   if(sub) sub.textContent = 'Prices in local currency · '+p.name;
- 
+
   // Update plan prices
   const pb = document.getElementById('price-basic');
   const pp = document.getElementById('price-premium');
@@ -2594,7 +3348,7 @@ function applyPricing(p){
   if(pb) pb.textContent = p.basic;
   if(pp) pp.textContent = p.premium;
   if(ppl) ppl.textContent = p.platinum;
- 
+
   // Update compare tab
   const cb = document.getElementById('cmp-basic');
   const cp = document.getElementById('cmp-premium');
@@ -2602,11 +3356,11 @@ function applyPricing(p){
   if(cb) cb.textContent = p.basic;
   if(cp) cp.textContent = p.premium;
   if(cpl) cpl.textContent = p.platinum;
- 
+
   // Store for CTA
   window._currentPricing = p;
 }
- 
+
 function showRegTab(tab){
   document.getElementById('reg-tab-plans').style.display = tab==='plans' ? 'block' : 'none';
   document.getElementById('reg-tab-compare').style.display = tab==='compare' ? 'block' : 'none';
@@ -2615,26 +3369,26 @@ function showRegTab(tab){
   document.getElementById('tab-compare').style.background = tab==='compare' ? '#fff' : 'transparent';
   document.getElementById('tab-compare').style.color = tab==='compare' ? '#FF6B35' : '#6B7280';
 }
- 
+
 function selectPlan(plan){
   selectedPlanType = plan;
   const p = window._currentPricing || PRICING_MAP['DEFAULT'];
   const prices = {basic: p.basic, premium: p.premium, platinum: p.platinum};
   const icons = {basic:'🏪', premium:'⭐', platinum:'👑'};
   const names = {basic:'Basic Plan', premium:'Premium Plan', platinum:'Platinum Plan'};
- 
+
   // Update CTA
   document.getElementById('cta-icon').textContent = icons[plan];
   document.getElementById('cta-plan').textContent = names[plan];
   document.getElementById('cta-price').textContent = prices[plan]+'/year';
   document.getElementById('reg-cta').style.display = 'block';
- 
+
   // Highlight selected plan
   ['basic','premium','platinum'].forEach(p=>{
     const el = document.getElementById('plan-'+p);
     if(el) el.style.borderColor = p===plan ? '#34D399' : (p==='premium'?'#667EEA':'#E5E7EB');
   });
- 
+
   toast('✅ '+names[plan]+' selected!');
   // Scroll to CTA
   setTimeout(()=>{
@@ -2653,7 +3407,7 @@ function selectExp(el){
   });
   el.style.borderColor='#F59E0B';el.style.background='#FFFBEB';
 }
- 
+
 async function submitAgent(){
   const name    = document.getElementById('ag-name').value.trim();
   const country = document.getElementById('ag-country').value.trim();
@@ -2662,7 +3416,7 @@ async function submitAgent(){
   const agree   = document.getElementById('ag-agree').checked;
   if(!name||!country||!city||!phone){ toast('⚠️ Please fill all required fields'); return; }
   if(!agree){ toast('⚠️ Please agree to the terms first'); return; }
- 
+
   // Generate agent ID
   const agentId = 'HM' + Date.now().toString().slice(-5);
   const agentData = { name, country, city, phone,
@@ -2671,7 +3425,7 @@ async function submitAgent(){
     agentId, status:'active', probation:true, contracts:0,
     earned:0, pending:0, joinedAt: new Date().toISOString()
   };
- 
+
   // Save to Supabase
   sbInsert('agents',{
     name, country, city, phone,
@@ -2679,10 +3433,10 @@ async function submitAgent(){
     experience: agentData.experience,
     status:'active'
   });
- 
+
   // Save locally
   try{ localStorage.setItem('hm_agent', JSON.stringify(agentData)); }catch(e){}
- 
+
   // Show success then go to dashboard
   document.getElementById('agent-form-wrap').innerHTML=`
     <div style="text-align:center;padding:40px 20px;">
@@ -2709,12 +3463,12 @@ async function submitAgent(){
       </button>
     </div>`;
 }
- 
+
 function openAgentDashboard(){
   let agent = null;
   try{ agent = JSON.parse(localStorage.getItem('hm_agent')||'null'); }catch(e){}
   if(!agent){ toast('⚠️ Please complete your agent registration first'); go('agent'); return; }
- 
+
   // Populate dashboard
   document.getElementById('ag-dash-name').textContent = agent.name;
   document.getElementById('ag-qr-name').textContent = agent.name;
@@ -2724,7 +3478,7 @@ function openAgentDashboard(){
   document.getElementById('ag-stat-earned').textContent = '$'+(agent.earned||0);
   document.getElementById('ag-stat-pending').textContent = '$'+(agent.pending||0);
   document.getElementById('ag-biz-count').textContent = (agent.contracts||0)+' signed';
- 
+
   // Probation status
   if(agent.probation && (agent.contracts||0) < 3){
     document.getElementById('ag-probation-badge').style.display='block';
@@ -2736,13 +3490,13 @@ function openAgentDashboard(){
   } else {
     document.getElementById('ag-dash-status').textContent = '🟢 Fully Active Agent';
   }
- 
+
   // Draw QR code (simple visual representation)
   drawQR(agent.agentId);
- 
+
   go('agent-dashboard');
 }
- 
+
 function drawQR(agentId){
   const canvas = document.getElementById('qr-canvas');
   if(!canvas) return;
@@ -2750,7 +3504,7 @@ function drawQR(agentId){
   const size = 140;
   ctx.fillStyle = '#fff';
   ctx.fillRect(0,0,size,size);
- 
+
   // Draw a visual QR-like pattern (decorative — real QR needs a library)
   ctx.fillStyle = '#1A1A2E';
   const cell = 10;
@@ -2782,7 +3536,7 @@ function drawQR(agentId){
   ctx.textBaseline='middle';
   ctx.fillText('HM',70,70);
 }
- 
+
 function checkAgentStatus(){
   try{
     const agent = JSON.parse(localStorage.getItem('hm_agent')||'null');
@@ -2790,14 +3544,14 @@ function checkAgentStatus(){
   }catch(e){}
   return null;
 }
- 
+
 function logOut(){
   try{ localStorage.removeItem('hm_user'); }catch(e){}
   deleteCookie('hm_user');
   toast('👋 Logged out successfully');
   setTimeout(()=>{ resetLogin(); go('splash'); },600);
 }
- 
+
 // ══════════════════════════════════
 // PERSISTENT STORAGE — cookies + localStorage
 // ══════════════════════════════════
@@ -2839,17 +3593,22 @@ function loadUser(){
   }catch(e){}
   return null;
 }
- 
+
 // Offline detection
 window.addEventListener('online',()=>document.getElementById('offline-bar').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offline-bar').classList.add('show'));
 if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show');
- 
+
 // ── CHECK IF ALREADY LOGGED IN ──
 (function(){
   try{
     const user = loadUser();
-    if(user && user.loggedIn){
+    // Render default SOS panel immediately, then update with real numbers
+  renderSOSPanel();
+  detectEmergencyNumbers();
+  loadFeaturedSuppliers();
+
+  if(user && user.loggedIn){
       document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=user.name);
       document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+(user.location||user.country||''));
       const greet=document.querySelector('.home-greet');
