@@ -1532,7 +1532,7 @@ function supplierCardHTML(s){
     <div class="act-row">
       <a class="act-btn ab-wa" href="https://wa.me/${wa}" target="_blank"><span class="bi">💬</span>WhatsApp</a>
       <a class="act-btn ab-call" href="tel:${phone}"><span class="bi">📞</span>Call</a>
-      <button class="act-btn ab-map" onclick="openMaps('${address}','${s.latitude||''}','${s.longitude||''}')" ><span class="bi">📍</span>Maps</button>
+      <button class="act-btn ab-map" data-addr="${address}" data-lat="${s.latitude||''}" data-lng="${s.longitude||''}" onclick="openMaps(this.dataset.addr,this.dataset.lat,this.dataset.lng)"><span class="bi">📍</span>Maps</button>
       <button class="act-btn ab-info" onclick="openDetailById('${sid}')"><span class="bi">ℹ️</span>Info</button>
     </div>
   </div>`;}
@@ -1723,7 +1723,7 @@ function renderFavs(){
   }
   list.innerHTML=favs.map(s=>`
     <div class="fav-card">
-      <button class="fav-remove" onclick="removeFav('${s.name}')">✕</button>
+      <button class="fav-remove" data-name="${s.name}" onclick="removeFav(this.dataset.name)">✕</button>
       <div class="sup-top" style="padding-right:36px;cursor:pointer" onclick="openDetail(getSup(${s.id}))">
         <div class="sup-avatar" style="background:${s.color}">${s.emoji}</div>
         <div style="flex:1">
@@ -1739,8 +1739,8 @@ function renderFavs(){
       <div class="sup-loc">📍 ${s.location}</div>
       <div class="act-row">
         <a class="act-btn ab-wa" href="https://wa.me/${(s.whatsapp||s.phone||'').replace(/[\s+]/g,'')}" target="_blank"><span class="bi">💬</span>WhatsApp</a>
-        <a class="act-btn ab-call" href="tel:${(s.phone||'').replace(/\s/g,'')}"><span class="bi">📞</span>Call</a>
-        <button class="act-btn ab-map" onclick="openMaps('${(s.address||s.location||'').replace(/'/g,'').replace(/"/g,'')}','${s.latitude||''}','${s.longitude||''}')"><span class="bi">📍</span>Maps</button>
+        <a class="act-btn ab-call" href="tel:${(s.phone||'').replace(/ /g,'')}"><span class="bi">📞</span>Call</a>
+        <button class="act-btn ab-map" data-addr="${(s.address||s.location||'')}" data-lat="${s.latitude||''}" data-lng="${s.longitude||''}" onclick="openMaps(this.dataset.addr,this.dataset.lat,this.dataset.lng)"><span class="bi">📍</span>Maps</button>
         <button class="act-btn ab-info" onclick="openDetailFromFav(${s.id})"><span class="bi">ℹ️</span>Info</button>
       </div>
       <div class="fav-note-lbl">📝 My note</div>
@@ -2184,13 +2184,15 @@ function filterDropdown(ddId, inputId){
   const filtered=q.length===0 ? COUNTRIES : COUNTRIES.filter(c=>c.toLowerCase().includes(q));
   if(!filtered.length){ dd.style.display='none'; return; }
   dd.style.display='block';
-  dd.innerHTML=filtered.slice(0,40).map(c=>`
-    <div onclick="selectCountry('${inputId}','${ddId}',\`${c}\`)"
-      style="padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;
-      border-bottom:1px solid #F3F4F6;"
-      onmouseover="this.style.background='#F9F7F4'"
-      onmouseout="this.style.background='#fff'">${c}</div>
-  `).join('');
+  dd.innerHTML=filtered.slice(0,40).map(c=>{
+    const d = document.createElement('div');
+    d.style.cssText = 'padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;border-bottom:1px solid #F3F4F6;';
+    d.textContent = c;
+    d.onmouseover = ()=>d.style.background='#F9F7F4';
+    d.onmouseout = ()=>d.style.background='#fff';
+    d.onclick = ()=>selectCountry(inputId, ddId, c);
+    return d.outerHTML;
+  }).join('');
 }
 function selectCountry(inputId, ddId, value){
   document.getElementById(inputId).value=value;
@@ -2352,25 +2354,6 @@ function checkAgentStatus(){
     if(agent) return agent;
   }catch(e){}
   return null;
-}
-    <div style="text-align:center;padding:40px 20px;">
-      <div style="font-size:72px;margin-bottom:20px;">🎉</div>
-      <div style="font-size:22px;font-weight:900;margin-bottom:10px;">Application Submitted!</div>
-      <div style="font-size:15px;font-weight:600;color:#6B7280;margin-bottom:28px;line-height:1.6;">
-        Thank you, <strong style="color:#1A1A2E">${name}</strong>!<br>
-        We'll review your application and contact you on WhatsApp within <strong>48 hours</strong>.
-      </div>
-      <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:16px;padding:18px;margin-bottom:24px;text-align:left;">
-        <div style="font-size:12px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">What happens next</div>
-        <div style="display:flex;flex-direction:column;gap:9px;">
-          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>📋</span><span>Our team reviews your application</span></div>
-          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>💬</span><span>We contact you on WhatsApp to discuss terms</span></div>
-          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>🔑</span><span>You receive your unique agent link & dashboard</span></div>
-          <div style="display:flex;gap:10px;font-size:13px;font-weight:600;color:#92400E;"><span>💰</span><span>Start signing businesses & earning commissions</span></div>
-        </div>
-      </div>
-      <button class="main-btn" style="background:linear-gradient(135deg,#F59E0B,#D97706)" onclick="go('home')">Back to Home 🏠</button>
-    </div>`;
 }
  
 function logOut(){
