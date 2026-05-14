@@ -1507,10 +1507,14 @@ function supplierCardHTML(s){
   const color = s.color || '#FFE4E6';
   const emoji = s.emoji || '🏪';
   const location = s.location || '';
-  const address = s.address || location;
+  const address = (s.address || location).replace(/'/g,'').replace(/"/g,'');
+  const sid = s.id || Math.random();
+  // Store supplier in window cache for safe access
+  window._supCache = window._supCache || {};
+  window._supCache[sid] = s;
   return `
   <div class="sup-card">
-    <div class="sup-top" onclick="openDetail(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+    <div class="sup-top" onclick="openDetailById('${sid}')">
       <div class="sup-avatar" style="background:${color}">${emoji}</div>
       <div style="flex:1">
         <div class="sup-name">${s.name}</div>
@@ -1523,15 +1527,24 @@ function supplierCardHTML(s){
       </div>
       <div class="open-badge ${open?'open':'closed'}">${open?'Open':'Closed'}</div>
     </div>
-    <button class="heart-btn" id="hb-${s.id}" onclick="event.stopPropagation();toggleFavObj(${JSON.stringify(s).replace(/"/g,'&quot;')},this)">${fav?'❤️':'🤍'}</button>
+    <button class="heart-btn" id="hb-${sid}" onclick="event.stopPropagation();toggleFavById('${sid}',this)">${fav?'❤️':'🤍'}</button>
     <div class="sup-loc">📍 ${location}</div>
     <div class="act-row">
       <a class="act-btn ab-wa" href="https://wa.me/${wa}" target="_blank"><span class="bi">💬</span>WhatsApp</a>
       <a class="act-btn ab-call" href="tel:${phone}"><span class="bi">📞</span>Call</a>
-      <button class="act-btn ab-map" onclick="openMaps('${address}',${s.latitude||''},${s.longitude||''})"><span class="bi">📍</span>Maps</button>
-      <button class="act-btn ab-info" onclick="openDetail(${JSON.stringify(s).replace(/"/g,'&quot;')})"><span class="bi">ℹ️</span>Info</button>
+      <button class="act-btn ab-map" onclick="openMaps('${address}','${s.latitude||''}','${s.longitude||''}')" ><span class="bi">📍</span>Maps</button>
+      <button class="act-btn ab-info" onclick="openDetailById('${sid}')"><span class="bi">ℹ️</span>Info</button>
     </div>
   </div>`;}
+ 
+function openDetailById(sid){
+  const s = (window._supCache||{})[sid] || getSup(sid);
+  if(s) openDetail(s);
+}
+function toggleFavById(sid, btn){
+  const s = (window._supCache||{})[sid] || getSup(sid);
+  if(s) toggleFavObj(s, btn);
+}
  
 function toggleFavObj(s, btn){
   let favs = getFavs();
@@ -1585,7 +1598,7 @@ function openDetail(s){
       <div class="det-acts">
         <a class="det-act ab-wa" href="https://wa.me/${getWA(s)}" target="_blank"><span class="di">💬</span>WhatsApp</a>
         <a class="det-act ab-call" href="tel:${getPhone(s)}"><span class="di">📞</span>Call</a>
-        <button class="det-act ab-map" onclick="openMaps('${s.address||s.location||''}',${s.latitude||''},${s.longitude||''})"><span class="di">📍</span>Maps</button>
+        <button class="det-act ab-map" onclick="openMaps(this.dataset.addr,this.dataset.lat,this.dataset.lng)" data-addr="${(s.address||s.location||'').replace(/"/g,'')}" data-lat="${s.latitude||''}" data-lng="${s.longitude||''}"><span class="di">📍</span>Maps</button>
         <button class="det-act ab-info" onclick="toast('🌐 Website coming soon!')"><span class="di">🌐</span>Website</button>
       </div>
  
