@@ -1738,17 +1738,29 @@ function renderFavs(){
       </div>
       <div class="sup-loc">📍 ${s.location}</div>
       <div class="act-row">
-        <button class="act-btn ab-wa" onclick="toast('💬 WhatsApp: ${s.name.replace(/'/g,"\\'")}')"><span class="bi">💬</span>WhatsApp</button>
-        <button class="act-btn ab-call" onclick="toast('📞 Calling ${s.phone}')"><span class="bi">📞</span>Call</button>
-        <button class="act-btn ab-map" onclick="openMaps('${s.address}')"><span class="bi">📍</span>Maps</button>
-        <button class="act-btn ab-info" onclick="openDetail(getSup(${s.id}))"><span class="bi">ℹ️</span>Info</button>
+        <a class="act-btn ab-wa" href="https://wa.me/${(s.whatsapp||s.phone||'').replace(/[\s+]/g,'')}" target="_blank"><span class="bi">💬</span>WhatsApp</a>
+        <a class="act-btn ab-call" href="tel:${(s.phone||'').replace(/\s/g,'')}"><span class="bi">📞</span>Call</a>
+        <button class="act-btn ab-map" onclick="openMaps('${(s.address||s.location||'').replace(/'/g,'').replace(/"/g,'')}','${s.latitude||''}','${s.longitude||''}')"><span class="bi">📍</span>Maps</button>
+        <button class="act-btn ab-info" onclick="openDetailFromFav(${s.id})"><span class="bi">ℹ️</span>Info</button>
       </div>
       <div class="fav-note-lbl">📝 My note</div>
       <textarea class="fav-note-input" rows="2"
-        placeholder="e.g. 'Ask for Dr. Sara', 'Use entrance B'..."
-        onchange="updateNote('${s.name}',this.value)">${s.note||''}</textarea>
+        placeholder="e.g. Ask for Dr. Sara, Use entrance B..."
+        onchange="updateNoteById(${s.id},this.value)">${s.note||''}</textarea>
       <div class="fav-saved-lbl">✅ Saved offline · ${new Date(s.savedAt).toLocaleDateString()}</div>
     </div>`).join('');
+}
+ 
+function openDetailFromFav(id){
+  const favs = getFavs();
+  const s = favs.find(f=>f.id==id) || getSup(id);
+  if(s) openDetail(s);
+}
+ 
+function updateNoteById(id, val){
+  const favs = getFavs();
+  const f = favs.find(f=>f.id==id);
+  if(f){ f.note=val; setFavs(favs); }
 }
  
 // ══════════════════════════════════
