@@ -2313,13 +2313,12 @@ function drawQR(agentId){
   });
   // Center logo
   ctx.fillStyle='#FF6B35';
-  ctx.beginPath();
-  ctx.roundRect(55,55,30,30,6);
-  ctx.fill();
+  ctx.fillRect(52,52,36,36);
   ctx.fillStyle='#fff';
-  ctx.font='bold 14px Arial';
+  ctx.font='bold 13px Arial';
   ctx.textAlign='center';
-  ctx.fillText('HM',70,74);
+  ctx.textBaseline='middle';
+  ctx.fillText('HM',70,70);
 }
  
 function checkAgentStatus(){
@@ -2409,23 +2408,27 @@ if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show
     const user = loadUser();
     if(user && user.loggedIn){
       document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=user.name);
-      document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+(user.location||user.country));
+      document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+(user.location||user.country||''));
       const greet=document.querySelector('.home-greet');
       if(greet) greet.textContent='Welcome back, '+user.name+' 👋';
       const locName=document.querySelector('.loc-name');
       if(locName && user.location) locName.textContent=user.location;
-      // Check if already an agent
-      const agent = checkAgentStatus();
-      if(agent){
-        const sub = document.getElementById('agent-menu-sub');
-        if(sub) sub.textContent = '🟢 Active Agent · ID: '+agent.agentId;
-      }
+      try{
+        const agent = checkAgentStatus();
+        if(agent){
+          const sub = document.getElementById('agent-menu-sub');
+          if(sub) sub.textContent = '🟢 Active Agent · ID: '+agent.agentId;
+        }
+      }catch(e){ console.log('agent check skipped',e); }
       go('home');
     } else {
       go('splash');
     }
-  }catch(e){ go('splash'); }
-  setStep(1);
+  }catch(e){
+    console.log('login check error',e);
+    go('splash');
+  }
+  try{ setStep(1); }catch(e){}
 })();
 </script>
 </body>
