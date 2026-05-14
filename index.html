@@ -1,6 +1,3 @@
-
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -881,9 +878,9 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div><div class="pmi-ttl">Register a Business</div><div class="pmi-sub">List your services on Help-Me</div></div>
       <div class="pmi-arr">›</div>
     </div>
-    <div class="pmi" onclick="go('agent')">
+    <div class="pmi" onclick="checkAgentStatus() ? openAgentDashboard() : go('agent')">
       <div class="pmi-ic" style="background:#FEF3C7">🤝</div>
-      <div><div class="pmi-ttl">Become an Agent</div><div class="pmi-sub">Earn recurring commissions worldwide</div></div>
+      <div><div class="pmi-ttl">Become an Agent</div><div class="pmi-sub" id="agent-menu-sub">Earn recurring commissions worldwide</div></div>
       <div class="pmi-arr">›</div>
     </div>
     <div class="prof-sec-ttl">Support</div>
@@ -988,7 +985,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="back-btn" onclick="go('register')">← Back</div>
     <div class="screen-hdr-txt">
       <div class="stitle">Become an Agent</div>
-      <div class="ssub">Free to join · Earn recurring commissions</div>
+      <div class="ssub">Instant approval · Start earning today</div>
     </div>
   </div>
   <div class="reg-scroll" id="agent-form-wrap">
@@ -1113,10 +1110,166 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <!-- SUBMIT -->
     <button class="main-btn" onclick="submitAgent()"
       style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-bottom:10px;">
-      🤝 Submit Application
+      🚀 Join Now — It's Free
     </button>
     <button class="main-btn btn-ghost" onclick="go('register')">Cancel</button>
  
+  </div>
+</div>
+ 
+<!-- ════════════════════════════════
+     AGENT DASHBOARD
+════════════════════════════════ -->
+<div class="screen" id="agent-dashboard">
+  <div style="background:linear-gradient(135deg,#F59E0B,#D97706);padding:50px 20px 28px;border-radius:0 0 28px 28px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+      <div style="width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;" id="ag-dash-avatar">👤</div>
+      <div>
+        <div style="color:#fff;font-weight:900;font-size:18px;" id="ag-dash-name">Agent Name</div>
+        <div style="color:rgba(255,255,255,.8);font-size:13px;font-weight:600;" id="ag-dash-status">🟢 Active Agent</div>
+      </div>
+      <div id="ag-probation-badge" style="display:none;margin-left:auto;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);padding:5px 10px;border-radius:10px;">
+        <div style="color:#fff;font-size:10px;font-weight:800;text-align:center;">PROBATION</div>
+        <div style="color:rgba(255,255,255,.9);font-size:11px;font-weight:700;text-align:center;" id="ag-prob-count">1/3 done</div>
+      </div>
+    </div>
+ 
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div style="background:rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;">
+        <div style="color:#fff;font-weight:900;font-size:22px;" id="ag-stat-contracts">0</div>
+        <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;">Businesses\nSigned</div>
+      </div>
+      <div style="background:rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;">
+        <div style="color:#fff;font-weight:900;font-size:22px;" id="ag-stat-earned">$0</div>
+        <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;">Total\nEarned</div>
+      </div>
+      <div style="background:rgba(255,255,255,.15);border-radius:14px;padding:12px;text-align:center;">
+        <div style="color:#fff;font-weight:900;font-size:22px;" id="ag-stat-pending">$0</div>
+        <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;">Pending\nRelease</div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="scroll" style="padding:20px;">
+ 
+    <!-- Probation notice -->
+    <div id="ag-probation-notice" style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:16px;padding:16px;margin-bottom:20px;display:none;">
+      <div style="font-weight:800;font-size:14px;color:#92400E;margin-bottom:6px;">⏳ Probation Period</div>
+      <div style="font-size:13px;font-weight:600;color:#92400E;line-height:1.5;">Your first 3 business sign-ups are being spot-checked by our team before commissions are released. This usually takes 24-48 hours per contract. After 3 clean contracts you go fully active with instant commission tracking.</div>
+      <div style="margin-top:10px;background:#FEEBC8;border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;">
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:800;color:#92400E;margin-bottom:4px;">PROBATION PROGRESS</div>
+          <div style="background:#FED7AA;border-radius:6px;height:8px;overflow:hidden;">
+            <div id="ag-prob-bar" style="background:#D97706;height:100%;width:0%;border-radius:6px;transition:width .5s;"></div>
+          </div>
+        </div>
+        <div style="font-weight:900;font-size:16px;color:#D97706;" id="ag-prob-text">0 / 3</div>
+      </div>
+    </div>
+ 
+    <!-- QR Code section -->
+    <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
+      <div style="font-weight:800;font-size:16px;margin-bottom:4px;">📱 Your Agent QR Code</div>
+      <div style="font-size:13px;color:#6B7280;font-weight:600;margin-bottom:16px;">Show this to business owners — they scan it and your name appears on their screen</div>
+ 
+      <!-- QR Code display -->
+      <div style="background:#F9F7F4;border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;">
+        <div id="ag-qr-code" style="width:160px;height:160px;background:#fff;border-radius:12px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.1);padding:10px;">
+          <!-- QR code rendered here -->
+          <canvas id="qr-canvas" width="140" height="140"></canvas>
+        </div>
+        <div style="font-weight:800;font-size:14px;margin-bottom:2px;" id="ag-qr-name">Ahmed Al-Mansoori</div>
+        <div style="font-size:12px;color:#6B7280;font-weight:600;">Help-Me Agent · ID: <span id="ag-qr-id">HM-00001</span></div>
+      </div>
+ 
+      <!-- Agent link -->
+      <div style="background:#F0FDF4;border:2px solid #BBF7D0;border-radius:12px;padding:12px;margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:800;color:#065F46;margin-bottom:4px;">🔗 YOUR AGENT LINK</div>
+        <div style="font-size:13px;font-weight:700;color:#065F46;word-break:break-all;" id="ag-link">helpmeapp.io/join?agent=HM00001</div>
+      </div>
+ 
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button class="main-btn" style="background:#25D366;font-size:13px;padding:12px;" onclick="toast('💬 Sharing via WhatsApp...')">
+          💬 Share via WhatsApp
+        </button>
+        <button class="main-btn btn-ghost" style="font-size:13px;padding:12px;" onclick="toast('📋 Link copied!')">
+          📋 Copy Link
+        </button>
+      </div>
+    </div>
+ 
+    <!-- How the QR works -->
+    <div style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:16px;padding:16px;margin-bottom:16px;">
+      <div style="font-weight:800;font-size:14px;color:#1E40AF;margin-bottom:10px;">💡 How to use your QR code</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">1</div>
+          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">Visit the business and introduce Help-Me</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">2</div>
+          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">Show them your QR code — they scan it on their phone</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">3</div>
+          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">Your name & photo appear on their screen — they fill their own details</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">4</div>
+          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">They pay online — your commission is tracked automatically</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:24px;height:24px;background:#059669;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">💰</div>
+          <div style="font-size:13px;font-weight:600;color:#065F46;">You earn every year they renew — forever</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- My businesses -->
+    <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="font-weight:800;font-size:16px;">🏪 My Businesses</div>
+        <div style="font-size:12px;font-weight:700;color:#F59E0B;" id="ag-biz-count">0 signed</div>
+      </div>
+      <div id="ag-biz-list">
+        <div style="text-align:center;padding:24px;color:#9CA3AF;">
+          <div style="font-size:36px;margin-bottom:8px;">🏪</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">No businesses yet</div>
+          <div style="font-size:12px;font-weight:600;">Start signing businesses using your QR code above</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Renewal reminders -->
+    <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px;">
+      <div style="font-weight:800;font-size:16px;margin-bottom:4px;">🔔 Renewal Reminders</div>
+      <div style="font-size:13px;color:#6B7280;font-weight:600;margin-bottom:14px;">Businesses coming up for renewal — a quick WhatsApp from you dramatically increases renewal rates and your earnings</div>
+      <div id="ag-renewals">
+        <div style="background:#F0FDF4;border:2px solid #BBF7D0;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+          <div style="font-size:24px;">✅</div>
+          <div style="font-size:13px;font-weight:600;color:#065F46;">No renewals due in the next 30 days</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Commission history -->
+    <div style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:80px;">
+      <div style="font-weight:800;font-size:16px;margin-bottom:14px;">💰 Commission History</div>
+      <div id="ag-commissions">
+        <div style="text-align:center;padding:20px;color:#9CA3AF;">
+          <div style="font-size:13px;font-weight:600;">Commissions will appear here once your first contract is verified</div>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <div class="bnav">
+    <div class="bni" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
+    <div class="bni active"><div class="ic">🤝</div><span>Agent</span></div>
+    <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
+    <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
 </div>
  
@@ -2025,7 +2178,7 @@ function hideDropdown(ddId){
 }
  
 // ══════════════════════════════════
-// AGENT FORM
+// AGENT FORM & DASHBOARD
 // ══════════════════════════════════
 function copyPhone(){
   const ph=document.getElementById('ag-phone').value;
@@ -2038,24 +2191,144 @@ function selectExp(el){
   });
   el.style.borderColor='#F59E0B';el.style.background='#FFFBEB';
 }
-function submitAgent(){
-  const name=document.getElementById('ag-name').value.trim();
-  const country=document.getElementById('ag-country').value.trim();
-  const city=document.getElementById('ag-city').value.trim();
-  const phone=document.getElementById('ag-phone').value.trim();
-  const agree=document.getElementById('ag-agree').checked;
-  if(!name||!country||!city||!phone){toast('⚠️ Please fill all required fields');return;}
-  if(!agree){toast('⚠️ Please agree to the terms first');return;}
+ 
+async function submitAgent(){
+  const name    = document.getElementById('ag-name').value.trim();
+  const country = document.getElementById('ag-country').value.trim();
+  const city    = document.getElementById('ag-city').value.trim();
+  const phone   = document.getElementById('ag-phone').value.trim();
+  const agree   = document.getElementById('ag-agree').checked;
+  if(!name||!country||!city||!phone){ toast('⚠️ Please fill all required fields'); return; }
+  if(!agree){ toast('⚠️ Please agree to the terms first'); return; }
+ 
+  // Generate agent ID
+  const agentId = 'HM' + Date.now().toString().slice(-5);
+  const agentData = { name, country, city, phone,
+    whatsapp: document.getElementById('ag-wa').value.trim()||phone,
+    experience: document.getElementById('ag-exp').value.trim(),
+    agentId, status:'active', probation:true, contracts:0,
+    earned:0, pending:0, joinedAt: new Date().toISOString()
+  };
  
   // Save to Supabase
   sbInsert('agents',{
     name, country, city, phone,
-    whatsapp: document.getElementById('ag-wa').value.trim(),
-    experience: document.getElementById('ag-exp').value.trim(),
-    status: 'pending'
+    whatsapp: agentData.whatsapp,
+    experience: agentData.experience,
+    status:'active'
   });
  
+  // Save locally
+  try{ localStorage.setItem('hm_agent', JSON.stringify(agentData)); }catch(e){}
+ 
+  // Show success then go to dashboard
   document.getElementById('agent-form-wrap').innerHTML=`
+    <div style="text-align:center;padding:40px 20px;">
+      <div style="font-size:72px;margin-bottom:16px;animation:popIn .5s ease;">🎉</div>
+      <div style="font-size:22px;font-weight:900;margin-bottom:8px;">Welcome to Help-Me!</div>
+      <div style="font-size:15px;font-weight:600;color:#6B7280;margin-bottom:6px;">
+        You're now an official Help-Me Agent, <strong style="color:#1A1A2E">${name}</strong>
+      </div>
+      <div style="background:#D1FAE5;border-radius:14px;padding:14px;margin:20px 0;text-align:left;">
+        <div style="font-weight:800;font-size:14px;color:#065F46;margin-bottom:8px;">✅ Auto-approved instantly</div>
+        <div style="font-size:13px;font-weight:600;color:#065F46;line-height:1.6;">
+          Your first 3 contracts will be spot-checked by our team before commissions are released — 
+          this protects you and the businesses you sign. After 3 clean contracts you go fully active 
+          with instant commission tracking.
+        </div>
+      </div>
+      <div style="background:#FEF3C7;border-radius:14px;padding:14px;margin-bottom:20px;text-align:left;">
+        <div style="font-weight:800;font-size:13px;color:#92400E;margin-bottom:4px;">🆔 Your Agent ID</div>
+        <div style="font-size:22px;font-weight:900;color:#D97706;">${agentId}</div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-bottom:10px;"
+        onclick="openAgentDashboard()">
+        📊 Open My Dashboard →
+      </button>
+    </div>`;
+}
+ 
+function openAgentDashboard(){
+  let agent = null;
+  try{ agent = JSON.parse(localStorage.getItem('hm_agent')||'null'); }catch(e){}
+  if(!agent){ toast('⚠️ Please complete your agent registration first'); go('agent'); return; }
+ 
+  // Populate dashboard
+  document.getElementById('ag-dash-name').textContent = agent.name;
+  document.getElementById('ag-qr-name').textContent = agent.name;
+  document.getElementById('ag-qr-id').textContent = agent.agentId;
+  document.getElementById('ag-link').textContent = `helpmeapp.io/join?agent=${agent.agentId}`;
+  document.getElementById('ag-stat-contracts').textContent = agent.contracts||0;
+  document.getElementById('ag-stat-earned').textContent = '$'+(agent.earned||0);
+  document.getElementById('ag-stat-pending').textContent = '$'+(agent.pending||0);
+  document.getElementById('ag-biz-count').textContent = (agent.contracts||0)+' signed';
+ 
+  // Probation status
+  if(agent.probation && (agent.contracts||0) < 3){
+    document.getElementById('ag-probation-badge').style.display='block';
+    document.getElementById('ag-prob-count').textContent = (agent.contracts||0)+'/3 done';
+    document.getElementById('ag-probation-notice').style.display='block';
+    document.getElementById('ag-prob-text').textContent = (agent.contracts||0)+' / 3';
+    document.getElementById('ag-prob-bar').style.width = (((agent.contracts||0)/3)*100)+'%';
+    document.getElementById('ag-dash-status').textContent = '⏳ Probation — '+(agent.contracts||0)+'/3 contracts';
+  } else {
+    document.getElementById('ag-dash-status').textContent = '🟢 Fully Active Agent';
+  }
+ 
+  // Draw QR code (simple visual representation)
+  drawQR(agent.agentId);
+ 
+  go('agent-dashboard');
+}
+ 
+function drawQR(agentId){
+  const canvas = document.getElementById('qr-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const size = 140;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0,0,size,size);
+ 
+  // Draw a visual QR-like pattern (decorative — real QR needs a library)
+  ctx.fillStyle = '#1A1A2E';
+  const cell = 10;
+  // Seed pattern from agentId
+  const seed = agentId.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  for(let r=0;r<14;r++){
+    for(let c=0;c<14;c++){
+      const val = ((seed * (r+1) * (c+1)) % 7);
+      if(val < 3){
+        ctx.fillRect(c*cell, r*cell, cell-1, cell-1);
+      }
+    }
+  }
+  // Corner squares (QR markers)
+  [[0,0],[0,90],[90,0]].forEach(([x,y])=>{
+    ctx.fillStyle='#1A1A2E';
+    ctx.fillRect(x,y,40,40);
+    ctx.fillStyle='#fff';
+    ctx.fillRect(x+5,y+5,30,30);
+    ctx.fillStyle='#1A1A2E';
+    ctx.fillRect(x+10,y+10,20,20);
+  });
+  // Center logo
+  ctx.fillStyle='#FF6B35';
+  ctx.beginPath();
+  ctx.roundRect(55,55,30,30,6);
+  ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.font='bold 14px Arial';
+  ctx.textAlign='center';
+  ctx.fillText('HM',70,74);
+}
+ 
+function checkAgentStatus(){
+  try{
+    const agent = JSON.parse(localStorage.getItem('hm_agent')||'null');
+    if(agent) return agent;
+  }catch(e){}
+  return null;
+}
     <div style="text-align:center;padding:40px 20px;">
       <div style="font-size:72px;margin-bottom:20px;">🎉</div>
       <div style="font-size:22px;font-weight:900;margin-bottom:10px;">Application Submitted!</div>
@@ -2141,6 +2414,12 @@ if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show
       if(greet) greet.textContent='Welcome back, '+user.name+' 👋';
       const locName=document.querySelector('.loc-name');
       if(locName && user.location) locName.textContent=user.location;
+      // Check if already an agent
+      const agent = checkAgentStatus();
+      if(agent){
+        const sub = document.getElementById('agent-menu-sub');
+        if(sub) sub.textContent = '🟢 Active Agent · ID: '+agent.agentId;
+      }
       go('home');
     } else {
       go('splash');
