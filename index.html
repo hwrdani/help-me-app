@@ -916,61 +916,218 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="back-btn" onclick="go('home')">← Back</div>
     <div class="screen-hdr-txt">
       <div class="stitle">Register Your Business</div>
-      <div class="ssub">Join providers on Help-Me worldwide</div>
+      <div class="ssub" id="reg-location-sub">Detecting your location...</div>
     </div>
   </div>
   <div class="reg-scroll">
-    <div class="price-box">
-      <div class="pb-ic">🏪</div>
-      <div class="pb-t">Annual Listing Fee</div>
-      <div class="pb-p">$99 <span style="font-size:16px;opacity:.8">/year</span></div>
-      <div class="pb-s">Reach customers worldwide · Unlimited updates</div>
+ 
+    <!-- LOCATION DETECTED BANNER -->
+    <div id="reg-location-banner" style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:16px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:22px;">📍</span>
+      <div>
+        <div style="font-weight:800;font-size:14px;color:#1E40AF;" id="reg-country-name">Detecting location...</div>
+        <div style="font-size:12px;font-weight:600;color:#3B82F6;">Prices shown in your local currency</div>
+      </div>
+      <div style="margin-left:auto;font-size:20px;" id="reg-country-flag">🌍</div>
     </div>
-    <div class="feat-item"><span class="fi-ic">✅</span><div><div class="fi-t">Verified Listing</div><div class="fi-s">Get the verified badge</div></div></div>
-    <div class="feat-item"><span class="fi-ic">🌍</span><div><div class="fi-t">Global Visibility</div><div class="fi-s">Seen by Middle East travelers worldwide</div></div></div>
-    <div class="feat-item"><span class="fi-ic">⭐</span><div><div class="fi-t">Ratings &amp; Reviews</div><div class="fi-s">Build trust with verified reviews</div></div></div>
-    <div class="feat-item"><span class="fi-ic">📊</span><div><div class="fi-t">Business Dashboard</div><div class="fi-s">Manage profile &amp; track views</div></div></div>
-    <div style="margin-top:20px">
-      <button class="main-btn btn-purple" style="margin-bottom:10px" onclick="toast('📝 Full registration form coming in Stage 3!')">📝 Start Registration</button>
-      <button class="main-btn btn-ghost" onclick="go('home')">Maybe Later</button>
+ 
+    <!-- PLAN TOGGLE -->
+    <div style="display:flex;gap:4px;background:#F0F4F8;padding:4px;border-radius:14px;margin-bottom:20px;">
+      <button id="tab-plans" onclick="showRegTab('plans')" style="flex:1;padding:10px;border:none;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;background:#fff;color:#FF6B35;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+        💰 Choose Plan
+      </button>
+      <button id="tab-compare" onclick="showRegTab('compare')" style="flex:1;padding:10px;border:none;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;background:transparent;color:#6B7280;">
+        📊 Compare
+      </button>
+    </div>
+ 
+    <!-- PLANS TAB -->
+    <div id="reg-tab-plans">
+ 
+      <!-- BASIC PLAN -->
+      <div id="plan-basic" style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:14px;border:2px solid #E5E7EB;cursor:pointer;transition:border-color .2s;" onclick="selectPlan('basic')">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-weight:900;font-size:18px;margin-bottom:2px;">Basic</div>
+            <div style="font-size:12px;font-weight:600;color:#6B7280;">Perfect to get started</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900;font-size:28px;color:#FF6B35;" id="price-basic">--</div>
+            <div style="font-size:11px;color:#6B7280;font-weight:600;">/year</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 1 Category</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 3 Subcategories</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 3 Photos</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> WhatsApp · Call · Maps buttons</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> Ratings & Reviews</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#9CA3AF;"><span style="font-size:16px;">✗</span> Analytics Dashboard</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#9CA3AF;"><span style="font-size:16px;">✗</span> Priority in Search</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#9CA3AF;"><span style="font-size:16px;">✗</span> Website & Social Links</div>
+        </div>
+        <button onclick="selectPlan('basic')" style="width:100%;margin-top:16px;padding:13px;background:#F9F7F4;color:#FF6B35;border:2px solid #FF6B35;border-radius:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;" id="btn-basic">
+          Select Basic
+        </button>
+      </div>
+ 
+      <!-- PREMIUM PLAN -->
+      <div id="plan-premium" style="background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:14px;border:2px solid #667EEA;cursor:pointer;position:relative;" onclick="selectPlan('premium')">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#667EEA;color:#fff;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:800;">MOST POPULAR</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-weight:900;font-size:18px;margin-bottom:2px;">Premium</div>
+            <div style="font-size:12px;font-weight:600;color:#6B7280;">For growing businesses</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900;font-size:28px;color:#667EEA;" id="price-premium">--</div>
+            <div style="font-size:11px;color:#6B7280;font-weight:600;">/year</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 2 Categories</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 5 Subcategories</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> 8 Photos</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> WhatsApp · Call · Maps buttons</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> Ratings & Reviews</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> Analytics Dashboard</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> Website & Social Links</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;"><span style="color:#34D399;font-size:16px;">✓</span> Respond to Reviews</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#9CA3AF;"><span style="font-size:16px;">✗</span> Priority in Search</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#9CA3AF;"><span style="font-size:16px;">✗</span> Featured Badge</div>
+        </div>
+        <button onclick="selectPlan('premium')" style="width:100%;margin-top:16px;padding:13px;background:linear-gradient(135deg,#667EEA,#764BA2);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;" id="btn-premium">
+          Select Premium
+        </button>
+      </div>
+ 
+      <!-- PLATINUM PLAN -->
+      <div id="plan-platinum" style="background:linear-gradient(135deg,#1A1A2E,#2E3A5F);border-radius:20px;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,.2);margin-bottom:20px;border:2px solid transparent;cursor:pointer;" onclick="selectPlan('platinum')">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-weight:900;font-size:18px;margin-bottom:2px;color:#fff;">Platinum</div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.7);">Maximum visibility</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900;font-size:28px;color:#FFE66D;" id="price-platinum">--</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:600;">/year</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> 3 Categories</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> 8 Subcategories</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> 15 Photos</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> WhatsApp · Call · Maps buttons</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> Ratings & Reviews</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> Full Analytics Dashboard</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> Website & Social Links</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> Priority in Search Results</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> ⭐ Featured Badge</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;"><span style="color:#FFE66D;font-size:16px;">✓</span> Respond to Reviews</div>
+        </div>
+        <button onclick="selectPlan('platinum')" style="width:100%;margin-top:16px;padding:13px;background:#FFE66D;color:#1A1A2E;border:none;border-radius:13px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;" id="btn-platinum">
+          Select Platinum ⭐
+        </button>
+      </div>
+ 
+    </div>
+ 
+    <!-- COMPARE TAB -->
+    <div id="reg-tab-compare" style="display:none;">
+      <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;">
+        <!-- Header -->
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;background:#F9F7F4;border-bottom:2px solid #F3F4F6;">
+          <div style="padding:12px;font-size:12px;font-weight:800;color:#6B7280;">FEATURE</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#FF6B35;">BASIC</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#667EEA;">PREMIUM</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#1A1A2E;">PLATINUM</div>
+        </div>
+        <!-- Rows -->
+        <div id="compare-price-row" style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;background:#FFF9F5;">
+          <div style="padding:12px;font-size:12px;font-weight:800;color:#1A1A2E;">Annual Price</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#FF6B35;" id="cmp-basic">--</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#667EEA;" id="cmp-premium">--</div>
+          <div style="padding:12px;text-align:center;font-size:12px;font-weight:800;color:#FFE66D;background:#1A1A2E;" id="cmp-platinum">--</div>
+        </div>
+        <!-- Feature rows -->
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Categories</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#FF6B35;">1</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#667EEA;">2</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#1A1A2E;">3</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;background:#F9F7F4;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Subcategories</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#FF6B35;">3</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#667EEA;">5</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#1A1A2E;">8</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Photos</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#FF6B35;">3</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#667EEA;">8</div>
+          <div style="padding:10px;text-align:center;font-size:13px;font-weight:800;color:#1A1A2E;">15</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;background:#F9F7F4;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Analytics</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Website Link</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:1px solid #F3F4F6;background:#F9F7F4;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Priority Search</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;">
+          <div style="padding:10px 12px;font-size:12px;font-weight:700;">Featured Badge</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;">✗</div>
+          <div style="padding:10px;text-align:center;font-size:14px;color:#34D399;">✓</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- SELECTED PLAN CTA -->
+    <div id="reg-cta" style="display:none;background:#fff;border-radius:20px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:20px;border:2px solid #34D399;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="font-size:32px;" id="cta-icon">🏪</div>
+        <div>
+          <div style="font-weight:900;font-size:16px;" id="cta-plan">Plan Selected</div>
+          <div style="font-size:13px;color:#6B7280;font-weight:600;" id="cta-price">--/year</div>
+        </div>
+        <div style="margin-left:auto;background:#D1FAE5;color:#065F46;padding:5px 12px;border-radius:10px;font-size:12px;font-weight:800;">Selected ✓</div>
+      </div>
+      <button class="main-btn" style="background:linear-gradient(135deg,#34D399,#059669);margin-bottom:10px;" onclick="toast('📝 Full registration form coming in Stage 3!')">
+        📝 Continue to Registration
+      </button>
     </div>
  
     <!-- AGENT DIVIDER -->
-    <div style="display:flex;align-items:center;gap:12px;margin:28px 0 20px;">
+    <div style="display:flex;align-items:center;gap:12px;margin:8px 0 20px;">
       <div style="flex:1;height:2px;background:linear-gradient(to right,transparent,#E5E7EB)"></div>
       <div style="font-size:12px;font-weight:800;color:#9CA3AF;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;">Or become an agent</div>
       <div style="flex:1;height:2px;background:linear-gradient(to left,transparent,#E5E7EB)"></div>
     </div>
  
     <!-- AGENT BANNER -->
-    <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:20px;margin-bottom:8px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-        <div style="width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🤝</div>
+    <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:18px;margin-bottom:8px;cursor:pointer;box-shadow:0 6px 20px rgba(245,158,11,.3);" onclick="go('agent')">
+      <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
+        <div style="width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🤝</div>
         <div>
-          <div style="color:#fff;font-weight:900;font-size:17px;margin-bottom:3px;">Become a Help-Me Agent</div>
-          <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Earn recurring commissions by signing businesses</div>
+          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help-Me Agent</div>
+          <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;">Earn recurring commissions — work anywhere</div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
-          <div style="color:#fff;font-weight:900;font-size:18px;">%</div>
-          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Annual Commission</div>
-        </div>
-        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
-          <div style="color:#fff;font-weight:900;font-size:18px;">♾️</div>
-          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">No Limit on Earnings</div>
-        </div>
-        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
-          <div style="color:#fff;font-weight:900;font-size:18px;">🌍</div>
-          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Work Anywhere</div>
-        </div>
-        <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:10px;text-align:center;">
-          <div style="color:#fff;font-weight:900;font-size:18px;">📱</div>
-          <div style="color:rgba(255,255,255,.85);font-size:11px;font-weight:700;">Your Own Dashboard</div>
-        </div>
-      </div>
-      <button style="width:100%;padding:13px;background:#fff;color:#D97706;border:none;border-radius:13px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">
-        Apply Now →
+      <button style="width:100%;padding:12px;background:#fff;color:#D97706;border:none;border-radius:12px;font-size:14px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;">
+        Apply Now — It's Free →
       </button>
     </div>
  
@@ -1318,40 +1475,95 @@ async function sbInsert(table, data){
 // ══════════════════════════════════
 const CATS = {
   doctors:{title:'Doctors & Healthcare',emoji:'🏥',color:'#FFE4E6',
-    photo:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80',
     gradient:'rgba(220,38,38,.72),rgba(239,68,68,.3)',
     tagline:'Find trusted doctors & specialists near you',
-    subcats:['All','GP','Dentist','Pediatrician','Dermatologist','Cardiologist']},
+    subcats:[
+      {key:'all',    label:'All',           emoji:'🏥', color:'#FFE4E6', photo:'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&q=80'},
+      {key:'gp',     label:'General GP',    emoji:'👨‍⚕️', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80'},
+      {key:'dentist',label:'Dentist',        emoji:'🦷', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1588776814546-1ffeddf6c5cc?w=400&q=80'},
+      {key:'paeds',  label:'Pediatrician',  emoji:'👶', color:'#D1FAE5', photo:'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80'},
+      {key:'derm',   label:'Dermatologist', emoji:'🧴', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&q=80'},
+      {key:'cardio', label:'Cardiologist',  emoji:'🫀', color:'#FCE7F3', photo:'https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=400&q=80'},
+      {key:'eye',    label:'Eye Doctor',    emoji:'👁️', color:'#EDE9FE', photo:'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&q=80'},
+      {key:'lab',    label:'Lab & Scans',   emoji:'🔬', color:'#ECFDF5', photo:'https://images.unsplash.com/photo-1581093458791-9f3c3250a8b0?w=400&q=80'},
+    ]},
   mechanics:{title:'Mechanics & Auto',emoji:'🔧',color:'#DBEAFE',
-    photo:'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=900&q=80',
     gradient:'rgba(29,78,216,.72),rgba(59,130,246,.3)',
     tagline:'Trusted garages & auto services nearby',
-    subcats:['All','Car Repair','Tires','Oil Change','Electrical','Body Work']},
+    subcats:[
+      {key:'all',     label:'All',           emoji:'🔧', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=400&q=80'},
+      {key:'repair',  label:'Car Repair',    emoji:'🚗', color:'#EFF6FF', photo:'https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=400&q=80'},
+      {key:'tires',   label:'Tires',         emoji:'⚙️', color:'#F0FDF4', photo:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'},
+      {key:'oil',     label:'Oil Change',    emoji:'🛢️', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=400&q=80'},
+      {key:'electric',label:'Electrical',    emoji:'⚡', color:'#FFF7ED', photo:'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=400&q=80'},
+      {key:'tow',     label:'Tow Truck',     emoji:'🚚', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80'},
+      {key:'wash',    label:'Car Wash',      emoji:'🫧', color:'#EDE9FE', photo:'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=400&q=80'},
+      {key:'rental',  label:'Car Rental',    emoji:'🔑', color:'#D1FAE5', photo:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=80'},
+    ]},
   pharmacy:{title:'Pharmacy',emoji:'💊',color:'#D1FAE5',
-    photo:'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=900&q=80',
     gradient:'rgba(4,120,87,.72),rgba(16,185,129,.3)',
     tagline:'Pharmacies open now — including 24hr',
-    subcats:['All','24hr','Compounding','Vitamins','Homecare']},
+    subcats:[
+      {key:'all',      label:'All',          emoji:'💊', color:'#D1FAE5', photo:'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80'},
+      {key:'24hr',     label:'24hr',         emoji:'🕐', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=400&q=80'},
+      {key:'vitamins', label:'Vitamins',     emoji:'🌿', color:'#ECFDF5', photo:'https://images.unsplash.com/photo-1550572017-4fcdbb59cc32?w=400&q=80'},
+      {key:'cosmetics',label:'Cosmetics',    emoji:'💄', color:'#FCE7F3', photo:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80'},
+      {key:'homecare', label:'Home Care',    emoji:'🏠', color:'#EFF6FF', photo:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80'},
+    ]},
   restaurants:{title:'Restaurants & Cafes',emoji:'🍽️',color:'#FEF3C7',
-    photo:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=900&q=80',
     gradient:'rgba(180,83,9,.78),rgba(245,158,11,.3)',
     tagline:'Great food from trusted local restaurants',
-    subcats:['All','Arabic','Lebanese','Indian','Italian','Cafes']},
+    subcats:[
+      {key:'all',     label:'All',           emoji:'🍽️', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&q=80'},
+      {key:'arabic',  label:'Arabic',        emoji:'🥙', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=400&q=80'},
+      {key:'lebanese',label:'Lebanese',      emoji:'🫕', color:'#FFF7ED', photo:'https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400&q=80'},
+      {key:'indian',  label:'Indian',        emoji:'🍛', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80'},
+      {key:'italian', label:'Italian',       emoji:'🍕', color:'#ECFDF5', photo:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80'},
+      {key:'cafe',    label:'Cafes',         emoji:'☕', color:'#F5F0E8', photo:'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80'},
+      {key:'fastfood',label:'Fast Food',     emoji:'🍔', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80'},
+      {key:'seafood', label:'Seafood',       emoji:'🦞', color:'#EFF6FF', photo:'https://images.unsplash.com/photo-1615361200141-f45040f367be?w=400&q=80'},
+    ]},
   hotels:{title:'Hotels & Stays',emoji:'🏨',color:'#EDE9FE',
-    photo:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=900&q=80',
     gradient:'rgba(109,40,217,.72),rgba(167,139,250,.3)',
     tagline:'Luxury & budget stays wherever you are',
-    subcats:['All','Luxury','Budget','Apartments','Resorts']},
+    subcats:[
+      {key:'all',      label:'All',           emoji:'🏨', color:'#EDE9FE', photo:'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400&q=80'},
+      {key:'luxury',   label:'Luxury',        emoji:'⭐', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&q=80'},
+      {key:'budget',   label:'Budget',        emoji:'💰', color:'#D1FAE5', photo:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'},
+      {key:'apartment',label:'Apartments',    emoji:'🏢', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&q=80'},
+      {key:'resort',   label:'Resorts',       emoji:'🌴', color:'#ECFDF5', photo:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=80'},
+      {key:'business', label:'Business',      emoji:'💼', color:'#F3F4F6', photo:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&q=80'},
+    ]},
   beauty:{title:'Beauty & Salons',emoji:'💇',color:'#FCE7F3',
-    photo:'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=900&q=80',
     gradient:'rgba(190,24,93,.72),rgba(244,114,182,.3)',
     tagline:'Top-rated salons, spas & beauty services',
-    subcats:['All','Hair','Nails','Barber','Spa','Eyebrows']},
+    subcats:[
+      {key:'all',     label:'All',           emoji:'💇', color:'#FCE7F3', photo:'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=400&q=80'},
+      {key:'hair',    label:'Hair Salon',    emoji:'✂️', color:'#FCE7F3', photo:'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&q=80'},
+      {key:'nails',   label:'Nails',         emoji:'💅', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80'},
+      {key:'barber',  label:'Barber',        emoji:'💈', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80'},
+      {key:'spa',     label:'Spa & Massage', emoji:'🧖', color:'#D1FAE5', photo:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80'},
+      {key:'brows',   label:'Eyebrows',      emoji:'🪄', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80'},
+      {key:'makeup',  label:'Makeup',        emoji:'💄', color:'#FCE7F3', photo:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80'},
+    ]},
   emergency:{title:'Emergency Services',emoji:'🚨',color:'#FFE4E6',
-    photo:'https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=800&q=80',
+    photo:'https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=900&q=80',
     gradient:'rgba(185,28,28,.78),rgba(239,68,68,.3)',
     tagline:'Immediate help — hospitals, police & more',
-    subcats:['All','Ambulance','Police','Fire','Roadside']}
+    subcats:[
+      {key:'all',      label:'All',           emoji:'🚨', color:'#FFE4E6', photo:'https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=400&q=80'},
+      {key:'ambulance',label:'Ambulance',     emoji:'🚑', color:'#FEE2E2', photo:'https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=400&q=80'},
+      {key:'hospital', label:'Hospital',      emoji:'🏥', color:'#FFE4E6', photo:'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&q=80'},
+      {key:'police',   label:'Police',        emoji:'👮', color:'#DBEAFE', photo:'https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=400&q=80'},
+      {key:'fire',     label:'Fire Dept',     emoji:'🔥', color:'#FEF3C7', photo:'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&q=80'},
+      {key:'roadside', label:'Roadside Help', emoji:'🚗', color:'#EDE9FE', photo:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80'},
+    ]},
 };
  
 const SAMPLE_SUPPLIERS = [
@@ -1423,74 +1635,166 @@ function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
+  // Trigger pricing detection when register opens
+  if(id==='register') detectCountryPricing();
 }
  
 // ══════════════════════════════════
-// CATEGORY
+// CATEGORY & SUBCATEGORY GRID
 // ══════════════════════════════════
+let currentCatKey = null;
+let currentSuppliers = [];
+ 
 async function openCat(catKey){
+  currentCatKey = catKey;
   const cat = CATS[catKey];
+ 
+  // Build hero banner
   document.getElementById('cat-title').textContent = cat.title;
-  document.getElementById('cat-sub').textContent = 'Loading...';
- 
-  // Build hero banner immediately
-  const banners = {
-    doctors:{imgs:['https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=900&q=80'],pos:'center 30%'},
-    mechanics:{imgs:['https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=900&q=80'],pos:'center 45%'},
-    pharmacy:{imgs:['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=900&q=80'],pos:'center 35%'},
-    restaurants:{imgs:['https://images.unsplash.com/photo-1552566626-52f8b828add9?w=900&q=80'],pos:'center 50%'},
-    hotels:{imgs:['https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=900&q=80'],pos:'center 40%'},
-    beauty:{imgs:['https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=900&q=80'],pos:'center 25%'},
-    emergency:{imgs:['https://images.unsplash.com/photo-1614923975573-23f200a5e2e5?w=900&q=80'],pos:'center 40%'}
-  };
-  const b = banners[catKey]||banners.doctors;
- 
+  document.getElementById('cat-sub').textContent = cat.tagline;
   document.getElementById('cat-hero').innerHTML = `
-    <div style="position:relative;height:240px;overflow:hidden;background:linear-gradient(135deg,${cat.gradient});">
-      <img src="${b.imgs[0]}" style="width:100%;height:100%;object-fit:cover;object-position:${b.pos};" onerror="this.style.display='none'">
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.1) 30%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.82) 100%);"></div>
+    <div style="position:relative;height:220px;overflow:hidden;background:linear-gradient(135deg,${cat.gradient});">
+      <img src="${cat.photo}" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;" onerror="this.style.display='none'">
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.85) 100%);"></div>
       <div style="position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px;margin-bottom:12px;width:fit-content;">
-          <span style="font-size:11px;color:#fff;font-weight:700;" id="cat-count-badge">⏳ Loading providers...</span>
-        </div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
           <div style="width:46px;height:46px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(255,255,255,.3);">${cat.emoji}</div>
           <div>
             <div style="color:#fff;font-weight:900;font-size:22px;text-shadow:0 2px 12px rgba(0,0,0,.4);line-height:1.1;">${cat.title}</div>
-            <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.4);margin-top:2px;">${cat.tagline}</div>
+            <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;margin-top:2px;">${cat.tagline}</div>
           </div>
         </div>
       </div>
     </div>`;
  
-  document.getElementById('subcat-scroll').innerHTML =
-    cat.subcats.map((s,i)=>`<div class="subcat${i===0?' active':''}" onclick="pickSubcat(this)">${s}</div>`).join('');
+  // Hide subcat scroll bar and supplier list, show subcat grid
+  document.getElementById('subcat-scroll').style.display = 'none';
+  document.getElementById('sup-list').innerHTML = '';
+ 
+  // Build subcategory visual grid
+  document.getElementById('subcat-scroll').innerHTML = '';
+  buildSubcatGrid(cat);
  
   go('category');
  
-  // Load suppliers from Supabase
+  // Load all suppliers in background
   let suppliers = await sbFetch('suppliers', `?category_key=eq.${catKey}&active=eq.true&order=rating.desc`);
- 
-  // Fall back to sample data if database is empty
   if(!suppliers || suppliers.length===0){
     suppliers = SAMPLE_SUPPLIERS.filter(s=>s.cat===catKey);
   }
+  currentSuppliers = suppliers;
  
-  const badge = document.getElementById('cat-count-badge');
-  if(badge) badge.textContent = `✅ ${suppliers.length} verified providers nearby`;
-  document.getElementById('cat-sub').textContent = suppliers.length + ' providers found nearby';
-  document.getElementById('sup-list').innerHTML = suppliers.length
-    ? suppliers.map(s=>supplierCardHTML(s)).join('')
+  // Update count on grid
+  const countEl = document.getElementById('subcat-total-count');
+  if(countEl) countEl.textContent = suppliers.length + ' verified providers';
+}
+ 
+function buildSubcatGrid(cat){
+  const scroll = document.getElementById('subcat-scroll');
+  scroll.style.display = 'block';
+  scroll.style.overflowX = 'unset';
+  scroll.style.padding = '0';
+ 
+  // Vibrant gradient pairs for each subcategory card
+  const gradients = [
+    'linear-gradient(135deg,#FF6B6B,#FF8E53)',
+    'linear-gradient(135deg,#4ECDC4,#44A08D)',
+    'linear-gradient(135deg,#667EEA,#764BA2)',
+    'linear-gradient(135deg,#F093FB,#F5576C)',
+    'linear-gradient(135deg,#4FACFE,#00F2FE)',
+    'linear-gradient(135deg,#43E97B,#38F9D7)',
+    'linear-gradient(135deg,#FA709A,#FEE140)',
+    'linear-gradient(135deg,#A18CD1,#FBC2EB)',
+    'linear-gradient(135deg,#FD7043,#FF8F00)',
+    'linear-gradient(135deg,#26C6DA,#00ACC1)',
+  ];
+ 
+  scroll.innerHTML = `
+    <div style="padding:16px 16px 8px;">
+      <div style="font-weight:800;font-size:15px;margin-bottom:4px;">What are you looking for?</div>
+      <div style="font-size:13px;color:#6B7280;font-weight:600;" id="subcat-total-count">Loading providers...</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:4px 16px 16px;">
+      ${cat.subcats.map((s,i)=>`
+        <div onclick="pickSubcatGrid('${s.key}','${s.label}')"
+          style="border-radius:20px;cursor:pointer;position:relative;height:110px;
+          background:${gradients[i % gradients.length]};
+          box-shadow:0 6px 20px rgba(0,0,0,.15);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+          transition:transform .15s;overflow:hidden;"
+          onmousedown="this.style.transform='scale(.96)'"
+          onmouseup="this.style.transform='scale(1)'"
+          ontouchstart="this.style.transform='scale(.96)'"
+          ontouchend="this.style.transform='scale(1)'">
+          <!-- Subtle shine overlay -->
+          <div style="position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.15);border-radius:20px 20px 60% 60%;"></div>
+          <div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));z-index:1;">${s.emoji}</div>
+          <div style="color:#fff;font-weight:800;font-size:13px;text-align:center;
+            text-shadow:0 1px 4px rgba(0,0,0,.3);z-index:1;padding:0 8px;">${s.label}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+ 
+function pickSubcatGrid(key, label){
+  const cat = CATS[currentCatKey];
+ 
+  // Update header
+  document.getElementById('cat-sub').textContent = label === 'All'
+    ? cat.tagline
+    : label + ' · ' + cat.title;
+ 
+  // Filter suppliers
+  let filtered = currentSuppliers;
+  if(key !== 'all'){
+    filtered = currentSuppliers.filter(s=>{
+      const spec = (s.spec||s.specialty||'').toLowerCase();
+      const subcat = (s.subcat||'').toLowerCase();
+      return spec.includes(label.toLowerCase()) || subcat.includes(key);
+    });
+    // If no match on specialty, show all (fallback)
+    if(filtered.length === 0) filtered = currentSuppliers;
+  }
+ 
+  // Hide subcat grid, show supplier list
+  const scroll = document.getElementById('subcat-scroll');
+  scroll.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;padding:12px 16px 8px;overflow-x:auto;">
+      <button onclick="buildSubcatGrid(CATS[currentCatKey])"
+        style="display:flex;align-items:center;gap:6px;background:#F3F4F6;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;">
+        ← Back
+      </button>
+      ${cat.subcats.map(s=>`
+        <div data-subkey="${s.key}" onclick="pickSubcatGrid('${s.key}','${s.label}')"
+          style="white-space:nowrap;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;
+          background:${s.key===key?'#1A1A2E':'#F3F4F6'};color:${s.key===key?'#fff':'#374151'};">
+          ${s.emoji} ${s.label}
+        </div>
+      `).join('')}
+    </div>`;
+  scroll.style.overflowX = 'auto';
+ 
+  // Show badge
+  document.getElementById('cat-hero').querySelector('div').insertAdjacentHTML('beforeend',
+    `<div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px;">
+      <span style="font-size:11px;color:#fff;font-weight:700;">✅ ${filtered.length} providers</span>
+    </div>`
+  );
+ 
+  // Render suppliers
+  document.getElementById('sup-list').innerHTML = filtered.length
+    ? filtered.map(s=>supplierCardHTML(s)).join('')
     : `<div style="text-align:center;padding:40px 20px;">
         <div style="font-size:48px;margin-bottom:12px;">🔍</div>
-        <div style="font-weight:800;font-size:16px;margin-bottom:6px;">No providers yet</div>
-        <div style="font-size:13px;color:#6B7280;font-weight:600;">Be the first to register your business in this category!</div>
+        <div style="font-weight:800;font-size:16px;margin-bottom:6px;">No ${label} providers yet</div>
+        <div style="font-size:13px;color:#6B7280;font-weight:600;">Be the first to register in this subcategory!</div>
       </div>`;
 }
+ 
 function pickSubcat(el){
   document.querySelectorAll('.subcat').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  toast('🔍 Filtering by '+el.textContent);
 }
  
 function getPhone(s){ return (s.phone||'+97336706010').replace(/\s+/g,''); }
@@ -2205,7 +2509,138 @@ function hideDropdown(ddId){
 }
  
 // ══════════════════════════════════
-// AGENT FORM & DASHBOARD
+// BUSINESS REGISTRATION & PRICING
+// ══════════════════════════════════
+const PRICING_MAP = {
+  'BH':{name:'Bahrain',flag:'🇧🇭',sym:'BD',basic:'20 BD',premium:'30 BD',platinum:'40 BD'},
+  'SA':{name:'Saudi Arabia',flag:'🇸🇦',sym:'SAR',basic:'200 SAR',premium:'300 SAR',platinum:'400 SAR'},
+  'AE':{name:'United Arab Emirates',flag:'🇦🇪',sym:'AED',basic:'200 AED',premium:'300 AED',platinum:'400 AED'},
+  'KW':{name:'Kuwait',flag:'🇰🇼',sym:'KWD',basic:'16 KWD',premium:'24 KWD',platinum:'32 KWD'},
+  'QA':{name:'Qatar',flag:'🇶🇦',sym:'QAR',basic:'200 QAR',premium:'300 QAR',platinum:'400 QAR'},
+  'OM':{name:'Oman',flag:'🇴🇲',sym:'OMR',basic:'20 OMR',premium:'30 OMR',platinum:'40 OMR'},
+  'GB':{name:'United Kingdom',flag:'🇬🇧',sym:'GBP',basic:'£40',premium:'£60',platinum:'£80'},
+  'US':{name:'United States',flag:'🇺🇸',sym:'USD',basic:'$50',premium:'$75',platinum:'$100'},
+  'CA':{name:'Canada',flag:'🇨🇦',sym:'CAD',basic:'CA$65',premium:'CA$100',platinum:'CA$130'},
+  'AU':{name:'Australia',flag:'🇦🇺',sym:'AUD',basic:'A$75',premium:'A$112',platinum:'A$150'},
+  'DE':{name:'Germany',flag:'🇩🇪',sym:'EUR',basic:'€45',premium:'€68',platinum:'€90'},
+  'FR':{name:'France',flag:'🇫🇷',sym:'EUR',basic:'€45',premium:'€68',platinum:'€90'},
+  'IT':{name:'Italy',flag:'🇮🇹',sym:'EUR',basic:'€45',premium:'€68',platinum:'€90'},
+  'ES':{name:'Spain',flag:'🇪🇸',sym:'EUR',basic:'€40',premium:'€60',platinum:'€80'},
+  'NL':{name:'Netherlands',flag:'🇳🇱',sym:'EUR',basic:'€45',premium:'€68',platinum:'€90'},
+  'GR':{name:'Greece',flag:'🇬🇷',sym:'EUR',basic:'€35',premium:'€52',platinum:'€70'},
+  'CY':{name:'Cyprus',flag:'🇨🇾',sym:'EUR',basic:'€45',premium:'€68',platinum:'€90'},
+  'TR':{name:'Turkey',flag:'🇹🇷',sym:'USD',basic:'$30',premium:'$45',platinum:'$60'},
+  'EG':{name:'Egypt',flag:'🇪🇬',sym:'USD',basic:'$20',premium:'$30',platinum:'$40'},
+  'JO':{name:'Jordan',flag:'🇯🇴',sym:'JOD',basic:'35 JOD',premium:'52 JOD',platinum:'70 JOD'},
+  'MA':{name:'Morocco',flag:'🇲🇦',sym:'MAD',basic:'500 MAD',premium:'750 MAD',platinum:'1000 MAD'},
+  'LB':{name:'Lebanon',flag:'🇱🇧',sym:'USD',basic:'$20',premium:'$30',platinum:'$40'},
+  'TH':{name:'Thailand',flag:'🇹🇭',sym:'USD',basic:'$30',premium:'$45',platinum:'$60'},
+  'MY':{name:'Malaysia',flag:'🇲🇾',sym:'MYR',basic:'150 MYR',premium:'225 MYR',platinum:'300 MYR'},
+  'SG':{name:'Singapore',flag:'🇸🇬',sym:'SGD',basic:'S$65',premium:'S$100',platinum:'S$130'},
+  'ID':{name:'Indonesia',flag:'🇮🇩',sym:'IDR',basic:'500K IDR',premium:'750K IDR',platinum:'1M IDR'},
+  'PH':{name:'Philippines',flag:'🇵🇭',sym:'PHP',basic:'1,500 PHP',premium:'2,250 PHP',platinum:'3,000 PHP'},
+  'IN':{name:'India',flag:'🇮🇳',sym:'INR',basic:'1,500 INR',premium:'2,250 INR',platinum:'3,000 INR'},
+  'ZA':{name:'South Africa',flag:'🇿🇦',sym:'ZAR',basic:'500 ZAR',premium:'750 ZAR',platinum:'1,000 ZAR'},
+  'GE':{name:'Georgia',flag:'🇬🇪',sym:'USD',basic:'$30',premium:'$45',platinum:'$60'},
+  'AZ':{name:'Azerbaijan',flag:'🇦🇿',sym:'USD',basic:'$30',premium:'$45',platinum:'$60'},
+  'DEFAULT':{name:'International',flag:'🌍',sym:'USD',basic:'$20',premium:'$30',platinum:'$40'}
+};
+ 
+let selectedPlanType = null;
+ 
+async function detectCountryPricing(){
+  let countryCode = 'DEFAULT';
+  try{
+    // Try IP geolocation
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    countryCode = data.country_code || 'DEFAULT';
+  }catch(e){
+    // Fallback — try to detect from user's saved profile
+    try{
+      const user = loadUser();
+      if(user && user.country){
+        // Map country name to code roughly
+        const name = user.country.toLowerCase();
+        if(name.includes('bahrain')) countryCode='BH';
+        else if(name.includes('saudi')) countryCode='SA';
+        else if(name.includes('emirates')||name.includes('uae')) countryCode='AE';
+        else if(name.includes('kuwait')) countryCode='KW';
+        else if(name.includes('qatar')) countryCode='QA';
+        else if(name.includes('oman')) countryCode='OM';
+        else if(name.includes('uk')||name.includes('britain')) countryCode='GB';
+        else if(name.includes('united states')||name.includes('usa')) countryCode='US';
+      }
+    }catch(e2){}
+  }
+ 
+  const pricing = PRICING_MAP[countryCode] || PRICING_MAP['DEFAULT'];
+  applyPricing(pricing);
+}
+ 
+function applyPricing(p){
+  // Update location banner
+  const banner = document.getElementById('reg-country-name');
+  const flag = document.getElementById('reg-country-flag');
+  const sub = document.getElementById('reg-location-sub');
+  if(banner) banner.textContent = p.name;
+  if(flag) flag.textContent = p.flag;
+  if(sub) sub.textContent = 'Prices in local currency · '+p.name;
+ 
+  // Update plan prices
+  const pb = document.getElementById('price-basic');
+  const pp = document.getElementById('price-premium');
+  const ppl = document.getElementById('price-platinum');
+  if(pb) pb.textContent = p.basic;
+  if(pp) pp.textContent = p.premium;
+  if(ppl) ppl.textContent = p.platinum;
+ 
+  // Update compare tab
+  const cb = document.getElementById('cmp-basic');
+  const cp = document.getElementById('cmp-premium');
+  const cpl = document.getElementById('cmp-platinum');
+  if(cb) cb.textContent = p.basic;
+  if(cp) cp.textContent = p.premium;
+  if(cpl) cpl.textContent = p.platinum;
+ 
+  // Store for CTA
+  window._currentPricing = p;
+}
+ 
+function showRegTab(tab){
+  document.getElementById('reg-tab-plans').style.display = tab==='plans' ? 'block' : 'none';
+  document.getElementById('reg-tab-compare').style.display = tab==='compare' ? 'block' : 'none';
+  document.getElementById('tab-plans').style.background = tab==='plans' ? '#fff' : 'transparent';
+  document.getElementById('tab-plans').style.color = tab==='plans' ? '#FF6B35' : '#6B7280';
+  document.getElementById('tab-compare').style.background = tab==='compare' ? '#fff' : 'transparent';
+  document.getElementById('tab-compare').style.color = tab==='compare' ? '#FF6B35' : '#6B7280';
+}
+ 
+function selectPlan(plan){
+  selectedPlanType = plan;
+  const p = window._currentPricing || PRICING_MAP['DEFAULT'];
+  const prices = {basic: p.basic, premium: p.premium, platinum: p.platinum};
+  const icons = {basic:'🏪', premium:'⭐', platinum:'👑'};
+  const names = {basic:'Basic Plan', premium:'Premium Plan', platinum:'Platinum Plan'};
+ 
+  // Update CTA
+  document.getElementById('cta-icon').textContent = icons[plan];
+  document.getElementById('cta-plan').textContent = names[plan];
+  document.getElementById('cta-price').textContent = prices[plan]+'/year';
+  document.getElementById('reg-cta').style.display = 'block';
+ 
+  // Highlight selected plan
+  ['basic','premium','platinum'].forEach(p=>{
+    const el = document.getElementById('plan-'+p);
+    if(el) el.style.borderColor = p===plan ? '#34D399' : (p==='premium'?'#667EEA':'#E5E7EB');
+  });
+ 
+  toast('✅ '+names[plan]+' selected!');
+  // Scroll to CTA
+  setTimeout(()=>{
+    document.getElementById('reg-cta').scrollIntoView({behavior:'smooth'});
+  }, 300);
+}
 // ══════════════════════════════════
 function copyPhone(){
   const ph=document.getElementById('ag-phone').value;
