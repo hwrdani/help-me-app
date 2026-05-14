@@ -3104,18 +3104,28 @@ let selectedWACC = {flag:'🇦🇪', code:'+971'};
 let ccDropOpen = false;
 let waCCDropOpen = false;
 
-function renderCCList(listId, filterText, onSelect){
+function renderCCList(listId, filterText, onSelectFn){
   const list = document.getElementById(listId);
+  if(!list) return;
   const q = (filterText||'').toLowerCase();
   const filtered = q ? COUNTRY_CODES.filter(c=>c.name.toLowerCase().includes(q)||c.code.includes(q)) : COUNTRY_CODES;
-  list.innerHTML = filtered.map(c=>`
-    <div onclick="${onSelect}('${c.flag}','${c.code}','${c.name}')"
+  list.innerHTML = filtered.map((c,i)=>`
+    <div data-idx="${i}" data-flag="${c.flag}" data-code="${c.code}" data-name="${c.name}" data-fn="${onSelectFn}"
       style="padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;border-bottom:1px solid #F3F4F6;"
-      onmouseover="this.style.background='#F9F7F4'" onmouseout="this.style.background='#fff'">
+      onmousedown="handleCCSelect(this)" onmouseover="this.style.background='#F9F7F4'" onmouseout="this.style.background='#fff'">
       <span style="font-size:20px">${c.flag}</span>
       <span style="font-size:13px;font-weight:700;flex:1">${c.name}</span>
       <span style="font-size:13px;font-weight:800;color:#667EEA">${c.code}</span>
     </div>`).join('');
+}
+
+function handleCCSelect(el){
+  const flag = el.dataset.flag;
+  const code = el.dataset.code;
+  const name = el.dataset.name;
+  const fn   = el.dataset.fn;
+  if(fn === 'selectCC') selectCC(flag, code, name);
+  else if(fn === 'selectWACC') selectWACC(flag, code, name);
 }
 
 function toggleCCDropdown(){
@@ -3125,14 +3135,14 @@ function toggleCCDropdown(){
   if(ccDropOpen){
     renderCCList('cc-list','','selectCC');
     setTimeout(()=>document.getElementById('cc-search').focus(),100);
-    document.addEventListener('click', closeCCOnOutside);
+    setTimeout(()=>document.addEventListener('mousedown', closeCCOnOutside), 200);
   }
 }
 function closeCCOnOutside(e){
   if(!e.target.closest('#dd-cc') && !e.target.closest('#cc-display')){
     document.getElementById('dd-cc').style.display='none';
     ccDropOpen=false;
-    document.removeEventListener('click',closeCCOnOutside);
+    document.removeEventListener('mousedown',closeCCOnOutside);
   }
 }
 function filterCC(q){ renderCCList('cc-list',q,'selectCC'); }
@@ -3141,8 +3151,7 @@ function selectCC(flag,code,name){
   document.getElementById('cc-display').innerHTML=`${flag} ${code} <span style="font-size:10px;color:#9CA3AF;">▼</span>`;
   document.getElementById('dd-cc').style.display='none';
   ccDropOpen=false;
-  document.removeEventListener('click',closeCCOnOutside);
-  toast('✅ '+flag+' '+name+' selected');
+  document.removeEventListener('mousedown',closeCCOnOutside);
 }
 
 function toggleWACCDropdown(){
@@ -3151,14 +3160,14 @@ function toggleWACCDropdown(){
   dd.style.display=waCCDropOpen?'block':'none';
   if(waCCDropOpen){
     renderCCList('wa-cc-list','','selectWACC');
-    document.addEventListener('click',closeWACCOnOutside);
+    setTimeout(()=>document.addEventListener('mousedown',closeWACCOnOutside), 200);
   }
 }
 function closeWACCOnOutside(e){
   if(!e.target.closest('#dd-wa-cc') && !e.target.closest('#wa-cc-display')){
     document.getElementById('dd-wa-cc').style.display='none';
     waCCDropOpen=false;
-    document.removeEventListener('click',closeWACCOnOutside);
+    document.removeEventListener('mousedown',closeWACCOnOutside);
   }
 }
 function filterWACC(q){ renderCCList('wa-cc-list',q,'selectWACC'); }
@@ -3167,7 +3176,7 @@ function selectWACC(flag,code,name){
   document.getElementById('wa-cc-display').innerHTML=`${flag} ${code} <span style="font-size:9px;color:#9CA3AF;">▼</span>`;
   document.getElementById('dd-wa-cc').style.display='none';
   waCCDropOpen=false;
-  document.removeEventListener('click',closeWACCOnOutside);
+  document.removeEventListener('mousedown',closeWACCOnOutside);
 }
 
 function copyLoginToWA(cb){
@@ -3238,23 +3247,32 @@ function showDropdown(ddId, inputId){
 function filterDropdown(ddId, inputId){
   const input=document.getElementById(inputId);
   const dd=document.getElementById(ddId);
+  if(!input||!dd) return;
   const q=input.value.toLowerCase();
   const filtered=q.length===0 ? COUNTRIES : COUNTRIES.filter(c=>c.toLowerCase().includes(q));
   if(!filtered.length){ dd.style.display='none'; return; }
   dd.style.display='block';
   dd.innerHTML=filtered.slice(0,40).map(c=>{
-    const d = document.createElement('div');
-    d.style.cssText = 'padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;border-bottom:1px solid #F3F4F6;';
-    d.textContent = c;
-    d.onmouseover = ()=>d.style.background='#F9F7F4';
-    d.onmouseout = ()=>d.style.background='#fff';
-    d.onclick = ()=>selectCountry(inputId, ddId, c);
-    return d.outerHTML;
+    const safe = c.replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    return `<div
+      data-value="${safe}"
+      data-input="${inputId}"
+      data-dd="${ddId}"
+      onmousedown="handleCountrySelect(this)"
+      style="padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;border-bottom:1px solid #F3F4F6;"
+      onmouseover="this.style.background='#F9F7F4'"
+      onmouseout="this.style.background='#fff'">${c}</div>`;
   }).join('');
 }
+function handleCountrySelect(el){
+  const value = el.dataset.value;
+  const inputId = el.dataset.input;
+  const ddId = el.dataset.dd;
+  selectCountry(inputId, ddId, value);
+}
 function selectCountry(inputId, ddId, value){
-  document.getElementById(inputId).value=value;
-  document.getElementById(inputId).style.borderColor='#34D399';
+  const input = document.getElementById(inputId);
+  if(input){ input.value=value; input.style.borderColor='#34D399'; }
   hideDropdown(ddId);
 }
 function hideDropdown(ddId){
