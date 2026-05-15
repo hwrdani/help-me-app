@@ -3178,18 +3178,7 @@ async function detectSplashCity(){
   let country = '';
   let countryCode = 'DEFAULT';
 
-  // Try multiple IP APIs — use whichever responds first
-  const apis = [
-    ()=>fetch('https://cloudflare.com/cdn-cgi/trace').then(r=>r.text()).then(t=>{
-      const lines=t.split('\n'); const get=k=>{ const l=lines.find(x=>x.startsWith(k+'=')); return l?l.split('=')[1].trim():''; };
-      const code=get('loc'); return {city:'',country:code,code};
-    }),
-    ()=>fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country_name||'',code:d.country_code||''})),
-    ()=>fetch('https://ipwho.is/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.country_code||''})),
-    ()=>fetch('https://ip-api.com/json/?fields=country,countryCode,city').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.countryCode||''})),
-  ];
-
-  // Country code to name map for Cloudflare fallback
+  // Country code to name map
   const CC_MAP = {
     'BH':'Bahrain','SA':'Saudi Arabia','AE':'United Arab Emirates','KW':'Kuwait',
     'QA':'Qatar','OM':'Oman','TR':'Turkey','GB':'United Kingdom','EG':'Egypt',
@@ -3202,22 +3191,50 @@ async function detectSplashCity(){
     'NG':'Nigeria','KE':'Kenya','PK':'Pakistan','BD':'Bangladesh'
   };
 
-  for(const api of apis){
-    try{
-      const data = await Promise.race([
-        api(),
-        new Promise((_,r)=>setTimeout(()=>r('timeout'),5000))
-      ]);
-      if(data && (data.country||data.code)){
-        city = data.city || '';
-        countryCode = data.code || data.country || 'DEFAULT';
-        // If country is a 2-letter code, look up the name
-        country = (data.country && data.country.length > 2)
+  // Show fallback text immediately — don't wait
+  const detecting = document.getElementById('sp-detecting');
+  const fallback   = document.getElementById('sp-fallback');
+  const cityContent= document.getElementById('sp-city-content');
+
+  // Race ALL APIs simultaneously — take the first valid response
+  const timeout = ms => new Promise((_,r)=>setTimeout(()=>r('timeout'), ms));
+
+  const tryAPI = async (apiFn) => {
+    try {
+      const data = await Promise.race([apiFn(), timeout(3000)]);
+      if(data && (data.country || data.code)){
+        const code = data.code || data.country || '';
+        const name = (data.country && data.country.length > 2)
           ? data.country
-          : (CC_MAP[countryCode] || countryCode);
-        if(country && country.length >= 2) break;
+          : (CC_MAP[code] || '');
+        if(name && name.length >= 2) return { city: data.city||'', country: name, code };
       }
-    }catch(e){ continue; }
+    } catch(e){}
+    return null;
+  };
+
+  try{
+    // Fire ALL APIs at the same time — use whichever responds first with valid data
+    const result = await Promise.any([
+      tryAPI(()=>fetch('https://cloudflare.com/cdn-cgi/trace').then(r=>r.text()).then(t=>{
+        const lines=t.split('\n');
+        const get=k=>{ const l=lines.find(x=>x.startsWith(k+'=')); return l?l.split('=')[1].trim():''; };
+        const code=get('loc'); return {city:'',country:code,code};
+      })),
+      tryAPI(()=>fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country_name||'',code:d.country_code||''}))),
+      tryAPI(()=>fetch('https://ipwho.is/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.country_code||''}))),
+      tryAPI(()=>fetch('https://ip-api.com/json/?fields=country,countryCode,city').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.countryCode||''}))),
+    ].filter(Boolean));
+
+    if(result){
+      city = result.city || '';
+      country = result.country || '';
+      countryCode = result.code || 'DEFAULT';
+    }
+  } catch(e){
+    // All APIs failed — use DEFAULT
+    if(detecting) detecting.style.display = 'none';
+    if(fallback) fallback.style.display = 'block';
   }
 
   // Update emergency numbers
