@@ -109,7 +109,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 /* ════════════════════════════════
    SOS FLOATING BUTTON
 ════════════════════════════════ */
-.sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:none;flex-direction:column;align-items:flex-end;gap:10px;}
 
 .sos-btn{width:76px;height:76px;background:linear-gradient(135deg,#FF4757,#C0392B);
   border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -1901,6 +1901,9 @@ function go(id){
   window.scrollTo(0,0);
   if(id==='register') detectCountryPricing();
   if(id==='all-cats') renderAllCats();
+  // Hide SOS on splash and login screens
+  const sosFab = document.querySelector('.sos-fab');
+  if(sosFab) sosFab.style.display = (id==='splash'||id==='login') ? 'none' : 'flex';
   // Update active nav based on screen
   const exploreScreens = ['all-cats','category','detail','biz-reg'];
   const savedScreens = ['favorites'];
@@ -3156,22 +3159,42 @@ async function detectSplashCity(){
 
   // Try multiple IP APIs — use whichever responds first
   const apis = [
+    ()=>fetch('https://cloudflare.com/cdn-cgi/trace').then(r=>r.text()).then(t=>{
+      const lines=t.split('\n'); const get=k=>{ const l=lines.find(x=>x.startsWith(k+'=')); return l?l.split('=')[1].trim():''; };
+      const code=get('loc'); return {city:'',country:code,code};
+    }),
     ()=>fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country_name||'',code:d.country_code||''})),
-    ()=>fetch('https://ip-api.com/json/?fields=country,countryCode,city').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.countryCode||''})),
     ()=>fetch('https://ipwho.is/').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.country_code||''})),
+    ()=>fetch('https://ip-api.com/json/?fields=country,countryCode,city').then(r=>r.json()).then(d=>({city:d.city||'',country:d.country||'',code:d.countryCode||''})),
   ];
+
+  // Country code to name map for Cloudflare fallback
+  const CC_MAP = {
+    'BH':'Bahrain','SA':'Saudi Arabia','AE':'United Arab Emirates','KW':'Kuwait',
+    'QA':'Qatar','OM':'Oman','TR':'Turkey','GB':'United Kingdom','EG':'Egypt',
+    'FR':'France','JO':'Jordan','MA':'Morocco','TH':'Thailand','IT':'Italy',
+    'MY':'Malaysia','GE':'Georgia','AZ':'Azerbaijan','ID':'Indonesia','ES':'Spain',
+    'LB':'Lebanon','US':'United States','GR':'Greece','DE':'Germany','SG':'Singapore',
+    'ZA':'South Africa','CA':'Canada','PH':'Philippines','IN':'India',
+    'NL':'Netherlands','CY':'Cyprus','AU':'Australia','NZ':'New Zealand',
+    'JP':'Japan','KR':'South Korea','CN':'China','BR':'Brazil','MX':'Mexico',
+    'NG':'Nigeria','KE':'Kenya','PK':'Pakistan','BD':'Bangladesh'
+  };
 
   for(const api of apis){
     try{
       const data = await Promise.race([
         api(),
-        new Promise((_,r)=>setTimeout(()=>r('timeout'),4000))
+        new Promise((_,r)=>setTimeout(()=>r('timeout'),5000))
       ]);
-      if(data && data.country){
+      if(data && (data.country||data.code)){
         city = data.city || '';
-        country = data.country || '';
-        countryCode = data.code || 'DEFAULT';
-        break;
+        countryCode = data.code || data.country || 'DEFAULT';
+        // If country is a 2-letter code, look up the name
+        country = (data.country && data.country.length > 2)
+          ? data.country
+          : (CC_MAP[countryCode] || countryCode);
+        if(country && country.length >= 2) break;
       }
     }catch(e){ continue; }
   }
@@ -3223,9 +3246,17 @@ async function detectSplashCity(){
 
   // Load background image
   if(img && bg.img){
-    img.onload = ()=>{ img.style.opacity='0.85'; };
-    img.onerror = ()=>{ img.style.display='none'; };
+    img.style.opacity = '0'; // start hidden
+    img.onload = ()=>{
+      img.style.opacity='0.85';
+      img.style.display='block';
+    };
+    img.onerror = ()=>{
+      // Try a reliable fallback
+      img.src = 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
+    };
     img.src = bg.img;
+    img.style.display = 'block';
   }
 }
 
@@ -3446,6 +3477,9 @@ function finishReg(){
 
   toast('🎉 Welcome to Help Me, '+name+'!');
   resetLogin();
+  // Show SOS button
+  const sosFab = document.querySelector('.sos-fab');
+  if(sosFab) sosFab.style.display = 'flex';
   setTimeout(()=>go('home'),600);
 }
 
@@ -4177,6 +4211,9 @@ if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show
         }
       }catch(e){ console.log('agent check skipped',e); }
       go('home');
+      // Show SOS on home
+      const sosFab = document.querySelector('.sos-fab');
+      if(sosFab) sosFab.style.display = 'flex';
     } else {
       go('splash');
     }
