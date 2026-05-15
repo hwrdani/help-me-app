@@ -3173,129 +3173,162 @@ const CITY_BACKGROUNDS = {
   'Cyprus':               { img:'https://images.unsplash.com/photo-1563204457-14f68f1b7ed4?w=800&q=80', sub:'Find trusted services in Cyprus' },
 };
 
-async function detectSplashCity(){
-  let country = '';
-  let countryCode = 'DEFAULT';
+// ══════════════════════════════════
+// EMERGENCY NUMBERS BY COUNTRY
+// ══════════════════════════════════
+const EMERGENCY_NUMBERS = {
+  'BH':{ country:'Bahrain',              flag:'🇧🇭', ambulance:'999',  police:'999',  fire:'999',  roadside:'1600' },
+  'SA':{ country:'Saudi Arabia',         flag:'🇸🇦', ambulance:'997',  police:'999',  fire:'998',  roadside:'920000560' },
+  'AE':{ country:'UAE',                  flag:'🇦🇪', ambulance:'998',  police:'999',  fire:'997',  roadside:'800287747' },
+  'KW':{ country:'Kuwait',               flag:'🇰🇼', ambulance:'112',  police:'112',  fire:'112',  roadside:'1800100' },
+  'QA':{ country:'Qatar',                flag:'🇶🇦', ambulance:'999',  police:'999',  fire:'999',  roadside:'8008000' },
+  'OM':{ country:'Oman',                 flag:'🇴🇲', ambulance:'9999', police:'9999', fire:'9999', roadside:'1234' },
+  'TR':{ country:'Turkey',               flag:'🇹🇷', ambulance:'112',  police:'155',  fire:'110',  roadside:'154' },
+  'GB':{ country:'United Kingdom',       flag:'🇬🇧', ambulance:'999',  police:'999',  fire:'999',  roadside:'08457227999' },
+  'EG':{ country:'Egypt',                flag:'🇪🇬', ambulance:'123',  police:'122',  fire:'180',  roadside:'124' },
+  'FR':{ country:'France',               flag:'🇫🇷', ambulance:'15',   police:'17',   fire:'18',   roadside:'0800207070' },
+  'JO':{ country:'Jordan',               flag:'🇯🇴', ambulance:'911',  police:'911',  fire:'911',  roadside:'110' },
+  'MA':{ country:'Morocco',              flag:'🇲🇦', ambulance:'15',   police:'19',   fire:'15',   roadside:'177' },
+  'TH':{ country:'Thailand',             flag:'🇹🇭', ambulance:'1669', police:'191',  fire:'199',  roadside:'1193' },
+  'IT':{ country:'Italy',                flag:'🇮🇹', ambulance:'118',  police:'113',  fire:'115',  roadside:'116' },
+  'MY':{ country:'Malaysia',             flag:'🇲🇾', ambulance:'999',  police:'999',  fire:'994',  roadside:'15999' },
+  'GE':{ country:'Georgia',              flag:'🇬🇪', ambulance:'112',  police:'112',  fire:'112',  roadside:'113' },
+  'AZ':{ country:'Azerbaijan',           flag:'🇦🇿', ambulance:'103',  police:'102',  fire:'101',  roadside:'113' },
+  'ID':{ country:'Indonesia',            flag:'🇮🇩', ambulance:'118',  police:'110',  fire:'113',  roadside:'021500112' },
+  'ES':{ country:'Spain',                flag:'🇪🇸', ambulance:'112',  police:'112',  fire:'112',  roadside:'900123505' },
+  'LB':{ country:'Lebanon',              flag:'🇱🇧', ambulance:'140',  police:'112',  fire:'175',  roadside:'1214' },
+  'US':{ country:'United States',        flag:'🇺🇸', ambulance:'911',  police:'911',  fire:'911',  roadside:'*47' },
+  'GR':{ country:'Greece',               flag:'🇬🇷', ambulance:'166',  police:'100',  fire:'199',  roadside:'10400' },
+  'DE':{ country:'Germany',              flag:'🇩🇪', ambulance:'112',  police:'110',  fire:'112',  roadside:'01802222222' },
+  'SG':{ country:'Singapore',            flag:'🇸🇬', ambulance:'995',  police:'999',  fire:'995',  roadside:'18006378778' },
+  'ZA':{ country:'South Africa',         flag:'🇿🇦', ambulance:'10177',police:'10111',fire:'10111',roadside:'0800033007' },
+  'CA':{ country:'Canada',               flag:'🇨🇦', ambulance:'911',  police:'911',  fire:'911',  roadside:'*47' },
+  'PH':{ country:'Philippines',          flag:'🇵🇭', ambulance:'911',  police:'911',  fire:'911',  roadside:'136' },
+  'IN':{ country:'India',                flag:'🇮🇳', ambulance:'108',  police:'100',  fire:'101',  roadside:'1033' },
+  'NL':{ country:'Netherlands',          flag:'🇳🇱', ambulance:'112',  police:'112',  fire:'112',  roadside:'08000888' },
+  'CY':{ country:'Cyprus',               flag:'🇨🇾', ambulance:'112',  police:'112',  fire:'112',  roadside:'22588111' },
+  'AU':{ country:'Australia',            flag:'🇦🇺', ambulance:'000',  police:'000',  fire:'000',  roadside:'131111' },
+  'DEFAULT':{ country:'International',   flag:'🌍',  ambulance:'112',  police:'112',  fire:'112',  roadside:'112' }
+};
 
-  const CC_MAP = {
-    'BH':'Bahrain','SA':'Saudi Arabia','AE':'United Arab Emirates','KW':'Kuwait',
-    'QA':'Qatar','OM':'Oman','TR':'Turkey','GB':'United Kingdom','EG':'Egypt',
-    'FR':'France','JO':'Jordan','MA':'Morocco','TH':'Thailand','IT':'Italy',
-    'MY':'Malaysia','GE':'Georgia','AZ':'Azerbaijan','ID':'Indonesia','ES':'Spain',
-    'LB':'Lebanon','US':'United States','GR':'Greece','DE':'Germany','SG':'Singapore',
-    'ZA':'South Africa','CA':'Canada','PH':'Philippines','IN':'India',
-    'NL':'Netherlands','CY':'Cyprus','AU':'Australia','JP':'Japan','KR':'South Korea'
-  };
+let currentEmergencyData = {...EMERGENCY_NUMBERS['DEFAULT']};
 
-  // Show fallback immediately after 2.5s no matter what
-  const fallbackTimer = setTimeout(()=>{
-    applyCountryToSplash('', 'DEFAULT');
-  }, 2500);
+// ══════════════════════════════════
+// IP DETECTION — FAST & RELIABLE
+// ══════════════════════════════════
+const CC_MAP = {
+  'BH':'Bahrain','SA':'Saudi Arabia','AE':'United Arab Emirates','KW':'Kuwait',
+  'QA':'Qatar','OM':'Oman','TR':'Turkey','GB':'United Kingdom','EG':'Egypt',
+  'FR':'France','JO':'Jordan','MA':'Morocco','TH':'Thailand','IT':'Italy',
+  'MY':'Malaysia','GE':'Georgia','AZ':'Azerbaijan','ID':'Indonesia','ES':'Spain',
+  'LB':'Lebanon','US':'United States','GR':'Greece','DE':'Germany','SG':'Singapore',
+  'ZA':'South Africa','CA':'Canada','PH':'Philippines','IN':'India',
+  'NL':'Netherlands','CY':'Cyprus','AU':'Australia','JP':'Japan','KR':'South Korea',
+  'NZ':'New Zealand','CN':'China','BR':'Brazil','MX':'Mexico','NG':'Nigeria',
+  'KE':'Kenya','PK':'Pakistan','BD':'Bangladesh','IQ':'Iraq','SY':'Syria'
+};
 
-  // Try each API with individual short timeouts
-  const tryFetch = (url, parse, ms=2000) =>
-    new Promise(resolve=>{
-      const t = setTimeout(()=>resolve(null), ms);
-      fetch(url)
-        .then(r=> url.includes('trace') ? r.text() : r.json())
-        .then(d=>{ clearTimeout(t); resolve(parse(d)); })
-        .catch(()=>{ clearTimeout(t); resolve(null); });
-    });
+function detectSplashCity(){
+  // Show fallback after 3s no matter what — never get stuck
+  const giveUp = setTimeout(()=>{ applyCountryToSplash('','DEFAULT'); }, 3000);
 
-  // Try Cloudflare first — fastest, most reliable
-  let result = await tryFetch(
-    'https://1.1.1.1/cdn-cgi/trace',
-    t => {
-      const m = t.match(/loc=([A-Z]{2})/);
-      if(m) return { code: m[1], country: CC_MAP[m[1]] || '' };
-      return null;
-    }, 1500
-  );
-
-  // If Cloudflare failed, try ipapi.co
-  if(!result || !result.country){
-    result = await tryFetch(
-      'https://ipapi.co/json/',
-      d => d && d.country_name ? { code: d.country_code, country: d.country_name } : null,
-      2000
-    );
+  // Simple XMLHttpRequest — works on ALL browsers including old iOS Safari
+  // No async/await, no Promise.any, no fetch issues
+  function tryXHR(url, parseText, cb){
+    try{
+      const xhr = new XMLHttpRequest();
+      xhr.timeout = 2000;
+      xhr.onload  = function(){ try{ cb(parseText(xhr.responseText)); }catch(e){ cb(null); } };
+      xhr.onerror = xhr.ontimeout = function(){ cb(null); };
+      xhr.open('GET', url, true);
+      xhr.send();
+    }catch(e){ cb(null); }
   }
 
-  // If still nothing, try ipwho.is
-  if(!result || !result.country){
-    result = await tryFetch(
-      'https://ipwho.is/',
-      d => d && d.country ? { code: d.country_code, country: d.country } : null,
-      2000
-    );
-  }
-
-  clearTimeout(fallbackTimer);
-
-  if(result && result.country){
-    country = result.country;
-    countryCode = result.code || 'DEFAULT';
-  }
-
-  applyCountryToSplash(country, countryCode);
+  // Try Cloudflare first — fastest, works on all browsers, no CORS issues
+  tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
+    if(!text) return null;
+    const m = text.match(/loc=([A-Z]{2})/);
+    return m ? {code:m[1], country:CC_MAP[m[1]]||''} : null;
+  }, function(result){
+    if(result && result.country){
+      clearTimeout(giveUp);
+      applyCountryToSplash(result.country, result.code);
+    } else {
+      // Cloudflare failed — try ipapi.co
+      tryXHR('https://ipapi.co/json/', function(text){
+        try{
+          const d = JSON.parse(text);
+          return d && d.country_name ? {code:d.country_code, country:d.country_name} : null;
+        }catch(e){ return null; }
+      }, function(result2){
+        clearTimeout(giveUp);
+        if(result2 && result2.country){
+          applyCountryToSplash(result2.country, result2.code);
+        } else {
+          // Both failed — show generic screen
+          applyCountryToSplash('','DEFAULT');
+        }
+      });
+    }
+  });
 }
 
 function applyCountryToSplash(country, countryCode){
-  // Update emergency numbers
-  currentEmergencyData = EMERGENCY_NUMBERS[countryCode] || EMERGENCY_NUMBERS['DEFAULT'];
+  // Update emergency data
+  currentEmergencyData = EMERGENCY_NUMBERS[countryCode] || {...EMERGENCY_NUMBERS['DEFAULT']};
   currentEmergencyData._fullName = country || currentEmergencyData.country;
 
-  // Update location bars
+  // Update all location displays
   const displayLoc = country || 'Your location';
   const locBar = document.getElementById('loc-name-bar');
   if(locBar) locBar.textContent = displayLoc;
-  document.querySelectorAll('.loc-name').forEach(el=>el.textContent = displayLoc);
+  document.querySelectorAll('.loc-name').forEach(function(el){ el.textContent = displayLoc; });
 
   renderSOSPanel();
   updateEmergencyBanner();
 
-  // Set backgrounds on registration screens
-  const bg = CITY_BACKGROUNDS[country] || CITY_BACKGROUNDS['DEFAULT'];
-  ['login-bg-img','agent-bg-img'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el && bg.img){
+  // Set city background image on all screens
+  var bg = CITY_BACKGROUNDS[country] || CITY_BACKGROUNDS['DEFAULT'];
+
+  // Registration screen backgrounds
+  ['login-bg-img','agent-bg-img'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el && bg && bg.img){
+      el.onload = function(){ el.style.opacity = id==='login-bg-img' ? '0.45' : '0.3'; };
       el.src = bg.img;
-      el.onload = ()=>{ el.style.opacity = id==='login-bg-img' ? '0.45' : '0.3'; };
     }
   });
 
-  // Update splash screen
-  const detecting  = document.getElementById('sp-detecting');
-  const cityContent= document.getElementById('sp-city-content');
-  const fallback   = document.getElementById('sp-fallback');
-  const cityNameEl = document.getElementById('sp-city-name');
-  const citySubEl  = document.getElementById('sp-city-sub');
-  const img        = document.getElementById('sp-city-img');
+  // Splash screen update
+  var detecting  = document.getElementById('sp-detecting');
+  var cityContent= document.getElementById('sp-city-content');
+  var fallback   = document.getElementById('sp-fallback');
+  var cityNameEl = document.getElementById('sp-city-name');
+  var citySubEl  = document.getElementById('sp-city-sub');
+  var img        = document.getElementById('sp-city-img');
 
   if(detecting) detecting.style.display = 'none';
 
   if(country){
-    if(cityContent) cityContent.style.display = 'block';
+    if(cityContent){ cityContent.style.display = 'block'; }
     if(cityNameEl)  cityNameEl.textContent = country;
-    if(citySubEl)   citySubEl.textContent  = bg.sub || 'Find trusted services in '+country;
+    if(citySubEl)   citySubEl.textContent  = (bg && bg.sub) ? bg.sub : 'Find trusted services in '+country;
   } else {
     if(fallback) fallback.style.display = 'block';
   }
 
   // Load background image
-  if(img && bg.img){
-    img.onload = ()=>{ img.style.opacity='0.85'; img.style.display='block'; };
-    img.onerror= ()=>{ img.style.display='none'; };
+  if(img && bg && bg.img){
+    img.onload = function(){ img.style.opacity='0.85'; };
+    img.onerror= function(){ img.style.display='none'; };
     img.src = bg.img;
-    img.style.display='block';
+    img.style.display = 'block';
   }
 }
 
-  // detectEmergencyNumbers is now handled by detectSplashCity
-// kept as alias for any legacy calls
-async function detectEmergencyNumbers(){
-  await detectSplashCity();
-}
+// Legacy alias
+function detectEmergencyNumbers(){ detectSplashCity(); }
 
 function renderSOSPanel(){
   const e = currentEmergencyData;
