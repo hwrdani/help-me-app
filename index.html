@@ -365,7 +365,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 /* ════════════════════════════════
    LOGIN
 ════════════════════════════════ */
-#login{background:linear-gradient(160deg,#667EEA,#764BA2);justify-content:flex-end;}
+#login{background:linear-gradient(160deg,#1A1A2E,#2E3A5F);justify-content:flex-end;position:relative;overflow:hidden;}
 .login-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;}
 .login-ic{font-size:54px;margin-bottom:14px;}
 .login-ttl{font-size:30px;font-weight:900;color:#fff;margin-bottom:7px;}
@@ -831,7 +831,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
      LOGIN
 ════════════════════════════════ -->
 <div class="screen" id="login">
-  <div class="login-top">
+  <!-- Dynamic city background -->
+  <img id="login-bg-img" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity 1.5s ease;z-index:0;">
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.35) 0%,rgba(26,26,46,.7) 50%,rgba(26,26,46,.95) 100%);z-index:1;"></div>
+  <div class="login-top" style="position:relative;z-index:2;">
     <div class="login-ic">🆘</div>
     <div class="login-ttl">Help Me</div>
     <div class="login-sub">Find trusted services anywhere in the world</div>
@@ -842,10 +845,10 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div id="step-dot-2" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
       <div id="step-dot-3" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
     </div>
-  </div>
+  </div><!-- /login-top -->
 
   <!-- STEP 1: Phone number -->
-  <div id="login-s1" class="login-sheet">
+  <div id="login-s1" class="login-sheet" style="position:relative;z-index:2;">
     <div class="ls-title">Welcome! 👋</div>
     <div class="ls-sub">Enter your phone number to get started. We'll send a verification code via WhatsApp.</div>
 
@@ -882,7 +885,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 
   <!-- STEP 2: OTP -->
-  <div id="login-s2" class="login-sheet" style="display:none">
+  <div id="login-s2" class="login-sheet" style="display:none;position:relative;z-index:2;">
     <div class="ls-title">Check WhatsApp 💬</div>
     <div class="ls-sub">We sent a 4-digit code to <strong id="otp-num">+971 50 ···</strong><br>Enter it below to verify your number.</div>
     <div class="otp-row">
@@ -901,7 +904,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 
   <!-- STEP 3: Name & Country -->
-  <div id="login-s3" class="login-sheet" style="display:none">
+  <div id="login-s3" class="login-sheet" style="display:none;position:relative;z-index:2;">
     <div class="ls-title">Almost there! 🎉</div>
     <div class="ls-sub">Just two quick details and you're in. Everything else is optional.</div>
 
@@ -1288,11 +1291,15 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
      AGENT APPLICATION
 ════════════════════════════════ -->
 <div class="screen" id="agent">
-  <div class="screen-hdr">
-    <div class="back-btn" onclick="go('register')">← Back</div>
-    <div class="screen-hdr-txt">
-      <div class="stitle">Become an Agent</div>
-      <div class="ssub">Instant approval · Start earning today</div>
+  <div style="position:relative;overflow:hidden;">
+    <img id="agent-bg-img" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s;z-index:0;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,.85),rgba(217,119,6,.95));z-index:1;"></div>
+    <div class="screen-hdr" style="position:relative;z-index:2;">
+      <div class="back-btn" onclick="go('register')" style="color:#fff;background:rgba(0,0,0,.2);border-radius:20px;padding:6px 14px;">← Back</div>
+      <div class="screen-hdr-txt">
+        <div class="stitle" style="color:#fff;">Become an Agent</div>
+        <div class="ssub" style="color:rgba(255,255,255,.85);">Instant approval · Start earning today</div>
+      </div>
     </div>
   </div>
   <div class="reg-scroll" id="agent-form-wrap">
@@ -3218,6 +3225,14 @@ async function detectSplashCity(){
   currentEmergencyData._city = city;
   currentEmergencyData._fullName = city ? city+', '+country : country;
 
+  // Apply city background to all registration screens
+  const bg = CITY_BACKGROUNDS[country] || CITY_BACKGROUNDS['DEFAULT'];
+  if(bg && bg.img){
+    const loginBg = document.getElementById('login-bg-img');
+    const agentBg = document.getElementById('agent-bg-img');
+    if(loginBg){ loginBg.src=bg.img; loginBg.onload=()=>{ loginBg.style.opacity='0.45'; }; }
+    if(agentBg){ agentBg.src=bg.img; agentBg.onload=()=>{ agentBg.style.opacity='0.3'; }; }
+  }
   // Update location bar on home screen
   const displayLoc = city ? city+', '+country : country;
   const locBar = document.getElementById('loc-name-bar');
@@ -3953,6 +3968,14 @@ function applyPricing(p){
       if(heroCountry) heroCountry.textContent = p.flag+' '+p.name;
       if(regHdr) regHdr.style.background = 'transparent';
     };
+  }
+
+  // Apply same city background to login, biz-reg and agent screens
+  const loginBg = document.getElementById('login-bg-img');
+  const agentBg = document.getElementById('agent-bg-img');
+  if(bg && bg.img){
+    if(loginBg){ loginBg.src=bg.img; loginBg.onload=()=>{ loginBg.style.opacity='0.45'; }; }
+    if(agentBg){ agentBg.src=bg.img; agentBg.onload=()=>{ agentBg.style.opacity='0.3'; }; }
   }
 
   // Update plan prices
