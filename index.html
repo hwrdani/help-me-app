@@ -3246,84 +3246,123 @@ function detectSplashCity(){
   }
 
   // Try Cloudflare first — fastest, works on all browsers, no CORS issues
-  tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
-    if(!text) return null;
-    const m = text.match(/loc=([A-Z]{2})/);
-    return m ? {code:m[1], country:CC_MAP[m[1]]||''} : null;
+  // Cloudflare only gives country code, not city — use ipapi.co for city
+  tryXHR('https://ipapi.co/json/', function(text){
+    try{
+      const d = JSON.parse(text);
+      return d && d.country_name ? {code:d.country_code, country:d.country_name, city:d.city||''} : null;
+    }catch(e){ return null; }
   }, function(result){
     if(result && result.country){
       clearTimeout(giveUp);
-      applyCountryToSplash(result.country, result.code);
+      applyCountryToSplash(result.country, result.code, result.city||'');
     } else {
-      // Cloudflare failed — try ipapi.co
-      tryXHR('https://ipapi.co/json/', function(text){
-        try{
-          const d = JSON.parse(text);
-          return d && d.country_name ? {code:d.country_code, country:d.country_name} : null;
-        }catch(e){ return null; }
+      // ipapi failed — try Cloudflare (country only, no city)
+      tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
+        if(!text) return null;
+        const m = text.match(/loc=([A-Z]{2})/);
+        return m ? {code:m[1], country:CC_MAP[m[1]]||'', city:''} : null;
       }, function(result2){
         clearTimeout(giveUp);
         if(result2 && result2.country){
-          applyCountryToSplash(result2.country, result2.code);
+          applyCountryToSplash(result2.country, result2.code, '');
         } else {
-          // Both failed — show generic screen
-          applyCountryToSplash('','DEFAULT');
+          applyCountryToSplash('','DEFAULT','');
         }
       });
     }
   });
 }
 
-function applyCountryToSplash(country, countryCode){
-  // Update emergency data
-  currentEmergencyData = EMERGENCY_NUMBERS[countryCode] || {...EMERGENCY_NUMBERS['DEFAULT']};
-  currentEmergencyData._fullName = country || currentEmergencyData.country;
+function applyCountryToSplash(country, countryCode, city){
+  city = city || '';
+  // Fetch from Supabase — city first, then country fallback
+  // Falls back to hardcoded EMERGENCY_NUMBERS if Supabase fails
+  function applyEmergency(data){
+    currentEmergencyData = data || EMERGENCY_NUMBERS[countryCode] || {...EMERGENCY_NUMBERS['DEFAULT']};
+    currentEmergencyData._fullName = country || currentEmergencyData.country;
 
-  // Update all location displays
-  const displayLoc = country || 'Your location';
-  const locBar = document.getElementById('loc-name-bar');
-  if(locBar) locBar.textContent = displayLoc;
-  document.querySelectorAll('.loc-name').forEach(function(el){ el.textContent = displayLoc; });
+    // Update all location displays
+    const displayLoc = country || 'Your location';
+    const locBar = document.getElementById('loc-name-bar');
+    if(locBar) locBar.textContent = displayLoc;
+    document.querySelectorAll('.loc-name').forEach(function(el){ el.textContent = displayLoc; });
 
-  renderSOSPanel();
-  updateEmergencyBanner();
+    renderSOSPanel();
+    updateEmergencyBanner();
 
-  // Set city background image on all screens
-  var bg = CITY_BACKGROUNDS[country] || CITY_BACKGROUNDS['DEFAULT'];
+    // Set city background on all screens
+    var bg = CITY_BACKGROUNDS[country] || CITY_BACKGROUNDS['DEFAULT'];
+    ['login-bg-img','agent-bg-img'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && bg && bg.img){
+        el.onload = function(){ el.style.opacity = id==='login-bg-img' ? '0.45' : '0.3'; };
+        el.src = bg.img;
+      }
+    });
 
-  // Registration screen backgrounds
-  ['login-bg-img','agent-bg-img'].forEach(function(id){
-    var el = document.getElementById(id);
-    if(el && bg && bg.img){
-      el.onload = function(){ el.style.opacity = id==='login-bg-img' ? '0.45' : '0.3'; };
-      el.src = bg.img;
+    // Update splash screen
+    var detecting  = document.getElementById('sp-detecting');
+    var cityContent= document.getElementById('sp-city-content');
+    var fallback   = document.getElementById('sp-fallback');
+    var cityNameEl = document.getElementById('sp-city-name');
+    var citySubEl  = document.getElementById('sp-city-sub');
+    var img        = document.getElementById('sp-city-img');
+
+    if(detecting) detecting.style.display = 'none';
+    if(country){
+      if(cityContent){ cityContent.style.display = 'block'; }
+      if(cityNameEl)  cityNameEl.textContent = country;
+      if(citySubEl)   citySubEl.textContent  = (bg && bg.sub) ? bg.sub : 'Find trusted services in '+country;
+    } else {
+      if(fallback) fallback.style.display = 'block';
     }
-  });
-
-  // Splash screen update
-  var detecting  = document.getElementById('sp-detecting');
-  var cityContent= document.getElementById('sp-city-content');
-  var fallback   = document.getElementById('sp-fallback');
-  var cityNameEl = document.getElementById('sp-city-name');
-  var citySubEl  = document.getElementById('sp-city-sub');
-  var img        = document.getElementById('sp-city-img');
-
-  if(detecting) detecting.style.display = 'none';
-
-  if(country){
-    if(cityContent){ cityContent.style.display = 'block'; }
-    if(cityNameEl)  cityNameEl.textContent = country;
-    if(citySubEl)   citySubEl.textContent  = (bg && bg.sub) ? bg.sub : 'Find trusted services in '+country;
-  } else {
-    if(fallback) fallback.style.display = 'block';
+    if(img && bg && bg.img){
+      img.onload = function(){ img.style.opacity='0.85'; };
+      img.onerror= function(){ img.style.display='none'; };
+      img.src = bg.img;
+      img.style.display = 'block';
+    }
   }
 
-  // Load background image
-  if(img && bg && bg.img){
-    img.onload = function(){ img.style.opacity='0.85'; };
-    img.onerror= function(){ img.style.display='none'; };
-    img.src = bg.img;
-    img.style.display = 'block';
+  // Try Supabase — city first, then country fallback
+  if(countryCode && countryCode !== 'DEFAULT'){
+    var query = city
+      ? '/rest/v1/emergency_numbers?city=eq.'+encodeURIComponent(city)+'&country_code=eq.'+countryCode+'&limit=1'
+      : '/rest/v1/emergency_numbers?country_code=eq.'+countryCode+'&limit=1';
+
+    var xhr = new XMLHttpRequest();
+    xhr.timeout = 3000;
+    xhr.open('GET', SUPABASE_URL + query, true);
+    xhr.setRequestHeader('apikey', SUPABASE_KEY);
+    xhr.setRequestHeader('Authorization', 'Bearer '+SUPABASE_KEY);
+    xhr.onload = function(){
+      try{
+        var data = JSON.parse(xhr.responseText);
+        if(data && data.length > 0){
+          applyEmergency(data[0]);
+        } else if(city) {
+          // City not found — try country only
+          var xhr2 = new XMLHttpRequest();
+          xhr2.timeout = 2000;
+          xhr2.open('GET', SUPABASE_URL+'/rest/v1/emergency_numbers?country_code=eq.'+countryCode+'&limit=1', true);
+          xhr2.setRequestHeader('apikey', SUPABASE_KEY);
+          xhr2.setRequestHeader('Authorization', 'Bearer '+SUPABASE_KEY);
+          xhr2.onload = function(){
+            try{ var d2=JSON.parse(xhr2.responseText); applyEmergency(d2&&d2.length?d2[0]:null); }
+            catch(e){ applyEmergency(null); }
+          };
+          xhr2.onerror = xhr2.ontimeout = function(){ applyEmergency(null); };
+          xhr2.send();
+        } else {
+          applyEmergency(null);
+        }
+      }catch(e){ applyEmergency(null); }
+    };
+    xhr.onerror = xhr.ontimeout = function(){ applyEmergency(null); };
+    xhr.send();
+  } else {
+    applyEmergency(null);
   }
 }
 
@@ -3337,17 +3376,19 @@ function renderSOSPanel(){
   const rows = document.getElementById('sos-rows');
   if(!rows) return;
 
-  if(loc) loc.textContent = e._fullName || e.country;
+  if(loc) loc.textContent = e.city || e._fullName || e.country_name || e.country;
   if(bar) bar.style.display = 'block';
 
   const services = [
-    { emoji:'🏥', label:'Hospital',      num: e.ambulance,  bg:'#FFE4E6', delay:'.04s', action:'hospital'  },
-    { emoji:'🚑', label:'Ambulance',     num: e.ambulance,  bg:'#FEE2E2', delay:'.08s', action:'ambulance' },
-    { emoji:'👮', label:'Police',        num: e.police,     bg:'#DBEAFE', delay:'.12s', action:'police'    },
-    { emoji:'🔥', label:'Fire Dept',     num: e.fire,       bg:'#FEF3C7', delay:'.16s', action:'fire'      },
-    { emoji:'🔧', label:'Mechanic',      num: null,         bg:'#D1FAE5', delay:'.20s', action:'mechanic'  },
-    { emoji:'🚗', label:'Tow Truck',     num: e.roadside,   bg:'#EDE9FE', delay:'.24s', action:'tow'       },
-    { emoji:'💊', label:'24hr Pharmacy', num: null,         bg:'#D1FAE5', delay:'.28s', action:'pharmacy'  },
+    { emoji:'🚑', label:'Ambulance',      num: e.ambulance,      bg:'#FEE2E2', delay:'.04s', action:'ambulance' },
+    { emoji:'👮', label:'Police',          num: e.police,         bg:'#DBEAFE', delay:'.08s', action:'police'    },
+    { emoji:'🔥', label:'Fire Dept',       num: e.fire,           bg:'#FEF3C7', delay:'.12s', action:'fire'      },
+    { emoji:'🚗', label:'Traffic Accident',num: e.traffic_police||e.police, bg:'#FFF7ED', delay:'.16s', action:'traffic' },
+    { emoji:'⛵', label:'Coast Guard',     num: e.coast_guard,    bg:'#EFF6FF', delay:'.20s', action:'coast'     },
+    { emoji:'🏛️', label:'Tourist Police',  num: e.tourist_police, bg:'#F5F3FF', delay:'.24s', action:'tourist'   },
+    { emoji:'🔧', label:'Mechanic',        num: null,             bg:'#D1FAE5', delay:'.28s', action:'mechanic'  },
+    { emoji:'🚐', label:'Tow Truck',       num: e.roadside,       bg:'#EDE9FE', delay:'.32s', action:'tow'       },
+    { emoji:'💊', label:'24hr Pharmacy',   num: null,             bg:'#D1FAE5', delay:'.36s', action:'pharmacy'  },
   ];
 
   rows.innerHTML = services.map(s=>`
@@ -3367,18 +3408,16 @@ function updateEmergencyBanner(){
   const e = currentEmergencyData;
   const banner = document.querySelector('.emg-banner .es');
   if(banner){
-    banner.textContent = `Ambulance ${e.ambulance} · Police ${e.police} · Fire ${e.fire}`;
+    const traffic = e.traffic_police || e.police;
+    banner.textContent = `🚑 ${e.ambulance} · 👮 ${e.police} · 🔥 ${e.fire} · 🚗 ${traffic}`;
   }
 }
 
 function sosGoSearch(action){
   closeSOS();
-  const searches = {
-    hospital: 'hospital',
-    mechanic: 'mechanics',
-    pharmacy: 'pharmacy'
-  };
-  if(searches[action]) openCat(searches[action]);
+  if(action==='mechanic') openCat('mechanics');
+  else if(action==='pharmacy') openCat('pharmacy');
+  else if(action==='hospital') openCat('emergency');
   else toast('🔍 Searching for '+action+'...');
 }
 
