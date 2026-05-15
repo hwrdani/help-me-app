@@ -63,7 +63,8 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 .app{max-width:420px;margin:0 auto;min-height:100vh;position:relative;background:#F9F7F4;}
 .screen{display:none;flex-direction:column;min-height:100vh;animation:fadeUp .3s ease;}
 .screen.active{display:flex;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce-down{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+@keyframes pulse-border{0%,100%{border-color:#FFE66D;box-shadow:0 0 0 9999px rgba(0,0,0,.85),0 0 20px rgba(255,230,77,.6)}50%{border-color:#fff;box-shadow:0 0 0 9999px rgba(0,0,0,.85),0 0 30px rgba(255,255,255,.4)}}
 
 /* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;
@@ -490,6 +491,39 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 </div>
 
+<!-- ═══ IOS INSTALL OVERLAY ═══ -->
+<div id="ios-overlay" style="display:none;position:fixed;inset:0;z-index:9998;pointer-events:all;" onclick="hideIOSOverlay()">
+  <!-- Dark overlay -->
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.85);"></div>
+
+  <!-- Spotlight cutout at bottom center where Share button is -->
+  <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:56px;height:56px;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.85);background:transparent;border:3px solid #FFE66D;animation:pulse-border 1.5s infinite;"></div>
+
+  <!-- Bounce arrow pointing down to share button -->
+  <div style="position:absolute;bottom:76px;left:50%;transform:translateX(-50%);text-align:center;">
+    <div style="font-size:40px;animation:bounce-down 1s ease-in-out infinite;">⬇️</div>
+  </div>
+
+  <!-- Instruction card -->
+  <div style="position:absolute;bottom:160px;left:20px;right:20px;background:#1A1A2E;border:2px solid #FFE66D;border-radius:20px;padding:20px;text-align:center;">
+    <div style="font-size:36px;margin-bottom:10px;">📤</div>
+    <div style="color:#FFE66D;font-weight:900;font-size:18px;margin-bottom:8px;">Tap the Share button</div>
+    <div style="color:rgba(255,255,255,.8);font-size:14px;font-weight:600;line-height:1.5;margin-bottom:14px;">
+      It's highlighted below ⬇️<br>Then tap <strong style="color:#FFE66D;">"Add to Home Screen"</strong>
+    </div>
+    <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-bottom:14px;">
+      <div style="color:rgba(255,255,255,.6);font-size:12px;font-weight:600;">Your SOS icon will look like this on your home screen:</div>
+      <div style="margin-top:8px;display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
+        <div style="width:60px;height:60px;background:linear-gradient(135deg,#FF4757,#C0392B);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;font-family:Arial Black,sans-serif;box-shadow:0 4px 16px rgba(255,71,87,.5);">SOS</div>
+        <div style="color:#fff;font-size:12px;font-weight:700;">Help Me</div>
+      </div>
+    </div>
+    <button onclick="hideIOSOverlay()" style="background:rgba(255,255,255,.15);border:none;border-radius:10px;color:#fff;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">
+      Got it ✓
+    </button>
+  </div>
+</div>
+
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
 
@@ -506,10 +540,13 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   <!-- Content -->
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;padding:60px 24px 40px;">
 
-    <!-- Logo -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:auto;">
-      <div style="width:44px;height:44px;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid rgba(255,255,255,.3);">🆘</div>
-      <div style="color:#fff;font-weight:900;font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.4);">Help <span style="color:#FFE66D;">Me</span></div>
+    <!-- Logo — centered, bigger -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:auto;padding-top:20px;">
+      <div style="width:90px;height:90px;background:linear-gradient(135deg,#FF4757,#C0392B);backdrop-filter:blur(10px);border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:44px;border:2px solid rgba(255,255,255,.3);box-shadow:0 8px 32px rgba(255,71,87,.5);">🆘</div>
+      <div style="text-align:center;">
+        <div style="color:#fff;font-weight:900;font-size:36px;text-shadow:0 2px 12px rgba(0,0,0,.5);letter-spacing:-0.5px;">Help <span style="color:#FFE66D;">Me</span></div>
+        <div style="color:rgba(255,255,255,.7);font-size:14px;font-weight:600;margin-top:4px;">Trusted services · Anywhere · Always</div>
+      </div>
     </div>
 
     <!-- City welcome text -->
@@ -560,16 +597,43 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       Trusted services · 30 countries · Always nearby
     </div>
 
-    <!-- Install prompt -->
-    <div id="sp-install-prompt" style="display:none;margin-top:16px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
-      <div style="font-size:24px;">📲</div>
-      <div style="flex:1;">
-        <div style="color:#fff;font-weight:800;font-size:13px;">Add to Home Screen</div>
-        <div style="color:rgba(255,255,255,.7);font-size:11px;font-weight:600;">Get instant SOS access from your home screen</div>
+    <!-- Install prompt — device-aware -->
+    <div id="sp-install-prompt" style="display:none;margin-top:16px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="font-size:24px;" id="sp-install-icon">📲</div>
+        <div style="flex:1;">
+          <div style="color:#fff;font-weight:800;font-size:13px;">Add Help Me to Your Home Screen</div>
+          <div style="color:rgba(255,255,255,.7);font-size:11px;font-weight:600;" id="sp-install-sub">Get instant SOS access from your home screen</div>
+        </div>
       </div>
-      <button onclick="installApp()" style="padding:7px 12px;background:#FF4757;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;">
-        Install
-      </button>
+      <!-- Android: one tap install button -->
+      <div id="sp-android-install" style="display:none;">
+        <button onclick="installApp()"
+          style="width:100%;padding:11px;background:#FF4757;border:none;border-radius:11px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
+          ➕ Add to Home Screen
+        </button>
+      </div>
+      <!-- iOS: visual overlay guide -->
+      <div id="sp-ios-install" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;">
+            <span style="font-size:18px;">1️⃣</span>
+            <span style="color:#fff;font-size:12px;font-weight:700;">Tap the <strong style="color:#FFE66D;">Share</strong> button <strong style="color:#FFE66D;">⬆️</strong> at the bottom of Safari</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;">
+            <span style="font-size:18px;">2️⃣</span>
+            <span style="color:#fff;font-size:12px;font-weight:700;">Scroll down and tap <strong style="color:#FFE66D;">"Add to Home Screen"</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;">
+            <span style="font-size:18px;">3️⃣</span>
+            <span style="color:#fff;font-size:12px;font-weight:700;">Tap <strong style="color:#FFE66D;">"Add"</strong> — the SOS icon appears on your home screen ✅</span>
+          </div>
+          <button onclick="showIOSOverlay()"
+            style="width:100%;padding:11px;background:#FF4757;border:none;border-radius:11px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:4px;">
+            Show Me How →
+          </button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -975,28 +1039,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       </div>
     </div>
 
-    <div style="margin-bottom:20px;">
-      <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">📍 I am currently in <span style="color:#FF4757">*</span></div>
-      <div style="position:relative;">
-        <div style="display:flex;gap:8px;">
-          <div style="position:relative;flex:1;">
-            <input id="reg-location" type="text" placeholder="Search country..." autocomplete="off"
-              style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
-              font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
-              onfocus="this.style.borderColor='#667EEA';showDropdown('dd-location','reg-location')"
-              oninput="filterDropdown('dd-location','reg-location')"
-              onblur="setTimeout(()=>hideDropdown('dd-location'),200)">
-            <div id="dd-location" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
-              border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:1000;max-height:200px;
-              overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
-          </div>
-          <button onclick="detectLocation()" id="detect-btn"
-            style="padding:14px 13px;background:#DBEAFE;border:none;border-radius:13px;font-size:20px;
-            cursor:pointer;flex-shrink:0;transition:all .2s;">📍</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-top:5px;">
-        Tap 📍 to auto-detect your current location
+    <!-- IP auto-detection note -->
+    <div style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:13px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:20px;">📍</span>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#1E40AF;">Your current location is detected automatically</div>
+        <div style="font-size:11px;font-weight:600;color:#3B82F6;margin-top:2px;" id="reg-ip-location">Detecting your location...</div>
       </div>
     </div>
 
@@ -2997,22 +3045,60 @@ function closeMaps(){
   document.getElementById('maps-modal').classList.remove('open');
 }
 
+function showIOSOverlay(){
+  document.getElementById('ios-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function hideIOSOverlay(){
+  document.getElementById('ios-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 // ══════════════════════════════════
 // PWA — HOME SCREEN INSTALLATION
 // ══════════════════════════════════
 let deferredInstallPrompt = null;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isAndroid = /Android/.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-// Capture the install prompt event
+// Show install prompt based on device
+function checkInstallPrompt(){
+  // Don't show if already installed
+  if(isStandalone) return;
+
+  const prompt = document.getElementById('sp-install-prompt');
+  const androidBtn = document.getElementById('sp-android-install');
+  const iosInstr = document.getElementById('sp-ios-install');
+
+  if(isIOS){
+    // iOS — show step by step Safari instructions
+    if(prompt) prompt.style.display = 'block';
+    if(iosInstr) iosInstr.style.display = 'block';
+    if(androidBtn) androidBtn.style.display = 'none';
+  } else if(deferredInstallPrompt){
+    // Android/Chrome — show one-tap install button
+    if(prompt) prompt.style.display = 'block';
+    if(androidBtn) androidBtn.style.display = 'block';
+    if(iosInstr) iosInstr.style.display = 'none';
+  }
+}
+
+// Capture the Android install prompt event
 window.addEventListener('beforeinstallprompt', (e)=>{
   e.preventDefault();
   deferredInstallPrompt = e;
-  // Show install banner on splash
-  const prompt = document.getElementById('sp-install-prompt');
-  if(prompt) prompt.style.display = 'flex';
+  checkInstallPrompt();
 });
+
+// On iOS, show after a short delay
+if(isIOS){
+  setTimeout(checkInstallPrompt, 1500);
+}
 
 async function installApp(){
   if(deferredInstallPrompt){
+    // Android — trigger native install
     deferredInstallPrompt.prompt();
     const result = await deferredInstallPrompt.userChoice;
     if(result.outcome === 'accepted'){
@@ -3021,25 +3107,12 @@ async function installApp(){
       if(prompt) prompt.style.display = 'none';
     }
     deferredInstallPrompt = null;
-  } else {
-    // iOS — show manual instructions
-    showIOSInstallGuide();
-  }
-}
-
-function showIOSInstallGuide(){
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if(isIOS){
-    toast('📲 Tap Share → "Add to Home Screen" to install');
-  } else {
-    toast('📲 Tap browser menu → "Add to Home Screen"');
   }
 }
 
 // Register Service Worker for offline support
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
-    // Inline service worker for caching
     const swCode = `
       const CACHE = 'helpme-v1';
       self.addEventListener('install', e=>{
@@ -3057,57 +3130,89 @@ if('serviceWorker' in navigator){
   });
 }
 const CITY_BACKGROUNDS = {
-  // GCC
-  'Manama':         { img:'https://images.unsplash.com/photo-1578895101408-1a36b834405b?w=800&q=80', sub:'Find trusted services in Manama' },
-  'Riffa':          { img:'https://images.unsplash.com/photo-1578895101408-1a36b834405b?w=800&q=80', sub:'Find trusted services in Riffa' },
-  'Dubai':          { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', sub:'Find trusted services in Dubai' },
-  'Abu Dhabi':      { img:'https://images.unsplash.com/photo-1551888739-a4c6c8a9b1c5?w=800&q=80', sub:'Find trusted services in Abu Dhabi' },
-  'Riyadh':         { img:'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=800&q=80', sub:'Find trusted services in Riyadh' },
-  'Jeddah':         { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Jeddah' },
+  // GCC — specific landmark photos
+  'Manama':         { img:'https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=800&q=80', sub:'Find trusted services in Manama, Bahrain' },
+  'Riffa':          { img:'https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=800&q=80', sub:'Find trusted services in Riffa, Bahrain' },
+  'Muharraq':       { img:'https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=800&q=80', sub:'Find trusted services in Muharraq, Bahrain' },
+  'Juffair':        { img:'https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=800&q=80', sub:'Find trusted services in Juffair, Bahrain' },
+  'Dubai':          { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', sub:'Find trusted services in Dubai, UAE' },
+  'Abu Dhabi':      { img:'https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800&q=80', sub:'Find trusted services in Abu Dhabi, UAE' },
+  'Sharjah':        { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', sub:'Find trusted services in Sharjah, UAE' },
+  'Riyadh':         { img:'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=800&q=80', sub:'Find trusted services in Riyadh, Saudi Arabia' },
+  'Jeddah':         { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Jeddah, Saudi Arabia' },
+  'Mecca':          { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Mecca, Saudi Arabia' },
+  'Medina':         { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Medina, Saudi Arabia' },
   'Kuwait City':    { img:'https://images.unsplash.com/photo-1563177978-4c1be4f7ae3a?w=800&q=80', sub:'Find trusted services in Kuwait City' },
-  'Doha':           { img:'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=800&q=80', sub:'Find trusted services in Doha' },
-  'Muscat':         { img:'https://images.unsplash.com/photo-1609861657820-cb5bb52b31b3?w=800&q=80', sub:'Find trusted services in Muscat' },
+  'Doha':           { img:'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=800&q=80', sub:'Find trusted services in Doha, Qatar' },
+  'Lusail':         { img:'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=800&q=80', sub:'Find trusted services in Lusail, Qatar' },
+  'Muscat':         { img:'https://images.unsplash.com/photo-1609861657820-cb5bb52b31b3?w=800&q=80', sub:'Find trusted services in Muscat, Oman' },
+  'Salalah':        { img:'https://images.unsplash.com/photo-1609861657820-cb5bb52b31b3?w=800&q=80', sub:'Find trusted services in Salalah, Oman' },
   // Europe
-  'London':         { img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80', sub:'Find trusted services in London' },
-  'Paris':          { img:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', sub:'Find trusted services in Paris' },
-  'Rome':           { img:'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', sub:'Find trusted services in Rome' },
-  'Milan':          { img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', sub:'Find trusted services in Milan' },
-  'Barcelona':      { img:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80', sub:'Find trusted services in Barcelona' },
-  'Madrid':         { img:'https://images.unsplash.com/photo-1543785734-4b6e564642f8?w=800&q=80', sub:'Find trusted services in Madrid' },
+  'London':         { img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80', sub:'Find trusted services in London, UK' },
+  'Manchester':     { img:'https://images.unsplash.com/photo-1578508843072-8f0e1de0eb8a?w=800&q=80', sub:'Find trusted services in Manchester, UK' },
+  'Birmingham':     { img:'https://images.unsplash.com/photo-1578508843072-8f0e1de0eb8a?w=800&q=80', sub:'Find trusted services in Birmingham, UK' },
+  'Edinburgh':      { img:'https://images.unsplash.com/photo-1558022103-603c34ab10ce?w=800&q=80', sub:'Find trusted services in Edinburgh, UK' },
+  'Paris':          { img:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', sub:'Find trusted services in Paris, France' },
+  'Nice':           { img:'https://images.unsplash.com/photo-1491166617655-86c5cd0be68e?w=800&q=80', sub:'Find trusted services in Nice, France' },
+  'Cannes':         { img:'https://images.unsplash.com/photo-1491166617655-86c5cd0be68e?w=800&q=80', sub:'Find trusted services in Cannes, France' },
+  'Lyon':           { img:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', sub:'Find trusted services in Lyon, France' },
+  'Rome':           { img:'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', sub:'Find trusted services in Rome, Italy' },
+  'Milan':          { img:'https://images.unsplash.com/photo-1610016302534-6f67f1c968d8?w=800&q=80', sub:'Find trusted services in Milan, Italy' },
+  'Florence':       { img:'https://images.unsplash.com/photo-1541370976299-4d24be63b012?w=800&q=80', sub:'Find trusted services in Florence, Italy' },
+  'Venice':         { img:'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80', sub:'Find trusted services in Venice, Italy' },
+  'Barcelona':      { img:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80', sub:'Find trusted services in Barcelona, Spain' },
+  'Madrid':         { img:'https://images.unsplash.com/photo-1543785734-4b6e564642f8?w=800&q=80', sub:'Find trusted services in Madrid, Spain' },
+  'Marbella':       { img:'https://images.unsplash.com/photo-1543785734-4b6e564642f8?w=800&q=80', sub:'Find trusted services in Marbella, Spain' },
   'Amsterdam':      { img:'https://images.unsplash.com/photo-1534351590666-13e3e96b5702?w=800&q=80', sub:'Find trusted services in Amsterdam' },
-  'Athens':         { img:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80', sub:'Find trusted services in Athens' },
-  'Frankfurt':      { img:'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80', sub:'Find trusted services in Frankfurt' },
-  'Munich':         { img:'https://images.unsplash.com/photo-1595867818082-083862f3d630?w=800&q=80', sub:'Find trusted services in Munich' },
-  'Limassol':       { img:'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80', sub:'Find trusted services in Limassol' },
-  'Nicosia':        { img:'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80', sub:'Find trusted services in Nicosia' },
+  'Athens':         { img:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80', sub:'Find trusted services in Athens, Greece' },
+  'Santorini':      { img:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80', sub:'Find trusted services in Santorini, Greece' },
+  'Mykonos':        { img:'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80', sub:'Find trusted services in Mykonos, Greece' },
+  'Frankfurt':      { img:'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80', sub:'Find trusted services in Frankfurt, Germany' },
+  'Munich':         { img:'https://images.unsplash.com/photo-1595867818082-083862f3d630?w=800&q=80', sub:'Find trusted services in Munich, Germany' },
+  'Berlin':         { img:'https://images.unsplash.com/photo-1560969184-10fe8719e047?w=800&q=80', sub:'Find trusted services in Berlin, Germany' },
+  'Limassol':       { img:'https://images.unsplash.com/photo-1563204457-14f68f1b7ed4?w=800&q=80', sub:'Find trusted services in Limassol, Cyprus' },
+  'Nicosia':        { img:'https://images.unsplash.com/photo-1563204457-14f68f1b7ed4?w=800&q=80', sub:'Find trusted services in Nicosia, Cyprus' },
+  'Paphos':         { img:'https://images.unsplash.com/photo-1563204457-14f68f1b7ed4?w=800&q=80', sub:'Find trusted services in Paphos, Cyprus' },
   // Middle East & Africa
-  'Istanbul':       { img:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', sub:'Find trusted services in Istanbul' },
-  'Antalya':        { img:'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80', sub:'Find trusted services in Antalya' },
-  'Cairo':          { img:'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=800&q=80', sub:'Find trusted services in Cairo' },
-  'Hurghada':       { img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', sub:'Find trusted services in Hurghada' },
-  'Amman':          { img:'https://images.unsplash.com/photo-1563177978-4c1be4f7ae3a?w=800&q=80', sub:'Find trusted services in Amman' },
-  'Marrakech':      { img:'https://images.unsplash.com/photo-1539020140153-e479b8c29b07?w=800&q=80', sub:'Find trusted services in Marrakech' },
-  'Casablanca':     { img:'https://images.unsplash.com/photo-1577048982768-5cb3e7ddfa23?w=800&q=80', sub:'Find trusted services in Casablanca' },
-  'Beirut':         { img:'https://images.unsplash.com/photo-1581455590846-9db74cb1ca37?w=800&q=80', sub:'Find trusted services in Beirut' },
-  'Tbilisi':        { img:'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80', sub:'Find trusted services in Tbilisi' },
-  'Baku':           { img:'https://images.unsplash.com/photo-1558618047-f4bde34e2231?w=800&q=80', sub:'Find trusted services in Baku' },
-  'Cape Town':      { img:'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', sub:'Find trusted services in Cape Town' },
-  // Asia
-  'Bangkok':        { img:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80', sub:'Find trusted services in Bangkok' },
-  'Phuket':         { img:'https://images.unsplash.com/photo-1589394960098-bf80c28d07f0?w=800&q=80', sub:'Find trusted services in Phuket' },
+  'Istanbul':       { img:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', sub:'Find trusted services in Istanbul, Turkey' },
+  'Antalya':        { img:'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80', sub:'Find trusted services in Antalya, Turkey' },
+  'Bodrum':         { img:'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80', sub:'Find trusted services in Bodrum, Turkey' },
+  'Cairo':          { img:'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=800&q=80', sub:'Find trusted services in Cairo, Egypt' },
+  'Hurghada':       { img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', sub:'Find trusted services in Hurghada, Egypt' },
+  'Sharm El-Sheikh':{ img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', sub:'Find trusted services in Sharm El-Sheikh, Egypt' },
+  'Alexandria':     { img:'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=800&q=80', sub:'Find trusted services in Alexandria, Egypt' },
+  'Amman':          { img:'https://images.unsplash.com/photo-1580418827493-f2b22c0a76cb?w=800&q=80', sub:'Find trusted services in Amman, Jordan' },
+  'Marrakech':      { img:'https://images.unsplash.com/photo-1539020140153-e479b8c29b07?w=800&q=80', sub:'Find trusted services in Marrakech, Morocco' },
+  'Casablanca':     { img:'https://images.unsplash.com/photo-1577048982768-5cb3e7ddfa23?w=800&q=80', sub:'Find trusted services in Casablanca, Morocco' },
+  'Fes':            { img:'https://images.unsplash.com/photo-1539020140153-e479b8c29b07?w=800&q=80', sub:'Find trusted services in Fes, Morocco' },
+  'Beirut':         { img:'https://images.unsplash.com/photo-1581455590846-9db74cb1ca37?w=800&q=80', sub:'Find trusted services in Beirut, Lebanon' },
+  'Tbilisi':        { img:'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80', sub:'Find trusted services in Tbilisi, Georgia' },
+  'Batumi':         { img:'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80', sub:'Find trusted services in Batumi, Georgia' },
+  'Baku':           { img:'https://images.unsplash.com/photo-1558618047-f4bde34e2231?w=800&q=80', sub:'Find trusted services in Baku, Azerbaijan' },
+  'Cape Town':      { img:'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', sub:'Find trusted services in Cape Town, South Africa' },
+  'Johannesburg':   { img:'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', sub:'Find trusted services in Johannesburg, South Africa' },
+  // Asia Pacific
+  'Bangkok':        { img:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80', sub:'Find trusted services in Bangkok, Thailand' },
+  'Phuket':         { img:'https://images.unsplash.com/photo-1589394960098-bf80c28d07f0?w=800&q=80', sub:'Find trusted services in Phuket, Thailand' },
+  'Chiang Mai':     { img:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80', sub:'Find trusted services in Chiang Mai, Thailand' },
   'Kuala Lumpur':   { img:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', sub:'Find trusted services in Kuala Lumpur' },
+  'Langkawi':       { img:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', sub:'Find trusted services in Langkawi, Malaysia' },
+  'Penang':         { img:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', sub:'Find trusted services in Penang, Malaysia' },
   'Singapore':      { img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80', sub:'Find trusted services in Singapore' },
-  'Bali':           { img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', sub:'Find trusted services in Bali' },
-  'Jakarta':        { img:'https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=800&q=80', sub:'Find trusted services in Jakarta' },
-  'Manila':         { img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80', sub:'Find trusted services in Manila' },
-  'Mumbai':         { img:'https://images.unsplash.com/photo-1566552881560-0be862a7c445?w=800&q=80', sub:'Find trusted services in Mumbai' },
-  'Delhi':          { img:'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&q=80', sub:'Find trusted services in Delhi' },
+  'Bali':           { img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', sub:'Find trusted services in Bali, Indonesia' },
+  'Jakarta':        { img:'https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=800&q=80', sub:'Find trusted services in Jakarta, Indonesia' },
+  'Manila':         { img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80', sub:'Find trusted services in Manila, Philippines' },
+  'Boracay':        { img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80', sub:'Find trusted services in Boracay, Philippines' },
+  'Mumbai':         { img:'https://images.unsplash.com/photo-1566552881560-0be862a7c445?w=800&q=80', sub:'Find trusted services in Mumbai, India' },
+  'Delhi':          { img:'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&q=80', sub:'Find trusted services in Delhi, India' },
+  'Goa':            { img:'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80', sub:'Find trusted services in Goa, India' },
   // Americas
   'New York':       { img:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80', sub:'Find trusted services in New York' },
   'Los Angeles':    { img:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=800&q=80', sub:'Find trusted services in Los Angeles' },
   'Miami':          { img:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=800&q=80', sub:'Find trusted services in Miami' },
-  'Toronto':        { img:'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=800&q=80', sub:'Find trusted services in Toronto' },
-  'Vancouver':      { img:'https://images.unsplash.com/photo-1559589688-6ba6beafe1e3?w=800&q=80', sub:'Find trusted services in Vancouver' },
+  'Las Vegas':      { img:'https://images.unsplash.com/photo-1581351721010-8cf859cb14a4?w=800&q=80', sub:'Find trusted services in Las Vegas' },
+  'Toronto':        { img:'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=800&q=80', sub:'Find trusted services in Toronto, Canada' },
+  'Vancouver':      { img:'https://images.unsplash.com/photo-1559589688-6ba6beafe1e3?w=800&q=80', sub:'Find trusted services in Vancouver, Canada' },
   // Default fallback
   'DEFAULT':        { img:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80', sub:'Find trusted services anywhere in the world' },
 };
@@ -3346,69 +3451,57 @@ function showProfile(){
   document.getElementById('login-s3').style.display='block';
   setStep(3);
   setTimeout(()=>document.getElementById('reg-name').focus(),300);
-}
-
-function detectLocation(){
-  const btn = document.getElementById('detect-btn');
-  btn.textContent = '⏳';
-  btn.style.background = '#FEF3C7';
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        // In real app this reverse-geocodes to city name
-        // For prototype, simulate a result
-        document.getElementById('reg-location').value = 'Dubai, UAE';
-        document.getElementById('reg-location').style.borderColor = '#34D399';
-        btn.textContent = '✅';
-        btn.style.background = '#D1FAE5';
-        toast('📍 Location detected!');
-        setTimeout(()=>{ btn.textContent='📍'; btn.style.background='#DBEAFE'; },2000);
-      },
-      err => {
-        toast('📍 Please enter your location manually');
-        btn.textContent = '📍';
-        btn.style.background = '#DBEAFE';
-      }
-    );
-  } else {
-    toast('📍 Please enter your location manually');
-    btn.textContent = '📍';
-    btn.style.background = '#DBEAFE';
+  // Show current IP-detected location in the note
+  const ipNote = document.getElementById('reg-ip-location');
+  if(ipNote){
+    const loc = currentEmergencyData._fullName || currentEmergencyData.country || '';
+    ipNote.textContent = loc ? '📍 Currently detected: '+loc : 'Location will be detected automatically';
   }
 }
 
 function finishReg(){
-  const name     = document.getElementById('reg-name').value.trim();
-  const waNum    = document.getElementById('reg-wa').value.trim();
-  const country  = document.getElementById('reg-country').value.trim();
-  const location = document.getElementById('reg-location').value.trim();
+  const name    = document.getElementById('reg-name').value.trim();
+  const waNum   = document.getElementById('reg-wa').value.trim();
+  const country = document.getElementById('reg-country').value.trim();
   if(!name)    { toast('⚠️ Please enter your name'); return; }
   if(!waNum)   { toast('⚠️ Please enter your WhatsApp number'); return; }
   if(!country) { toast('⚠️ Please enter where you live'); return; }
-  if(!location){ toast('⚠️ Please enter where you currently are'); return; }
+
+  // Use IP-detected location — never the old form field
+  const ipLocation = currentEmergencyData._fullName || currentEmergencyData.country || country;
+
   try{
     saveUser({
-      name, country, location,
+      name, country,
+      location: ipLocation,
       phone: selectedCC.code+' '+document.getElementById('phone-input').value,
       whatsapp: selectedWACC.code+' '+waNum,
       loggedIn: true
     });
   }catch(e){}
+
   // Save to Supabase
   sbInsert('users',{
-    name, country, location,
+    name, country,
+    location: ipLocation,
     phone: selectedCC.code+' '+document.getElementById('phone-input').value,
     whatsapp: selectedWACC.code+' '+waNum
   });
 
   document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=name);
-  document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+location);
-  // Update home greeting
+  document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 '+ipLocation);
+
+  // Update home greeting and location bar
   const greet = document.querySelector('.home-greet');
   if(greet) greet.textContent = 'Welcome, '+name+' 👋';
-  // Update location bar
-  const locName = document.querySelector('.loc-name');
-  if(locName) locName.textContent = location;
+  const locBar = document.getElementById('loc-name-bar');
+  if(locBar) locBar.textContent = ipLocation;
+  document.querySelectorAll('.loc-name').forEach(el=>el.textContent=ipLocation);
+
+  // Hide profile login button
+  const loginBtn = document.getElementById('prof-login-btn');
+  if(loginBtn) loginBtn.style.display='none';
+
   toast('🎉 Welcome to Help Me, '+name+'!');
   resetLogin();
   setTimeout(()=>go('home'),600);
