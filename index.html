@@ -1054,11 +1054,19 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
      REGISTER
 ════════════════════════════════ -->
 <div class="screen" id="register">
-  <div class="screen-hdr">
-    <div class="back-btn" onclick="go('home')">← Back</div>
-    <div class="screen-hdr-txt">
-      <div class="stitle">Register Your Business</div>
-      <div class="ssub" id="reg-location-sub">Detecting your location...</div>
+  <div id="reg-hero-bg" style="position:relative;overflow:hidden;border-radius:0 0 24px 24px;margin-bottom:4px;">
+    <img id="reg-hero-img" src="" alt="" style="width:100%;height:180px;object-fit:cover;object-position:center 40%;display:none;">
+    <div id="reg-hero-overlay" style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,26,46,.3) 0%,rgba(26,26,46,.85) 100%);display:none;"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 20px;" id="reg-hero-text" style="display:none;">
+      <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📍 Registering for</div>
+      <div style="color:#fff;font-weight:900;font-size:20px;" id="reg-hero-country">Your Location</div>
+    </div>
+    <div class="screen-hdr" style="position:relative;background:transparent;" id="reg-hdr-inner">
+      <div class="back-btn" onclick="go('home')" style="color:#fff;background:rgba(0,0,0,.3);border-radius:20px;padding:6px 14px;">← Back</div>
+      <div class="screen-hdr-txt">
+        <div class="stitle" style="color:#fff;">Register Your Business</div>
+        <div class="ssub" id="reg-location-sub" style="color:rgba(255,255,255,.8);">Detecting your location...</div>
+      </div>
     </div>
   </div>
   <div class="reg-scroll">
@@ -1901,9 +1909,10 @@ function go(id){
   window.scrollTo(0,0);
   if(id==='register') detectCountryPricing();
   if(id==='all-cats') renderAllCats();
-  // Hide SOS on splash and login screens
+  // Hide SOS on splash, login and registration screens
+  const hideSOSScreens = ['splash','login','register','biz-reg','agent','agent-dashboard'];
   const sosFab = document.querySelector('.sos-fab');
-  if(sosFab) sosFab.style.display = (id==='splash'||id==='login') ? 'none' : 'flex';
+  if(sosFab) sosFab.style.display = hideSOSScreens.includes(id) ? 'none' : 'flex';
   // Update active nav based on screen
   const exploreScreens = ['all-cats','category','detail','biz-reg'];
   const savedScreens = ['favorites'];
@@ -3034,13 +3043,18 @@ if('serviceWorker' in navigator){
 }
 const CITY_BACKGROUNDS = {
   // GCC — specific landmark photos
-  'Manama':         { img:'https://i.ibb.co/whR8Gg9c/Bahrain-WTC.jpg', sub:'Find trusted services in Bahrain' },
-  'Riffa':          { img:'https://i.ibb.co/whR8Gg9c/Bahrain-WTC.jpg', sub:'Find trusted services in Riffa, Bahrain' },
-  'Muharraq':       { img:'https://i.ibb.co/whR8Gg9c/Bahrain-WTC.jpg', sub:'Find trusted services in Muharraq, Bahrain' },
-  'Juffair':        { img:'https://i.ibb.co/whR8Gg9c/Bahrain-WTC.jpg', sub:'Find trusted services in Juffair, Bahrain' },
-  'Dubai':          { img:'https://images.unsplash.com/photo-1546412414-e1885259563a?w=800&q=80', sub:'Find trusted services in Dubai, UAE' },
-  'Abu Dhabi':      { img:'https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800&q=80', sub:'Find trusted services in Abu Dhabi, UAE' },
-  'Sharjah':        { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', sub:'Find trusted services in Sharjah, UAE' },
+  'Manama':         { img:'https://i.ibb.co/JWYDG9g3/Bahrain-w-Flag-Home-Screen.png', sub:'Find trusted services in Bahrain' },
+  'Riffa':          { img:'https://i.ibb.co/JWYDG9g3/Bahrain-w-Flag-Home-Screen.png', sub:'Find trusted services in Riffa, Bahrain' },
+  'Muharraq':       { img:'https://i.ibb.co/JWYDG9g3/Bahrain-w-Flag-Home-Screen.png', sub:'Find trusted services in Muharraq, Bahrain' },
+  'Juffair':        { img:'https://i.ibb.co/JWYDG9g3/Bahrain-w-Flag-Home-Screen.png', sub:'Find trusted services in Juffair, Bahrain' },
+  'Dubai':          { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Dubai, UAE' },
+  'Abu Dhabi':      { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Abu Dhabi, UAE' },
+  'Sharjah':        { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Sharjah, UAE' },
+  'Ajman':          { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Ajman, UAE' },
+  'Ras Al Khaimah': { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Ras Al Khaimah, UAE' },
+  'Fujairah':       { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Fujairah, UAE' },
+  'Al Ain':         { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Al Ain, UAE' },
+  'Umm Al Quwain':  { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in Umm Al Quwain, UAE' },
   'Riyadh':         { img:'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=800&q=80', sub:'Find trusted services in Riyadh, Saudi Arabia' },
   'Jeddah':         { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Jeddah, Saudi Arabia' },
   'Mecca':          { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Mecca, Saudi Arabia' },
@@ -3120,9 +3134,9 @@ const CITY_BACKGROUNDS = {
   'DEFAULT':        { img:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80', sub:'Find trusted services anywhere in the world' },
 
   // ── COUNTRY-LEVEL KEYS (matched when city not found) ──
-  'Bahrain':              { img:'https://i.ibb.co/whR8Gg9c/Bahrain-WTC.jpg', sub:'Find trusted services in Bahrain' },
+  'Bahrain':              { img:'https://i.ibb.co/JWYDG9g3/Bahrain-w-Flag-Home-Screen.png', sub:'Find trusted services in Bahrain' },
   'Saudi Arabia':         { img:'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=800&q=80', sub:'Find trusted services in Saudi Arabia' },
-  'United Arab Emirates': { img:'https://images.unsplash.com/photo-1546412414-e1885259563a?w=800&q=80', sub:'Find trusted services in UAE' },
+  'United Arab Emirates': { img:'https://i.ibb.co/KjRCsrHq/Dubai-w-Flag-Home-screen.png', sub:'Find trusted services in UAE' },
   'Kuwait':               { img:'https://images.unsplash.com/photo-1563177978-4c1be4f7ae3a?w=800&q=80', sub:'Find trusted services in Kuwait' },
   'Qatar':                { img:'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=800&q=80', sub:'Find trusted services in Qatar' },
   'Oman':                 { img:'https://images.unsplash.com/photo-1609861657820-cb5bb52b31b3?w=800&q=80', sub:'Find trusted services in Oman' },
@@ -3922,6 +3936,24 @@ function applyPricing(p){
   if(banner) banner.textContent = p.name;
   if(flag) flag.textContent = p.flag;
   if(sub) sub.textContent = 'Prices in local currency · '+p.name;
+
+  // Set hero background image based on detected country
+  const bg = CITY_BACKGROUNDS[p.name] || CITY_BACKGROUNDS['DEFAULT'];
+  const heroImg = document.getElementById('reg-hero-img');
+  const heroOverlay = document.getElementById('reg-hero-overlay');
+  const heroText = document.getElementById('reg-hero-text');
+  const heroCountry = document.getElementById('reg-hero-country');
+  const regHdr = document.getElementById('reg-hdr-inner');
+  if(heroImg && bg && bg.img){
+    heroImg.src = bg.img;
+    heroImg.style.display = 'block';
+    heroImg.onload = ()=>{
+      if(heroOverlay) heroOverlay.style.display = 'block';
+      if(heroText) heroText.style.display = 'block';
+      if(heroCountry) heroCountry.textContent = p.flag+' '+p.name;
+      if(regHdr) regHdr.style.background = 'transparent';
+    };
+  }
 
   // Update plan prices
   const pb = document.getElementById('price-basic');
