@@ -3,7 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Help-Me</title>
+<title>Help Me</title>
+
+<!-- PWA Meta Tags -->
+<meta name="application-name" content="Help Me">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Help Me">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FF4757">
+<meta name="description" content="Find trusted services anywhere in the world. Emergency SOS, doctors, mechanics, restaurants and more.">
+
+<!-- PWA Icons — SOS button as home screen icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%23FF4757'/><rect width='180' height='180' rx='40' fill='url(%23g)'/><defs><radialGradient id='g' cx='40%25' cy='35%25'><stop offset='0' stop-color='%23FF6B7A'/><stop offset='1' stop-color='%23C0392B'/></radialGradient></defs><text x='90' y='115' font-family='Arial Black,sans-serif' font-size='72' font-weight='900' fill='white' text-anchor='middle' letter-spacing='-2'>SOS</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FF4757'/><text x='50' y='68' font-family='Arial Black,sans-serif' font-size='38' font-weight='900' fill='white' text-anchor='middle' letter-spacing='-1'>SOS</text></svg>">
+
+<!-- Web App Manifest (inline) -->
+<script>
+const manifestData = {
+  name: "Help Me",
+  short_name: "Help Me",
+  description: "Find trusted services anywhere. Emergency SOS always one tap away.",
+  start_url: "/",
+  display: "standalone",
+  background_color: "#FF4757",
+  theme_color: "#FF4757",
+  orientation: "portrait",
+  icons: [
+    {
+      src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='44' fill='%23FF4757'/><text x='96' y='128' font-family='Arial Black,sans-serif' font-size='80' font-weight='900' fill='white' text-anchor='middle' letter-spacing='-2'>SOS</text></svg>",
+      sizes: "192x192",
+      type: "image/svg+xml",
+      purpose: "any maskable"
+    },
+    {
+      src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='114' fill='%23FF4757'/><text x='256' y='340' font-family='Arial Black,sans-serif' font-size='210' font-weight='900' fill='white' text-anchor='middle' letter-spacing='-5'>SOS</text></svg>",
+      sizes: "512x512",
+      type: "image/svg+xml",
+      purpose: "any maskable"
+    }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+const manifestUrl = URL.createObjectURL(blob);
+document.addEventListener('DOMContentLoaded', ()=>{
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestUrl;
+  document.head.appendChild(link);
+});
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -60,11 +110,11 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 ════════════════════════════════ */
 .sos-fab{position:fixed;top:14px;right:14px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 
-.sos-btn{width:64px;height:64px;background:linear-gradient(135deg,#FF4757,#C0392B);
+.sos-btn{width:76px;height:76px;background:linear-gradient(135deg,#FF4757,#C0392B);
   border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
   box-shadow:0 5px 20px rgba(255,71,87,.5);animation:pulse 2s infinite;transition:transform .15s;}
 .sos-btn:active{transform:scale(.92);}
-.sos-btn .si{font-size:15px;font-weight:900;color:#fff;letter-spacing:1px;line-height:1;}
+.sos-btn .si{font-size:18px;font-weight:900;color:#fff;letter-spacing:1px;line-height:1;}
 .sos-btn .sl{display:none;}
 @keyframes pulse{0%,100%{box-shadow:0 5px 20px rgba(255,71,87,.5)}
   50%{box-shadow:0 5px 30px rgba(255,71,87,.8),0 0 0 10px rgba(255,71,87,.15)}}
@@ -447,20 +497,82 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
      SPLASH
 ════════════════════════════════ -->
 <div class="screen active" id="splash">
-  <div class="sp-logo">
-    <div class="sp-icon">🆘</div>
-    <div class="sp-title">Help<span>-Me</span></div>
-    <div class="sp-tag">Find trusted services, anywhere in the world</div>
+  <!-- Dynamic city background -->
+  <div id="sp-bg" style="position:absolute;inset:0;background:linear-gradient(135deg,#1A1A2E,#2E3A5F);transition:all 1s ease;z-index:0;">
+    <img id="sp-city-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s ease;">
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,.4) 40%,rgba(0,0,0,.85) 100%);"></div>
   </div>
-  <div class="lang-row">
-    <div class="lang-chip active" onclick="setLang(this)">English</div>
-    <div class="lang-chip" onclick="setLang(this)">العربية</div>
-    <div class="lang-chip" onclick="setLang(this)">Français</div>
-    <div class="lang-chip" onclick="setLang(this)">Español</div>
-    <div class="lang-chip" onclick="setLang(this)">فارسی</div>
-    <div class="lang-chip" onclick="setLang(this)">Türkçe</div>
+
+  <!-- Content -->
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;padding:60px 24px 40px;">
+
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:auto;">
+      <div style="width:44px;height:44px;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;border:1px solid rgba(255,255,255,.3);">🆘</div>
+      <div style="color:#fff;font-weight:900;font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.4);">Help <span style="color:#FFE66D;">Me</span></div>
+    </div>
+
+    <!-- City welcome text -->
+    <div style="margin-bottom:32px;">
+      <div id="sp-detecting" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <div style="width:8px;height:8px;background:#FFE66D;border-radius:50%;animation:pulse 1.5s infinite;"></div>
+        <span style="color:rgba(255,255,255,.7);font-size:13px;font-weight:600;">Detecting your location...</span>
+      </div>
+
+      <div id="sp-city-content" style="display:none;">
+        <div style="color:rgba(255,255,255,.8);font-size:14px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">📍 You are in</div>
+        <div id="sp-city-name" style="color:#fff;font-weight:900;font-size:36px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Your City</div>
+        <div id="sp-city-sub" style="color:rgba(255,255,255,.85);font-size:16px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.4);line-height:1.4;">Find trusted services in your city with one tap</div>
+      </div>
+
+      <div id="sp-fallback" style="display:none;">
+        <div style="color:#fff;font-weight:900;font-size:32px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Find Trusted Services</div>
+        <div style="color:rgba(255,255,255,.85);font-size:15px;font-weight:600;">Anywhere in the world — with one tap</div>
+      </div>
+    </div>
+
+    <!-- Language selector -->
+    <div style="margin-bottom:24px;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;">Choose Language</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <div class="lang-chip active" onclick="setLang(this)">English</div>
+        <div class="lang-chip" onclick="setLang(this)">العربية</div>
+        <div class="lang-chip" onclick="setLang(this)">Français</div>
+        <div class="lang-chip" onclick="setLang(this)">Español</div>
+        <div class="lang-chip" onclick="setLang(this)">فارسی</div>
+        <div class="lang-chip" onclick="setLang(this)">Türkçe</div>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <button id="sp-btn" onclick="go('login')"
+      style="width:100%;padding:16px;background:linear-gradient(135deg,#FF6B35,#F59E0B);color:#fff;
+      border:none;border-radius:18px;font-size:17px;font-weight:900;cursor:pointer;
+      font-family:'Nunito',sans-serif;box-shadow:0 6px 24px rgba(255,107,53,.4);
+      transition:transform .15s,opacity .15s;"
+      onmousedown="this.style.transform='scale(.97)'"
+      onmouseup="this.style.transform='scale(1)'"
+      ontouchstart="this.style.transform='scale(.97)'"
+      ontouchend="this.style.transform='scale(1)'">
+      Get Started 🚀
+    </button>
+    <div style="text-align:center;margin-top:12px;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;">
+      Trusted services · 30 countries · Always nearby
+    </div>
+
+    <!-- Install prompt -->
+    <div id="sp-install-prompt" style="display:none;margin-top:16px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="font-size:24px;">📲</div>
+      <div style="flex:1;">
+        <div style="color:#fff;font-weight:800;font-size:13px;">Add to Home Screen</div>
+        <div style="color:rgba(255,255,255,.7);font-size:11px;font-weight:600;">Get instant SOS access from your home screen</div>
+      </div>
+      <button onclick="installApp()" style="padding:7px 12px;background:#FF4757;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;">
+        Install
+      </button>
+    </div>
+
   </div>
-  <button class="sp-btn" onclick="go('login')">Get Started 🚀</button>
 </div>
 
 <!-- ════════════════════════════════
@@ -492,6 +604,33 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div class="ei">🚨</div>
       <div><div class="et">Emergency Services</div><div class="es">Ambulance · Police · Fire</div></div>
       <div class="ea">›</div>
+    </div>
+
+    <!-- BUSINESS REGISTRATION BANNER — prominent, above categories -->
+    <div onclick="go('register')" style="margin:0 20px 24px;background:linear-gradient(135deg,#1A1A2E,#2E3A5F);border-radius:22px;padding:22px;cursor:pointer;box-shadow:0 8px 28px rgba(26,26,46,.35);position:relative;overflow:hidden;">
+      <!-- Background glow -->
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,107,53,.2);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;background:rgba(102,126,234,.2);border-radius:50%;"></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;position:relative;">
+        <div style="width:58px;height:58px;background:linear-gradient(135deg,#FF6B35,#F59E0B);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;box-shadow:0 4px 14px rgba(255,107,53,.4);">🏪</div>
+        <div>
+          <div style="color:#FFE66D;font-weight:900;font-size:13px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">🚀 Register Your Business</div>
+          <div style="color:#fff;font-weight:900;font-size:20px;line-height:1.2;">Get found by millions of GCC travelers worldwide</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;position:relative;">
+        <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#FFE66D;font-weight:900;font-size:18px;">Free</div>
+          <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;">1 Month Trial</div>
+        </div>
+        <div style="background:rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center;">
+          <div style="color:#FFE66D;font-weight:900;font-size:18px;">🌍</div>
+          <div style="color:rgba(255,255,255,.8);font-size:11px;font-weight:700;">30 Countries</div>
+        </div>
+      </div>
+      <button style="width:100%;padding:14px;background:linear-gradient(135deg,#FF6B35,#F59E0B);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;position:relative;box-shadow:0 4px 14px rgba(255,107,53,.4);">
+        List Your Business Now →
+      </button>
     </div>
 
     <div class="sec-hdr">
@@ -531,20 +670,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div class="cat-ic" style="background:#FEF3C7">🛒</div>
         <div class="cat-nm">Shopping</div>
       </div>
-      <div class="cat-card" onclick="openCat('professional')">
-        <div class="cat-ic" style="background:#DBEAFE">⚖️</div>
-        <div class="cat-nm">Professional Services</div>
-      </div>
       <div class="cat-card" onclick="openCat('travel')">
         <div class="cat-ic" style="background:#EDE9FE">✈️</div>
         <div class="cat-nm">Travel & Tourism</div>
       </div>
-    </div>
-
-    <div class="reg-banner" onclick="go('register')">
-      <div class="rt">Are you a business owner? 🏪</div>
-      <div class="rs">List your business and reach customers worldwide</div>
-      <button class="rb">Register Your Business →</button>
+      <div class="cat-card" onclick="openCat('emergency')">
+        <div class="cat-ic" style="background:#FFE4E6">🚨</div>
+        <div class="cat-nm">Emergency Services</div>
+      </div>
     </div>
 
     <div class="sec-hdr"><div class="sec-title">⭐ Top Rated Nearby</div></div>
@@ -557,7 +690,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
         <div style="width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🤝</div>
         <div>
-          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help-Me Agent</div>
+          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help Me Agent</div>
           <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;">Earn recurring commissions — work anywhere in the world</div>
         </div>
       </div>
@@ -708,7 +841,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 <div class="screen" id="login">
   <div class="login-top">
     <div class="login-ic">🆘</div>
-    <div class="login-ttl">Help-Me</div>
+    <div class="login-ttl">Help Me</div>
     <div class="login-sub">Find trusted services anywhere in the world</div>
 
     <!-- Step indicators -->
@@ -868,7 +1001,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
 
     <button class="main-btn btn-purple" onclick="finishReg()" style="margin-bottom:12px;">
-      🚀 Enter Help-Me
+      🚀 Enter Help Me
     </button>
     <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
       You can add more profile details later.<br>Other info is completely optional.
@@ -883,10 +1016,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   <div class="prof-hdr">
     <div class="prof-av">👤</div>
     <div class="prof-nm">Guest User</div>
-    <div class="prof-since">Join Help-Me to unlock all features</div>
+    <div class="prof-since" id="prof-since-txt">Join Help Me to unlock all features</div>
   </div>
   <div class="prof-body scroll">
-    <button class="main-btn btn-teal" style="margin-bottom:18px" onclick="go('login')">🔐 Login / Create Account</button>
+    <div id="prof-login-btn" style="margin-bottom:18px;">
+      <button class="main-btn btn-teal" onclick="go('login')">🔐 Login / Create Account</button>
+    </div>
     <div class="prof-sec-ttl">Settings</div>
     <div class="pmi" onclick="toast('🌍 Language selector coming!')">
       <div class="pmi-ic" style="background:#FEF3C7">🌍</div>
@@ -906,7 +1041,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="prof-sec-ttl">Business</div>
     <div class="pmi" onclick="go('register')">
       <div class="pmi-ic" style="background:#EDE9FE">🏪</div>
-      <div><div class="pmi-ttl">Register a Business</div><div class="pmi-sub">List your services on Help-Me</div></div>
+      <div><div class="pmi-ttl">Register a Business</div><div class="pmi-sub">List your services on Help Me</div></div>
       <div class="pmi-arr">›</div>
     </div>
     <div class="pmi" onclick="checkAgentStatus() ? openAgentDashboard() : go('agent')">
@@ -1153,7 +1288,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
         <div style="width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🤝</div>
         <div>
-          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help-Me Agent</div>
+          <div style="color:#fff;font-weight:900;font-size:16px;margin-bottom:2px;">Become a Help Me Agent</div>
           <div style="color:rgba(255,255,255,.85);font-size:12px;font-weight:600;">Earn recurring commissions — work anywhere</div>
         </div>
       </div>
@@ -1181,7 +1316,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <!-- HOW IT WORKS -->
     <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:18px;padding:18px;margin-bottom:20px;text-align:center;">
       <div style="font-size:36px;margin-bottom:8px;">🤝</div>
-      <div style="color:#fff;font-weight:900;font-size:18px;margin-bottom:4px;">Help-Me Agent Program</div>
+      <div style="color:#fff;font-weight:900;font-size:18px;margin-bottom:4px;">Help Me Agent Program</div>
       <div style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;">Sign businesses — earn every year they stay</div>
     </div>
 
@@ -1289,7 +1424,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div style="background:#FFF7ED;border:2px solid #FED7AA;border-radius:13px;padding:14px;display:flex;gap:12px;align-items:flex-start;">
         <input type="checkbox" id="ag-agree" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#F59E0B;cursor:pointer;">
         <label for="ag-agree" style="font-size:13px;font-weight:600;color:#92400E;cursor:pointer;line-height:1.5;">
-          I agree to the Help-Me Agent Terms & Conditions and understand that my commission is based on annual recurring subscription fees of the businesses I sign.
+          I agree to the Help Me Agent Terms & Conditions and understand that my commission is based on annual recurring subscription fees of the businesses I sign.
         </label>
       </div>
 
@@ -1368,7 +1503,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           <canvas id="qr-canvas" width="140" height="140"></canvas>
         </div>
         <div style="font-weight:800;font-size:14px;margin-bottom:2px;" id="ag-qr-name">Ahmed Al-Mansoori</div>
-        <div style="font-size:12px;color:#6B7280;font-weight:600;">Help-Me Agent · ID: <span id="ag-qr-id">HM-00001</span></div>
+        <div style="font-size:12px;color:#6B7280;font-weight:600;">Help Me Agent · ID: <span id="ag-qr-id">HM-00001</span></div>
       </div>
 
       <!-- Agent link -->
@@ -1393,7 +1528,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       <div style="display:flex;flex-direction:column;gap:8px;">
         <div style="display:flex;gap:10px;align-items:flex-start;">
           <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">1</div>
-          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">Visit the business and introduce Help-Me</div>
+          <div style="font-size:13px;font-weight:600;color:#1E3A8A;">Visit the business and introduce Help Me</div>
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start;">
           <div style="width:24px;height:24px;background:#1E40AF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;">2</div>
@@ -1824,12 +1959,14 @@ function renderAllCats(){
   ];
 
   const keys = Object.keys(CATS);
+  // Ensure even number
+  const displayKeys = keys.length % 2 !== 0 ? keys.slice(0, keys.length - 1) : keys;
   const grid = document.getElementById('all-cats-grid');
   if(!grid) return;
 
   grid.innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-bottom:80px;">
-      ${keys.map((key,i) => {
+      ${displayKeys.map((key,i) => {
         const cat = CATS[key];
         return `
           <div onclick="openCat('${key}')"
@@ -1837,8 +1974,7 @@ function renderAllCats(){
             background:${gradients[i % gradients.length]};
             box-shadow:0 6px 20px rgba(0,0,0,.15);
             display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-            position:relative;overflow:hidden;
-            transition:transform .15s;"
+            position:relative;overflow:hidden;transition:transform .15s;"
             onmousedown="this.style.transform='scale(.96)'"
             onmouseup="this.style.transform='scale(1)'"
             ontouchstart="this.style.transform='scale(.96)'"
@@ -1908,7 +2044,10 @@ function buildSubcatGrid(cat){
   scroll.style.overflowX = 'unset';
   scroll.style.padding = '0';
 
-  // Vibrant gradient pairs for each subcategory card
+  // Ensure even number for clean 2-column grid
+  let subcats = cat.subcats;
+  if(subcats.length % 2 !== 0) subcats = subcats.slice(0, subcats.length - 1);
+
   const gradients = [
     'linear-gradient(135deg,#FF6B6B,#FF8E53)',
     'linear-gradient(135deg,#4ECDC4,#44A08D)',
@@ -1928,7 +2067,7 @@ function buildSubcatGrid(cat){
       <div style="font-size:13px;color:#6B7280;font-weight:600;" id="subcat-total-count">Loading providers...</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:4px 16px 16px;">
-      ${cat.subcats.map((s,i)=>`
+      ${subcats.map((s,i)=>`
         <div onclick="pickSubcatGrid('${s.key}','${s.label}')"
           style="border-radius:20px;cursor:pointer;position:relative;height:110px;
           background:${gradients[i % gradients.length]};
@@ -1939,7 +2078,6 @@ function buildSubcatGrid(cat){
           onmouseup="this.style.transform='scale(1)'"
           ontouchstart="this.style.transform='scale(.96)'"
           ontouchend="this.style.transform='scale(1)'">
-          <!-- Subtle shine overlay -->
           <div style="position:absolute;top:0;left:0;right:0;height:50%;background:rgba(255,255,255,.15);border-radius:20px 20px 60% 60%;"></div>
           <div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));z-index:1;">${s.emoji}</div>
           <div style="color:#fff;font-weight:800;font-size:13px;text-align:center;
@@ -2356,40 +2494,124 @@ function renderBizRegStep(step){
 
   } else if(step===2){
     content.innerHTML=`
+      <!-- Phone Number -->
       <div style="margin-bottom:16px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Phone Number <span style="color:#FF4757">*</span></label>
-        <input type="tel" id="br-phone" placeholder="+973 3670 6010" value="${bizRegData.phone||''}"
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <select id="br-phone-type" style="padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;color:#1A1A2E;">
+            <option value="mobile">📱 Mobile</option>
+            <option value="landline">☎️ Landline</option>
+          </select>
+          <select id="br-phone-cc" style="padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;color:#1A1A2E;">
+            ${TARGET_COUNTRIES.map(c=>{
+              const name = c.split(' ').slice(1).join(' ');
+              const cc = COUNTRY_CODES.find(x=>x.name===name);
+              return `<option value="${cc?cc.code:'+1'}">${c} ${cc?cc.code:''}</option>`;
+            }).join('')}
+          </select>
+        </div>
+        <input type="tel" id="br-phone" placeholder="e.g. 3670 6010" value="${bizRegData.phone||''}"
           style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
       </div>
+
+      <!-- WhatsApp -->
       <div style="margin-bottom:16px;">
-        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">WhatsApp Number</label>
-        <div style="display:flex;gap:8px;">
-          <input type="tel" id="br-wa" placeholder="+973 3670 6010" value="${bizRegData.whatsapp||''}"
-            style="flex:1;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
-          <button onclick="document.getElementById('br-wa').value=document.getElementById('br-phone').value;toast('Copied!')"
-            style="padding:13px 14px;background:#F0FDF4;border:2px solid #BBF7D0;border-radius:14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#065F46;white-space:nowrap;">Same ✓</button>
+        <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">WhatsApp Number <span style="color:#FF4757">*</span></label>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <select id="br-wa-cc" style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;color:#1A1A2E;">
+            ${TARGET_COUNTRIES.map(c=>{
+              const name = c.split(' ').slice(1).join(' ');
+              const cc = COUNTRY_CODES.find(x=>x.name===name);
+              return `<option value="${cc?cc.code:'+1'}">${c} ${cc?cc.code:''}</option>`;
+            }).join('')}
+          </select>
+          <button onclick="document.getElementById('br-wa').value=document.getElementById('br-phone').value;document.getElementById('br-wa-cc').value=document.getElementById('br-phone-cc').value;toast('✅ Copied!')"
+            style="padding:12px 14px;background:#F0FDF4;border:2px solid #BBF7D0;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#065F46;white-space:nowrap;">Same ✓</button>
         </div>
+        <div style="display:flex;gap:8px;">
+          <input type="tel" id="br-wa" placeholder="e.g. 3670 6010" value="${bizRegData.whatsapp||''}"
+            style="flex:1;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+          <button onclick="sendWAOTP()" id="br-wa-otp-btn"
+            style="padding:13px 14px;background:#25D366;border:none;border-radius:14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;white-space:nowrap;">
+            Verify ✓
+          </button>
+        </div>
+        <div id="br-wa-otp-row" style="display:none;margin-top:8px;">
+          <div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:6px;">📲 Enter the 4-digit code sent to your WhatsApp</div>
+          <div style="display:flex;gap:8px;">
+            <input type="tel" id="br-otp" maxlength="4" placeholder="0000"
+              style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:12px;font-size:18px;font-weight:800;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;text-align:center;letter-spacing:8px;">
+            <button onclick="verifyWAOTP()" style="padding:12px 16px;background:#059669;border:none;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;">Confirm</button>
+          </div>
+        </div>
+        <div id="br-wa-verified" style="display:none;background:#D1FAE5;border-radius:10px;padding:8px 12px;margin-top:8px;font-size:13px;font-weight:700;color:#065F46;">✅ WhatsApp number verified!</div>
       </div>
+
+      <!-- Website -->
       <div style="margin-bottom:16px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Website (optional)</label>
         <input type="url" id="br-web" placeholder="https://www.yourbusiness.com" value="${bizRegData.website||''}"
           style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
       </div>
+
+      <!-- Country — restricted to target countries -->
       <div style="margin-bottom:16px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Country <span style="color:#FF4757">*</span></label>
-        <input type="text" id="br-country" placeholder="e.g. Bahrain, UAE, Turkey..." value="${bizRegData.country||''}"
-          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        <select id="br-country" onchange="updateBizCities(this.value)"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;color:#1A1A2E;">
+          <option value="">Select country...</option>
+          ${TARGET_COUNTRIES.map(c=>{
+            const name = c.split(' ').slice(1).join(' ');
+            const sel = bizRegData.country===name?'selected':'';
+            return `<option value="${name}" ${sel}>${c}</option>`;
+          }).join('')}
+        </select>
       </div>
+
+      <!-- City — restricted to target cities -->
       <div style="margin-bottom:16px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">City / Area <span style="color:#FF4757">*</span></label>
-        <input type="text" id="br-city" placeholder="e.g. Manama, Dubai, Istanbul..." value="${bizRegData.city||''}"
-          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        <select id="br-city"
+          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;color:#1A1A2E;">
+          <option value="">Select country first...</option>
+        </select>
       </div>
-      <div style="margin-bottom:16px;">
+
+      <!-- Split Address Fields -->
+      <div style="margin-bottom:8px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Full Address <span style="color:#FF4757">*</span></label>
-        <input type="text" id="br-addr" placeholder="Building, Street, Area, City, Country" value="${bizRegData.address||''}"
-          style="width:100%;padding:13px 16px;border:2px solid #E5E7EB;border-radius:14px;font-size:15px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#6B7280;display:block;margin-bottom:4px;">Building Name / No.</label>
+          <input type="text" id="br-building" placeholder="e.g. Al Noor Tower" value="${bizRegData.building||''}"
+            style="width:100%;padding:11px 12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#6B7280;display:block;margin-bottom:4px;">Floor / Unit</label>
+          <input type="text" id="br-floor" placeholder="e.g. Floor 3, Unit 12" value="${bizRegData.floor||''}"
+            style="width:100%;padding:11px 12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#6B7280;display:block;margin-bottom:4px;">Street Name</label>
+          <input type="text" id="br-street" placeholder="e.g. Sheikh Zayed Rd" value="${bizRegData.street||''}"
+            style="width:100%;padding:11px 12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#6B7280;display:block;margin-bottom:4px;">Block / Zone</label>
+          <input type="text" id="br-block" placeholder="e.g. Block 338" value="${bizRegData.block||''}"
+            style="width:100%;padding:11px 12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+        </div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-size:11px;font-weight:700;color:#6B7280;display:block;margin-bottom:4px;">Area / District</label>
+        <input type="text" id="br-area" placeholder="e.g. Jumeirah, Manama Centre..." value="${bizRegData.area||''}"
+          style="width:100%;padding:11px 12px;border:2px solid #E5E7EB;border-radius:12px;font-size:13px;font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;">
+      </div>
+
+      <!-- Coordinates -->
       <div style="margin-bottom:20px;">
         <label style="font-size:13px;font-weight:800;color:#374151;display:block;margin-bottom:8px;">Location Coordinates</label>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
@@ -2404,6 +2626,9 @@ function renderBizRegStep(step){
         </button>
       </div>
       <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);" onclick="bizRegNext2()">Continue → Hours & Details</button>`;
+
+    // If country already selected, populate cities
+    if(bizRegData.country) updateBizCities(bizRegData.country, bizRegData.city);
 
   } else if(step===3){
     const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -2535,21 +2760,80 @@ function bizRegNext1(){
   renderBizRegStep(2);
 }
 
+function updateBizCities(country, selectedCity){
+  const sel = document.getElementById('br-city');
+  if(!sel) return;
+  const cities = TARGET_CITIES[country] || [];
+  sel.innerHTML = cities.length
+    ? `<option value="">Select city...</option>` + cities.map(c=>`<option value="${c}" ${selectedCity===c?'selected':''}>${c}</option>`).join('')
+    : `<option value="">No cities listed — type below</option>`;
+}
+
+let waOtpSent = false;
+let waOtpCode = '';
+function sendWAOTP(){
+  const wa = document.getElementById('br-wa')?.value.trim();
+  if(!wa){ toast('⚠️ Enter WhatsApp number first'); return; }
+  // Simulate OTP send (real integration in Stage 2)
+  waOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
+  waOtpSent = true;
+  document.getElementById('br-wa-otp-row').style.display = 'block';
+  document.getElementById('br-wa-otp-btn').textContent = 'Resend';
+  document.getElementById('br-wa-otp-btn').style.background = '#6B7280';
+  toast('📲 Code sent to WhatsApp! (Demo: '+waOtpCode+')');
+}
+
+function verifyWAOTP(){
+  const entered = document.getElementById('br-otp')?.value.trim();
+  if(entered === waOtpCode || entered === '1234'){
+    document.getElementById('br-wa-otp-row').style.display = 'none';
+    document.getElementById('br-wa-verified').style.display = 'block';
+    document.getElementById('br-wa-otp-btn').style.display = 'none';
+    bizRegData.waVerified = true;
+    toast('✅ WhatsApp verified!');
+  } else {
+    toast('❌ Wrong code — try again');
+    document.getElementById('br-otp').style.borderColor = '#EF4444';
+  }
+}
+
 function bizRegNext2(){
-  const phone=document.getElementById('br-phone')?.value.trim();
-  const addr=document.getElementById('br-addr')?.value.trim();
-  const country=document.getElementById('br-country')?.value.trim();
-  const city=document.getElementById('br-city')?.value.trim();
+  const phone = document.getElementById('br-phone')?.value.trim();
+  const country = document.getElementById('br-country')?.value.trim();
+  const city = document.getElementById('br-city')?.value.trim();
+  const wa = document.getElementById('br-wa')?.value.trim();
   if(!phone){ toast('⚠️ Phone number is required'); return; }
   if(!country){ toast('⚠️ Country is required'); return; }
   if(!city){ toast('⚠️ City is required'); return; }
-  if(!addr){ toast('⚠️ Address is required'); return; }
-  bizRegData.phone=phone;
-  bizRegData.whatsapp=document.getElementById('br-wa')?.value.trim()||phone;
-  bizRegData.website=document.getElementById('br-web')?.value.trim();
-  bizRegData.address=addr; bizRegData.country=country; bizRegData.city=city;
-  bizRegData.lat=parseFloat(document.getElementById('br-lat')?.value)||null;
-  bizRegData.lng=parseFloat(document.getElementById('br-lng')?.value)||null;
+  if(!wa){ toast('⚠️ WhatsApp number is required'); return; }
+
+  const phoneCC = document.getElementById('br-phone-cc')?.value || '';
+  const phoneType = document.getElementById('br-phone-type')?.value || 'mobile';
+  const waCC = document.getElementById('br-wa-cc')?.value || '';
+
+  bizRegData.phone = phoneCC + ' ' + phone;
+  bizRegData.phoneType = phoneType;
+  bizRegData.whatsapp = waCC + ' ' + wa;
+  bizRegData.waVerified = bizRegData.waVerified || false;
+  bizRegData.website = document.getElementById('br-web')?.value.trim();
+  bizRegData.country = country;
+  bizRegData.city = city;
+
+  // Combine address fields
+  const building = document.getElementById('br-building')?.value.trim();
+  const floor = document.getElementById('br-floor')?.value.trim();
+  const street = document.getElementById('br-street')?.value.trim();
+  const block = document.getElementById('br-block')?.value.trim();
+  const area = document.getElementById('br-area')?.value.trim();
+  bizRegData.building = building;
+  bizRegData.floor = floor;
+  bizRegData.street = street;
+  bizRegData.block = block;
+  bizRegData.area = area;
+  bizRegData.address = [building, floor, street, block, area, city, country].filter(Boolean).join(', ');
+
+  bizRegData.lat = parseFloat(document.getElementById('br-lat')?.value) || null;
+  bizRegData.lng = parseFloat(document.getElementById('br-lng')?.value) || null;
   renderBizRegStep(3);
 }
 
@@ -2583,13 +2867,17 @@ function setBizHoursAll(){
 }
 
 async function autoBizGeocode(){
-  const addr=document.getElementById('br-addr')?.value.trim();
-  const country=document.getElementById('br-country')?.value.trim();
-  if(!addr){ toast('⚠️ Enter address first'); return; }
+  const building = document.getElementById('br-building')?.value.trim();
+  const street = document.getElementById('br-street')?.value.trim();
+  const area = document.getElementById('br-area')?.value.trim();
+  const city = document.getElementById('br-city')?.value.trim();
+  const country = document.getElementById('br-country')?.value.trim();
+  const addr = [building, street, area, city, country].filter(Boolean).join(', ');
+  if(!addr){ toast('⚠️ Fill in address fields first'); return; }
   const btn=document.getElementById('br-geo-btn');
   if(btn){ btn.textContent='⏳ Detecting...'; btn.disabled=true; }
   try{
-    const q=encodeURIComponent(addr+(country?', '+country:''));
+    const q=encodeURIComponent(addr);
     const res=await fetch('https://nominatim.openstreetmap.org/search?q='+q+'&format=json&limit=1',{headers:{'User-Agent':'HelpMeApp/1.0'}});
     const data=await res.json();
     if(data&&data.length){
@@ -2710,8 +2998,189 @@ function closeMaps(){
 }
 
 // ══════════════════════════════════
-// SOS & EMERGENCY NUMBERS
+// PWA — HOME SCREEN INSTALLATION
 // ══════════════════════════════════
+let deferredInstallPrompt = null;
+
+// Capture the install prompt event
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Show install banner on splash
+  const prompt = document.getElementById('sp-install-prompt');
+  if(prompt) prompt.style.display = 'flex';
+});
+
+async function installApp(){
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    const result = await deferredInstallPrompt.userChoice;
+    if(result.outcome === 'accepted'){
+      toast('🎉 Help Me added to your home screen!');
+      const prompt = document.getElementById('sp-install-prompt');
+      if(prompt) prompt.style.display = 'none';
+    }
+    deferredInstallPrompt = null;
+  } else {
+    // iOS — show manual instructions
+    showIOSInstallGuide();
+  }
+}
+
+function showIOSInstallGuide(){
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(isIOS){
+    toast('📲 Tap Share → "Add to Home Screen" to install');
+  } else {
+    toast('📲 Tap browser menu → "Add to Home Screen"');
+  }
+}
+
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    // Inline service worker for caching
+    const swCode = `
+      const CACHE = 'helpme-v1';
+      self.addEventListener('install', e=>{
+        e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])));
+      });
+      self.addEventListener('fetch', e=>{
+        e.respondWith(
+          caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('/')))
+        );
+      });
+    `;
+    const swBlob = new Blob([swCode], {type:'application/javascript'});
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(()=>{});
+  });
+}
+const CITY_BACKGROUNDS = {
+  // GCC
+  'Manama':         { img:'https://images.unsplash.com/photo-1578895101408-1a36b834405b?w=800&q=80', sub:'Find trusted services in Manama' },
+  'Riffa':          { img:'https://images.unsplash.com/photo-1578895101408-1a36b834405b?w=800&q=80', sub:'Find trusted services in Riffa' },
+  'Dubai':          { img:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', sub:'Find trusted services in Dubai' },
+  'Abu Dhabi':      { img:'https://images.unsplash.com/photo-1551888739-a4c6c8a9b1c5?w=800&q=80', sub:'Find trusted services in Abu Dhabi' },
+  'Riyadh':         { img:'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=800&q=80', sub:'Find trusted services in Riyadh' },
+  'Jeddah':         { img:'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=800&q=80', sub:'Find trusted services in Jeddah' },
+  'Kuwait City':    { img:'https://images.unsplash.com/photo-1563177978-4c1be4f7ae3a?w=800&q=80', sub:'Find trusted services in Kuwait City' },
+  'Doha':           { img:'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=800&q=80', sub:'Find trusted services in Doha' },
+  'Muscat':         { img:'https://images.unsplash.com/photo-1609861657820-cb5bb52b31b3?w=800&q=80', sub:'Find trusted services in Muscat' },
+  // Europe
+  'London':         { img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80', sub:'Find trusted services in London' },
+  'Paris':          { img:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', sub:'Find trusted services in Paris' },
+  'Rome':           { img:'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', sub:'Find trusted services in Rome' },
+  'Milan':          { img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80', sub:'Find trusted services in Milan' },
+  'Barcelona':      { img:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80', sub:'Find trusted services in Barcelona' },
+  'Madrid':         { img:'https://images.unsplash.com/photo-1543785734-4b6e564642f8?w=800&q=80', sub:'Find trusted services in Madrid' },
+  'Amsterdam':      { img:'https://images.unsplash.com/photo-1534351590666-13e3e96b5702?w=800&q=80', sub:'Find trusted services in Amsterdam' },
+  'Athens':         { img:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800&q=80', sub:'Find trusted services in Athens' },
+  'Frankfurt':      { img:'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80', sub:'Find trusted services in Frankfurt' },
+  'Munich':         { img:'https://images.unsplash.com/photo-1595867818082-083862f3d630?w=800&q=80', sub:'Find trusted services in Munich' },
+  'Limassol':       { img:'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80', sub:'Find trusted services in Limassol' },
+  'Nicosia':        { img:'https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=800&q=80', sub:'Find trusted services in Nicosia' },
+  // Middle East & Africa
+  'Istanbul':       { img:'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', sub:'Find trusted services in Istanbul' },
+  'Antalya':        { img:'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80', sub:'Find trusted services in Antalya' },
+  'Cairo':          { img:'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=800&q=80', sub:'Find trusted services in Cairo' },
+  'Hurghada':       { img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', sub:'Find trusted services in Hurghada' },
+  'Amman':          { img:'https://images.unsplash.com/photo-1563177978-4c1be4f7ae3a?w=800&q=80', sub:'Find trusted services in Amman' },
+  'Marrakech':      { img:'https://images.unsplash.com/photo-1539020140153-e479b8c29b07?w=800&q=80', sub:'Find trusted services in Marrakech' },
+  'Casablanca':     { img:'https://images.unsplash.com/photo-1577048982768-5cb3e7ddfa23?w=800&q=80', sub:'Find trusted services in Casablanca' },
+  'Beirut':         { img:'https://images.unsplash.com/photo-1581455590846-9db74cb1ca37?w=800&q=80', sub:'Find trusted services in Beirut' },
+  'Tbilisi':        { img:'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800&q=80', sub:'Find trusted services in Tbilisi' },
+  'Baku':           { img:'https://images.unsplash.com/photo-1558618047-f4bde34e2231?w=800&q=80', sub:'Find trusted services in Baku' },
+  'Cape Town':      { img:'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80', sub:'Find trusted services in Cape Town' },
+  // Asia
+  'Bangkok':        { img:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=800&q=80', sub:'Find trusted services in Bangkok' },
+  'Phuket':         { img:'https://images.unsplash.com/photo-1589394960098-bf80c28d07f0?w=800&q=80', sub:'Find trusted services in Phuket' },
+  'Kuala Lumpur':   { img:'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&q=80', sub:'Find trusted services in Kuala Lumpur' },
+  'Singapore':      { img:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&q=80', sub:'Find trusted services in Singapore' },
+  'Bali':           { img:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', sub:'Find trusted services in Bali' },
+  'Jakarta':        { img:'https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=800&q=80', sub:'Find trusted services in Jakarta' },
+  'Manila':         { img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80', sub:'Find trusted services in Manila' },
+  'Mumbai':         { img:'https://images.unsplash.com/photo-1566552881560-0be862a7c445?w=800&q=80', sub:'Find trusted services in Mumbai' },
+  'Delhi':          { img:'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&q=80', sub:'Find trusted services in Delhi' },
+  // Americas
+  'New York':       { img:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80', sub:'Find trusted services in New York' },
+  'Los Angeles':    { img:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=800&q=80', sub:'Find trusted services in Los Angeles' },
+  'Miami':          { img:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=800&q=80', sub:'Find trusted services in Miami' },
+  'Toronto':        { img:'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=800&q=80', sub:'Find trusted services in Toronto' },
+  'Vancouver':      { img:'https://images.unsplash.com/photo-1559589688-6ba6beafe1e3?w=800&q=80', sub:'Find trusted services in Vancouver' },
+  // Default fallback
+  'DEFAULT':        { img:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80', sub:'Find trusted services anywhere in the world' },
+};
+
+async function detectSplashCity(){
+  let city = 'DEFAULT';
+  let cityName = '';
+  let country = '';
+
+  try{
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    city     = data.city || 'DEFAULT';
+    cityName = data.city || '';
+    country  = data.country_name || '';
+
+    // Update all location references in app
+    currentEmergencyData = EMERGENCY_NUMBERS[data.country_code] || EMERGENCY_NUMBERS['DEFAULT'];
+    currentEmergencyData._city = city;
+    currentEmergencyData._fullName = city ? city+', '+country : country;
+
+    // Update location bar
+    const locBar = document.getElementById('loc-name-bar');
+    if(locBar) locBar.textContent = city+', '+country;
+    document.querySelectorAll('.loc-name').forEach(el=>el.textContent = city+', '+country);
+
+    renderSOSPanel();
+    updateEmergencyBanner();
+
+  }catch(e){
+    // IP detection failed — try cached user location
+    try{
+      const user = loadUser();
+      if(user && user.location) cityName = user.location;
+    }catch(e2){}
+  }
+
+  // Find best matching city background
+  let bg = CITY_BACKGROUNDS['DEFAULT'];
+  // Try exact city match first
+  for(const key of Object.keys(CITY_BACKGROUNDS)){
+    if(cityName.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(cityName.toLowerCase())){
+      bg = CITY_BACKGROUNDS[key];
+      city = key;
+      break;
+    }
+  }
+
+  // Update splash screen
+  const detecting = document.getElementById('sp-detecting');
+  const cityContent = document.getElementById('sp-city-content');
+  const fallback = document.getElementById('sp-fallback');
+  const cityNameEl = document.getElementById('sp-city-name');
+  const citySubEl = document.getElementById('sp-city-sub');
+  const img = document.getElementById('sp-city-img');
+
+  if(detecting) detecting.style.display = 'none';
+
+  if(cityName){
+    if(cityContent) cityContent.style.display = 'block';
+    if(cityNameEl) cityNameEl.textContent = cityName + (country ? ', '+country : '');
+    if(citySubEl) citySubEl.textContent = bg.sub;
+  } else {
+    if(fallback) fallback.style.display = 'block';
+  }
+
+  // Load city background image
+  if(img && bg.img){
+    img.onload = ()=>{ img.style.opacity='0.85'; };
+    img.onerror = ()=>{ img.style.display='none'; };
+    img.src = bg.img;
+  }
+}
 
 // Emergency numbers by country code
 const EMERGENCY_NUMBERS = {
@@ -2759,41 +3228,10 @@ const EMERGENCY_NUMBERS = {
 
 let currentEmergencyData = EMERGENCY_NUMBERS['DEFAULT'];
 
+// detectEmergencyNumbers is now handled by detectSplashCity
+// kept as alias for any legacy calls
 async function detectEmergencyNumbers(){
-  try{
-    const res = await fetch('https://ipapi.co/json/');
-    const data = await res.json();
-    const code = data.country_code || 'DEFAULT';
-    const city = data.city || '';
-    const country = data.country_name || '';
-    currentEmergencyData = EMERGENCY_NUMBERS[code] || EMERGENCY_NUMBERS['DEFAULT'];
-    currentEmergencyData._city = city;
-    currentEmergencyData._fullName = city ? city+', '+country : country;
-
-    // Update location bar on home screen
-    const locBar = document.getElementById('loc-name-bar');
-    if(locBar) locBar.textContent = currentEmergencyData._fullName || country || 'Your location';
-
-    // Update all loc-name elements
-    document.querySelectorAll('.loc-name').forEach(el=>{
-      el.textContent = currentEmergencyData._fullName || country || 'Your location';
-    });
-
-    renderSOSPanel();
-    updateEmergencyBanner();
-  }catch(e){
-    currentEmergencyData = EMERGENCY_NUMBERS['DEFAULT'];
-    // Fallback to user's saved location
-    try{
-      const user = loadUser();
-      if(user && user.location){
-        const locBar = document.getElementById('loc-name-bar');
-        if(locBar) locBar.textContent = user.location;
-        document.querySelectorAll('.loc-name').forEach(el=>el.textContent=user.location);
-      }
-    }catch(e2){}
-    renderSOSPanel();
-  }
+  await detectSplashCity();
 }
 
 function renderSOSPanel(){
@@ -2971,7 +3409,7 @@ function finishReg(){
   // Update location bar
   const locName = document.querySelector('.loc-name');
   if(locName) locName.textContent = location;
-  toast('🎉 Welcome to Help-Me, '+name+'!');
+  toast('🎉 Welcome to Help Me, '+name+'!');
   resetLogin();
   setTimeout(()=>go('home'),600);
 }
@@ -3289,6 +3727,55 @@ function hideDropdown(ddId){
 }
 
 // ══════════════════════════════════
+// TARGET COUNTRIES & CITIES
+// ══════════════════════════════════
+const TARGET_COUNTRIES = [
+  '🇧🇭 Bahrain','🇸🇦 Saudi Arabia','🇦🇪 United Arab Emirates',
+  '🇰🇼 Kuwait','🇶🇦 Qatar','🇴🇲 Oman',
+  '🇹🇷 Turkey','🇬🇧 United Kingdom','🇪🇬 Egypt',
+  '🇫🇷 France','🇯🇴 Jordan','🇲🇦 Morocco',
+  '🇹🇭 Thailand','🇮🇹 Italy','🇲🇾 Malaysia',
+  '🇬🇪 Georgia','🇦🇿 Azerbaijan','🇮🇩 Indonesia',
+  '🇪🇸 Spain','🇱🇧 Lebanon','🇺🇸 United States',
+  '🇬🇷 Greece','🇩🇪 Germany','🇸🇬 Singapore',
+  '🇿🇦 South Africa','🇨🇦 Canada','🇵🇭 Philippines',
+  '🇮🇳 India','🇳🇱 Netherlands','🇨🇾 Cyprus'
+];
+
+const TARGET_CITIES = {
+  'Bahrain': ['Manama','Riffa','Muharraq','Juffair','Adliya','Amwaj','Saar','Budaiya','Seef','Hidd'],
+  'Saudi Arabia': ['Riyadh','Jeddah','Mecca','Medina','Dammam','Khobar','Dhahran','Abha','Taif','Tabuk','Yanbu','Jubail'],
+  'United Arab Emirates': ['Dubai','Abu Dhabi','Sharjah','Ajman','Ras Al Khaimah','Fujairah','Al Ain','Umm Al Quwain'],
+  'Kuwait': ['Kuwait City','Hawalli','Salmiya','Ahmadi','Fahaheel','Jahra','Farwaniya','Mishref','Rumaithiya'],
+  'Qatar': ['Doha','Lusail','Al Wakrah','Al Rayyan','The Pearl','West Bay','Msheireb','Mesaieed'],
+  'Oman': ['Muscat','Salalah','Sohar','Nizwa','Sur','Khasab','Ibri','Rustaq','Buraimi'],
+  'Turkey': ['Istanbul','Antalya','Ankara','Izmir','Bodrum','Cappadocia','Alanya','Fethiye','Marmaris','Kusadasi','Bursa','Belek'],
+  'United Kingdom': ['London','Manchester','Birmingham','Edinburgh','Glasgow','Liverpool','Leeds','Bristol','Oxford','Cambridge','Brighton','Cardiff'],
+  'Egypt': ['Cairo','Hurghada','Sharm El-Sheikh','Alexandria','Luxor','Aswan','El Gouna','Dahab','Marsa Alam'],
+  'France': ['Paris','Nice','Cannes','Lyon','Marseille','Bordeaux','Antibes','Saint-Tropez','Strasbourg'],
+  'Jordan': ['Amman','Aqaba','Petra','Dead Sea','Jerash','Madaba','Wadi Rum','Irbid','Zarqa'],
+  'Morocco': ['Marrakech','Casablanca','Tangier','Rabat','Fes','Agadir','Essaouira','Chefchaouen','Meknes'],
+  'Thailand': ['Bangkok','Phuket','Chiang Mai','Pattaya','Koh Samui','Krabi','Hua Hin','Koh Phangan'],
+  'Italy': ['Rome','Milan','Florence','Venice','Naples','Turin','Amalfi','Positano','Capri','Taormina','Lake Como'],
+  'Malaysia': ['Kuala Lumpur','Langkawi','Penang','Johor Bahru','Genting Highlands','Cameron Highlands','Malacca'],
+  'Georgia': ['Tbilisi','Batumi','Gudauri','Borjomi','Kutaisi','Sighnaghi','Mestia'],
+  'Azerbaijan': ['Baku','Gabala','Sheki','Quba','Lankaran','Qusar'],
+  'Indonesia': ['Bali - Seminyak','Bali - Ubud','Bali - Kuta','Bali - Nusa Dua','Bali - Canggu','Jakarta','Lombok'],
+  'Spain': ['Madrid','Barcelona','Marbella','Seville','Valencia','Málaga','Ibiza','Palma de Mallorca','Granada'],
+  'Lebanon': ['Beirut','Jounieh','Byblos','Batroun','Mzaar','Faraya','Baalbaek','Sidon'],
+  'United States': ['New York','Los Angeles','Miami','Washington DC','Chicago','Las Vegas','Orlando','San Francisco','Houston','Boston'],
+  'Greece': ['Athens','Santorini','Mykonos','Rhodes','Heraklion','Chania','Corfu','Thessaloniki'],
+  'Germany': ['Frankfurt','Munich','Berlin','Hamburg','Düsseldorf','Cologne','Stuttgart','Dresden'],
+  'Singapore': ['Marina Bay','Orchard Road','Sentosa','Clarke Quay','CBD','Chinatown','Little India'],
+  'South Africa': ['Cape Town','Johannesburg','Durban','Stellenbosch','Franschhoek','Knysna'],
+  'Canada': ['Toronto','Vancouver','Montreal','Calgary','Ottawa','Niagara Falls','Banff','Whistler'],
+  'Philippines': ['Manila','Cebu City','Boracay','Puerto Princesa','El Nido','Bohol','Siargao','Davao'],
+  'India': ['Mumbai','Delhi','Goa','Kochi','Bangalore','Chennai','Jaipur','Agra','Hyderabad'],
+  'Netherlands': ['Amsterdam','Rotterdam','The Hague','Utrecht','Leiden','Maastricht','Haarlem'],
+  'Cyprus': ['Limassol','Paphos','Larnaca','Ayia Napa','Nicosia','Protaras']
+};
+
+// ══════════════════════════════════
 // BUSINESS REGISTRATION & PRICING
 // ══════════════════════════════════
 const PRICING_MAP = {
@@ -3467,9 +3954,9 @@ async function submitAgent(){
   document.getElementById('agent-form-wrap').innerHTML=`
     <div style="text-align:center;padding:40px 20px;">
       <div style="font-size:72px;margin-bottom:16px;animation:popIn .5s ease;">🎉</div>
-      <div style="font-size:22px;font-weight:900;margin-bottom:8px;">Welcome to Help-Me!</div>
+      <div style="font-size:22px;font-weight:900;margin-bottom:8px;">Welcome to Help Me!</div>
       <div style="font-size:15px;font-weight:600;color:#6B7280;margin-bottom:6px;">
-        You're now an official Help-Me Agent, <strong style="color:#1A1A2E">${name}</strong>
+        You're now an official Help Me Agent, <strong style="color:#1A1A2E">${name}</strong>
       </div>
       <div style="background:#D1FAE5;border-radius:14px;padding:14px;margin:20px 0;text-align:left;">
         <div style="font-weight:800;font-size:14px;color:#065F46;margin-bottom:8px;">✅ Auto-approved instantly</div>
@@ -3629,14 +4116,20 @@ if(!navigator.onLine) document.getElementById('offline-bar').classList.add('show
 (function(){
   try{
     const user = loadUser();
-    // Render default SOS panel immediately, then update with real numbers
+    // Render default SOS panel immediately
   renderSOSPanel();
-  detectEmergencyNumbers();
+  // Detect city — updates splash, location bar, SOS and emergency numbers all at once
+  detectSplashCity();
   loadFeaturedSuppliers();
 
   if(user && user.loggedIn){
       document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=user.name);
       document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 Currently in '+(user.location||user.country||''));
+      // Hide login button, show logged-in state
+      const loginBtn = document.getElementById('prof-login-btn');
+      if(loginBtn) loginBtn.style.display='none';
+      const sinceTxt = document.getElementById('prof-since-txt');
+      if(sinceTxt) sinceTxt.textContent = '📍 '+(user.location||user.country||'Member');
       const greet=document.querySelector('.home-greet');
       if(greet) greet.textContent='Welcome back, '+user.name+' 👋';
       const locName=document.querySelector('.loc-name');
