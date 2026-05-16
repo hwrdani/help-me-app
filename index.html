@@ -556,6 +556,14 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 
       <div id="sp-fallback" style="display:none;">
         <div style="color:#fff;font-weight:900;font-size:32px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Find Trusted Services</div>
+        <div style="color:rgba(255,255,255,.85);font-size:15px;font-weight:600;margin-bottom:12px;">Anywhere in the world — with one tap</div>
+        <button onclick="showLocationPicker()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">
+          📍 Set my location
+        </button>
+      </div>
+
+      <div id="sp-fallback" style="display:none;">
+        <div style="color:#fff;font-weight:900;font-size:32px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Find Trusted Services</div>
         <div style="color:rgba(255,255,255,.85);font-size:15px;font-weight:600;">Anywhere in the world — with one tap</div>
       </div>
     </div>
@@ -574,7 +582,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
 
     <!-- CTA Button -->
-    <button id="sp-btn" onclick="go('login')"
+    <button id="sp-btn" onclick="handleGetStarted()"
       style="width:100%;padding:16px;background:linear-gradient(135deg,#FF6B35,#F59E0B);color:#fff;
       border:none;border-radius:18px;font-size:17px;font-weight:900;cursor:pointer;
       font-family:'Nunito',sans-serif;box-shadow:0 6px 24px rgba(255,107,53,.4);
@@ -3089,11 +3097,37 @@ function selectManualLocation(country, code, flag){
 
 function retryGPS(){
   hideLocationPicker();
-  const det = document.getElementById('sp-detecting');
-  const content = document.getElementById('sp-city-content');
-  if(det){ det.style.display='flex'; }
-  if(content) content.style.display='none';
-  detectSplashCity();
+  if(navigator.geolocation){
+    toast('📍 Detecting via GPS...');
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        var xhr = new XMLHttpRequest();
+        xhr.timeout = 3000;
+        xhr.open('GET','https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',true);
+        xhr.setRequestHeader('User-Agent','HelpMeApp/1.0');
+        xhr.onload = function(){
+          try{
+            var d = JSON.parse(xhr.responseText);
+            var addr = d.address || {};
+            var country = addr.country || '';
+            var city = addr.city || addr.town || addr.village || '';
+            var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; }) || 'DEFAULT';
+            if(country){ applyCountryToSplash(country, code, city); toast('📍 GPS: '+country); }
+            else { toast('📍 Could not detect — select manually'); showLocationPicker(); }
+          }catch(e){ toast('📍 Could not detect — select manually'); showLocationPicker(); }
+        };
+        xhr.onerror = xhr.ontimeout = function(){ toast('📍 GPS failed — select manually'); showLocationPicker(); };
+        xhr.send();
+      },
+      function(){ toast('📍 GPS denied — select manually'); showLocationPicker(); },
+      { timeout: 5000, maximumAge: 60000 }
+    );
+  } else {
+    toast('📍 GPS not available — select manually');
+    showLocationPicker();
+  }
 }
 
 // ══════════════════════════════════
@@ -3324,9 +3358,10 @@ const CC_MAP = {
 };
 
 // GPS → IP fallback location detection
-// GPS works regardless of roaming SIM — uses physical device location
 function detectSplashCity(){
-  const giveUp = setTimeout(()=>{ applyCountryToSplash('','DEFAULT',''); }, 6000);
+  // On page load — use IP only (fast, no permission needed)
+  // GPS is triggered by user tap on Get Started for mobile compatibility
+  const giveUp = setTimeout(()=>{ applyCountryToSplash('','DEFAULT',''); }, 4000);
 
   function tryXHR(url, parseText, cb){
     try{
@@ -3339,72 +3374,67 @@ function detectSplashCity(){
     }catch(e){ cb(null); }
   }
 
-  function detectByIP(){
-    tryXHR('https://ipapi.co/json/', function(text){
-      try{
-        const d = JSON.parse(text);
-        return d && d.country_name ? {code:d.country_code, country:d.country_name, city:d.city||''} : null;
-      }catch(e){ return null; }
-    }, function(result){
-      if(result && result.country){
+  tryXHR('https://ipapi.co/json/', function(text){
+    try{
+      const d = JSON.parse(text);
+      return d && d.country_name ? {code:d.country_code, country:d.country_name, city:d.city||''} : null;
+    }catch(e){ return null; }
+  }, function(result){
+    clearTimeout(giveUp);
+    if(result && result.country){
+      applyCountryToSplash(result.country, result.code, result.city||'');
+    } else {
+      tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
+        if(!text) return null;
+        const m = text.match(/loc=([A-Z]{2})/);
+        return m ? {code:m[1], country:CC_MAP[m[1]]||'', city:''} : null;
+      }, function(result2){
         clearTimeout(giveUp);
-        applyCountryToSplash(result.country, result.code, result.city||'');
-      } else {
-        tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
-          if(!text) return null;
-          const m = text.match(/loc=([A-Z]{2})/);
-          return m ? {code:m[1], country:CC_MAP[m[1]]||'', city:''} : null;
-        }, function(result2){
-          clearTimeout(giveUp);
-          applyCountryToSplash(result2&&result2.country ? result2.country : '',
-                               result2&&result2.code    ? result2.code    : 'DEFAULT', '');
-        });
-      }
-    });
-  }
+        applyCountryToSplash(
+          result2&&result2.country ? result2.country : '',
+          result2&&result2.code    ? result2.code    : 'DEFAULT', '');
+      });
+    }
+  });
+}
 
-  // Step 1 — Try GPS first (physical location, works on roaming)
+// Called when user taps Get Started — user gesture allows GPS prompt on mobile
+function handleGetStarted(){
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
       function(pos){
-        // GPS succeeded — reverse geocode to get country/city
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        tryXHR(
-          'https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',
-          function(text){
-            try{
-              const d = JSON.parse(text);
-              const addr = d.address || {};
-              const country = addr.country || '';
-              const city = addr.city || addr.town || addr.village || addr.county || '';
-              // Map country name to code
-              const code = Object.keys(CC_MAP).find(k=>CC_MAP[k]===country) || 'DEFAULT';
-              return country ? {country, code, city} : null;
-            }catch(e){ return null; }
-          },
-          function(result){
-            clearTimeout(giveUp);
-            if(result && result.country){
-              applyCountryToSplash(result.country, result.code, result.city||'');
-              // Show GPS accuracy indicator on splash
-              const det = document.getElementById('sp-detecting');
-              if(det) det.innerHTML = '<span style="color:#34D399;font-size:11px;font-weight:700;">📍 GPS detected</span>';
-            } else {
-              detectByIP(); // GPS got coords but reverse geocode failed
+        // GPS success — reverse geocode
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        var xhr = new XMLHttpRequest();
+        xhr.timeout = 3000;
+        xhr.open('GET','https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',true);
+        xhr.setRequestHeader('User-Agent','HelpMeApp/1.0');
+        xhr.onload = function(){
+          try{
+            var d = JSON.parse(xhr.responseText);
+            var addr = d.address || {};
+            var country = addr.country || '';
+            var city = addr.city || addr.town || addr.village || addr.county || '';
+            var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; }) || 'DEFAULT';
+            if(country){
+              applyCountryToSplash(country, code, city);
+              toast('📍 GPS: '+country);
             }
-          }
-        );
+          }catch(e){}
+          go('login');
+        };
+        xhr.onerror = xhr.ontimeout = function(){ go('login'); };
+        xhr.send();
       },
       function(err){
-        // User denied GPS or GPS failed — fall back to IP
-        detectByIP();
+        // GPS denied or failed — already have IP result, just proceed
+        go('login');
       },
-      { timeout: 4000, maximumAge: 300000 } // 5 min cache — don't ask GPS every time
+      { timeout: 5000, maximumAge: 300000 }
     );
   } else {
-    // Browser doesn't support GPS — use IP
-    detectByIP();
+    go('login');
   }
 }
 
