@@ -491,6 +491,38 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 </div>
 
+<!-- Location permission screen — shown when user taps Get Started -->
+<div id="sp-location-ask" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:28px 28px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:56px;margin-bottom:12px;">📍</div>
+      <div style="font-weight:900;font-size:20px;color:#1A1A2E;margin-bottom:8px;">Allow Location Access</div>
+      <div style="font-size:14px;color:#6B7280;font-weight:600;line-height:1.6;">
+        Help Me uses your location to show the correct emergency numbers and local services wherever you are — even when roaming.
+      </div>
+    </div>
+    <div style="background:#EFF6FF;border-radius:14px;padding:14px 16px;margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:700;color:#1E40AF;line-height:1.6;">
+        🔒 Your location is only used to detect your country.<br>
+        It is never stored or shared with anyone.
+      </div>
+    </div>
+    <button id="sp-allow-btn" onclick="askLocationAndProceed()"
+      style="width:100%;padding:16px;background:linear-gradient(135deg,#FF6B35,#F59E0B);
+      border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:900;
+      cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:12px;
+      box-shadow:0 6px 20px rgba(255,107,53,.35);">
+      📍 Allow Location Access
+    </button>
+    <button onclick="skipLocationAndProceed()"
+      style="width:100%;padding:14px;background:transparent;border:2px solid #E5E7EB;
+      border-radius:16px;color:#6B7280;font-size:15px;font-weight:700;
+      cursor:pointer;font-family:'Nunito',sans-serif;">
+      Skip — Use my current detection
+    </button>
+  </div>
+</div>
+
 <!-- ═══ LOCATION PICKER MODAL ═══ -->
 <div id="location-picker" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);">
   <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 20px;max-height:85vh;overflow-y:auto;">
@@ -3395,66 +3427,60 @@ function detectSplashCity(){
 
 // Called when user taps Get Started — user gesture allows GPS prompt on mobile
 function handleGetStarted(){
-  // Show location permission screen first
-  // This gives user context before the GPS popup appears
-  // and works on both HTTP and HTTPS
-  var btn = document.getElementById('sp-btn');
+  // Show a location permission screen — this gives context AND acts as the user gesture
+  // required by mobile browsers before GPS popup can appear
+  var locScreen = document.getElementById('sp-location-ask');
+  if(locScreen) locScreen.style.display = 'flex';
+  else go('login');
+}
 
-  // Check if GPS is available and not previously denied
-  if(!navigator.geolocation){
-    go('login');
-    return;
-  }
+function askLocationAndProceed(){
+  var locScreen = document.getElementById('sp-location-ask');
+  if(locScreen) locScreen.style.display = 'none';
 
-  // Update button to show we're working
-  if(btn){ btn.innerHTML = '📍 Detecting location...'; btn.style.opacity='0.8'; btn.disabled=true; }
+  if(!navigator.geolocation){ go('login'); return; }
 
-  var proceeded = false;
+  var btn = document.getElementById('sp-allow-btn');
+  if(btn){ btn.textContent = '📍 Detecting...'; btn.disabled = true; }
+
+  var done = false;
   function proceed(){
-    if(proceeded) return;
-    proceeded = true;
-    if(btn){ btn.innerHTML = 'Get Started 🚀'; btn.style.opacity='1'; btn.disabled=false; }
+    if(done) return; done = true;
     go('login');
   }
+  var timer = setTimeout(proceed, 7000);
 
-  // Hard timeout — never block user more than 8 seconds
-  var hardStop = setTimeout(proceed, 8000);
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      var lat = pos.coords.latitude;
+      var lng = pos.coords.longitude;
+      var xhr = new XMLHttpRequest();
+      xhr.timeout = 4000;
+      xhr.open('GET','https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',true);
+      xhr.setRequestHeader('User-Agent','HelpMeApp/1.0');
+      xhr.onload = function(){
+        try{
+          var d = JSON.parse(xhr.responseText);
+          var addr = d.address||{};
+          var country = addr.country||'';
+          var city = addr.city||addr.town||addr.village||'';
+          var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; })||'DEFAULT';
+          if(country){ applyCountryToSplash(country,code,city); }
+        }catch(e){}
+        clearTimeout(timer); proceed();
+      };
+      xhr.onerror = xhr.ontimeout = function(){ clearTimeout(timer); proceed(); };
+      xhr.send();
+    },
+    function(err){ clearTimeout(timer); proceed(); },
+    { timeout:6000, maximumAge:300000, enableHighAccuracy:false }
+  );
+}
 
-  try{
-    navigator.geolocation.getCurrentPosition(
-      function(pos){
-        // GPS success
-        var lat = pos.coords.latitude;
-        var lng = pos.coords.longitude;
-        var xhr = new XMLHttpRequest();
-        xhr.timeout = 4000;
-        xhr.open('GET','https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',true);
-        xhr.setRequestHeader('User-Agent','HelpMeApp/1.0');
-        xhr.onload = function(){
-          try{
-            var d = JSON.parse(xhr.responseText);
-            var addr = d.address||{};
-            var country = addr.country||'';
-            var city = addr.city||addr.town||addr.village||'';
-            var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; })||'DEFAULT';
-            if(country){ applyCountryToSplash(country,code,city); toast('📍 '+country+' detected'); }
-          }catch(e){}
-          clearTimeout(hardStop); proceed();
-        };
-        xhr.onerror = xhr.ontimeout = function(){ clearTimeout(hardStop); proceed(); };
-        xhr.send();
-      },
-      function(err){
-        // Denied or unavailable — proceed with IP result
-        clearTimeout(hardStop);
-        proceed();
-      },
-      { timeout:6000, maximumAge:300000, enableHighAccuracy:false }
-    );
-  }catch(e){
-    clearTimeout(hardStop);
-    proceed();
-  }
+function skipLocationAndProceed(){
+  var locScreen = document.getElementById('sp-location-ask');
+  if(locScreen) locScreen.style.display = 'none';
+  go('login');
 }
 
 function applyCountryToSplash(country, countryCode, city){
@@ -3717,11 +3743,11 @@ function verifyOTP(){
       document.getElementById('login-s0').style.display='block';
       document.getElementById('login-s0').innerHTML = `
         <div class="ls-title">Account not found 🤔</div>
-        <div class="ls-sub">We couldn't find an account for <strong>${phone}</strong>.<br>Would you like to create one?</div>
+        <div class="ls-sub" style="word-break:break-all;">We could not find an account for <strong>${phone}</strong>. Would you like to create one?</div>
         <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);margin-bottom:12px;" onclick="showSignupFlow()">
           🚀 Create New Account
         </button>
-        <button class="main-btn btn-ghost" onclick="showStep0()">← Try Different Number</button>`;
+        <button class="main-btn btn-ghost" onclick="tryDifferentNumber()">← Try Different Number</button>`;
     }
   } else {
     // SIGN UP — go to profile details
@@ -3749,8 +3775,20 @@ function applyUserToApp(user){
 }
 
 function showProfile(){
-  // Legacy alias — now handled by verifyOTP
   verifyOTP();
+}
+
+function tryDifferentNumber(){
+  // Clear phone and go back to phone input in login mode
+  document.getElementById('phone-input').value = '';
+  document.querySelectorAll('.otp-input').forEach(i=>i.value='');
+  document.getElementById('login-s0').style.display = 'none';
+  document.getElementById('login-s1').style.display = 'block';
+  document.getElementById('s1-title').textContent = 'Welcome back! 👋';
+  document.getElementById('s1-sub').textContent = 'Enter your WhatsApp number to login';
+  isLoginMode = true;
+  setStep(1);
+  setTimeout(()=>document.getElementById('phone-input').focus(), 300);
 }
 
 function finishReg(){
