@@ -491,6 +491,28 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 </div>
 
+<!-- ═══ LOCATION PICKER MODAL ═══ -->
+<div id="location-picker" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);">
+  <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 20px;max-height:85vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-weight:900;font-size:18px;color:#1A1A2E;">📍 Where are you now?</div>
+        <div style="font-size:13px;color:#6B7280;font-weight:600;margin-top:2px;">Select your current country</div>
+      </div>
+      <button onclick="hideLocationPicker()" style="width:36px;height:36px;background:#F3F4F6;border:none;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+
+    <!-- GPS button -->
+    <button onclick="retryGPS()" style="width:100%;padding:13px;background:linear-gradient(135deg,#34D399,#059669);border:none;border-radius:14px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;">
+      📍 Detect my location automatically
+    </button>
+
+    <!-- Country list -->
+    <div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Or select manually:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="country-picker-grid"></div>
+  </div>
+</div>
+
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
 
@@ -525,8 +547,11 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 
       <div id="sp-city-content" style="display:none;">
         <div style="color:rgba(255,255,255,.8);font-size:14px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;">✨ Welcome to</div>
-        <div id="sp-city-name" style="color:#fff;font-weight:900;font-size:36px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Your City</div>
-        <div id="sp-city-sub" style="color:rgba(255,255,255,.85);font-size:16px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.4);line-height:1.4;">Find trusted services in your city with one tap</div>
+        <div id="sp-city-name" style="color:#fff;font-weight:900;font-size:36px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.5);margin-bottom:8px;">Your Country</div>
+        <div id="sp-city-sub" style="color:rgba(255,255,255,.85);font-size:16px;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.4);line-height:1.4;margin-bottom:10px;">Find trusted services with one tap</div>
+        <button onclick="showLocationPicker()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;">
+          📍 Not here? Change location
+        </button>
       </div>
 
       <div id="sp-fallback" style="display:none;">
@@ -3002,6 +3027,76 @@ function hideIOSOverlay(){
 }
 
 // ══════════════════════════════════
+// MANUAL LOCATION PICKER
+// ══════════════════════════════════
+function showLocationPicker(){
+  const grid = document.getElementById('country-picker-grid');
+  if(grid && !grid.children.length){
+    const countries = [
+      {flag:'🇧🇭',name:'Bahrain',code:'BH'},
+      {flag:'🇸🇦',name:'Saudi Arabia',code:'SA'},
+      {flag:'🇦🇪',name:'UAE',code:'AE'},
+      {flag:'🇰🇼',name:'Kuwait',code:'KW'},
+      {flag:'🇶🇦',name:'Qatar',code:'QA'},
+      {flag:'🇴🇲',name:'Oman',code:'OM'},
+      {flag:'🇹🇷',name:'Turkey',code:'TR'},
+      {flag:'🇬🇧',name:'UK',code:'GB'},
+      {flag:'🇪🇬',name:'Egypt',code:'EG'},
+      {flag:'🇫🇷',name:'France',code:'FR'},
+      {flag:'🇯🇴',name:'Jordan',code:'JO'},
+      {flag:'🇲🇦',name:'Morocco',code:'MA'},
+      {flag:'🇹🇭',name:'Thailand',code:'TH'},
+      {flag:'🇮🇹',name:'Italy',code:'IT'},
+      {flag:'🇲🇾',name:'Malaysia',code:'MY'},
+      {flag:'🇬🇪',name:'Georgia',code:'GE'},
+      {flag:'🇦🇿',name:'Azerbaijan',code:'AZ'},
+      {flag:'🇮🇩',name:'Indonesia',code:'ID'},
+      {flag:'🇪🇸',name:'Spain',code:'ES'},
+      {flag:'🇱🇧',name:'Lebanon',code:'LB'},
+      {flag:'🇺🇸',name:'USA',code:'US'},
+      {flag:'🇬🇷',name:'Greece',code:'GR'},
+      {flag:'🇩🇪',name:'Germany',code:'DE'},
+      {flag:'🇸🇬',name:'Singapore',code:'SG'},
+      {flag:'🇿🇦',name:'South Africa',code:'ZA'},
+      {flag:'🇨🇦',name:'Canada',code:'CA'},
+      {flag:'🇵🇭',name:'Philippines',code:'PH'},
+      {flag:'🇮🇳',name:'India',code:'IN'},
+      {flag:'🇳🇱',name:'Netherlands',code:'NL'},
+      {flag:'🇨🇾',name:'Cyprus',code:'CY'},
+    ];
+    grid.innerHTML = countries.map(c=>`
+      <button onmousedown="selectManualLocation('${c.name}','${c.code}','${c.flag}')"
+        style="padding:12px 10px;background:#F9F7F4;border:2px solid #E5E7EB;border-radius:14px;
+        cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">${c.flag}</span>
+        <span style="font-size:13px;font-weight:700;color:#1A1A2E;">${c.name}</span>
+      </button>`).join('');
+  }
+  document.getElementById('location-picker').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function hideLocationPicker(){
+  document.getElementById('location-picker').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function selectManualLocation(country, code, flag){
+  hideLocationPicker();
+  applyCountryToSplash(country, code, '');
+  toast(flag+' Location set to '+country);
+}
+
+function retryGPS(){
+  hideLocationPicker();
+  const det = document.getElementById('sp-detecting');
+  const content = document.getElementById('sp-city-content');
+  if(det){ det.style.display='flex'; }
+  if(content) content.style.display='none';
+  detectSplashCity();
+}
+
+// ══════════════════════════════════
 // PWA — HOME SCREEN INSTALLATION
 // ══════════════════════════════════
 let deferredInstallPrompt = null;
@@ -3228,16 +3323,15 @@ const CC_MAP = {
   'KE':'Kenya','PK':'Pakistan','BD':'Bangladesh','IQ':'Iraq','SY':'Syria'
 };
 
+// GPS → IP fallback location detection
+// GPS works regardless of roaming SIM — uses physical device location
 function detectSplashCity(){
-  // Show fallback after 3s no matter what — never get stuck
-  const giveUp = setTimeout(()=>{ applyCountryToSplash('','DEFAULT'); }, 3000);
+  const giveUp = setTimeout(()=>{ applyCountryToSplash('','DEFAULT',''); }, 6000);
 
-  // Simple XMLHttpRequest — works on ALL browsers including old iOS Safari
-  // No async/await, no Promise.any, no fetch issues
   function tryXHR(url, parseText, cb){
     try{
       const xhr = new XMLHttpRequest();
-      xhr.timeout = 2000;
+      xhr.timeout = 3000;
       xhr.onload  = function(){ try{ cb(parseText(xhr.responseText)); }catch(e){ cb(null); } };
       xhr.onerror = xhr.ontimeout = function(){ cb(null); };
       xhr.open('GET', url, true);
@@ -3245,33 +3339,73 @@ function detectSplashCity(){
     }catch(e){ cb(null); }
   }
 
-  // Try Cloudflare first — fastest, works on all browsers, no CORS issues
-  // Cloudflare only gives country code, not city — use ipapi.co for city
-  tryXHR('https://ipapi.co/json/', function(text){
-    try{
-      const d = JSON.parse(text);
-      return d && d.country_name ? {code:d.country_code, country:d.country_name, city:d.city||''} : null;
-    }catch(e){ return null; }
-  }, function(result){
-    if(result && result.country){
-      clearTimeout(giveUp);
-      applyCountryToSplash(result.country, result.code, result.city||'');
-    } else {
-      // ipapi failed — try Cloudflare (country only, no city)
-      tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
-        if(!text) return null;
-        const m = text.match(/loc=([A-Z]{2})/);
-        return m ? {code:m[1], country:CC_MAP[m[1]]||'', city:''} : null;
-      }, function(result2){
+  function detectByIP(){
+    tryXHR('https://ipapi.co/json/', function(text){
+      try{
+        const d = JSON.parse(text);
+        return d && d.country_name ? {code:d.country_code, country:d.country_name, city:d.city||''} : null;
+      }catch(e){ return null; }
+    }, function(result){
+      if(result && result.country){
         clearTimeout(giveUp);
-        if(result2 && result2.country){
-          applyCountryToSplash(result2.country, result2.code, '');
-        } else {
-          applyCountryToSplash('','DEFAULT','');
-        }
-      });
-    }
-  });
+        applyCountryToSplash(result.country, result.code, result.city||'');
+      } else {
+        tryXHR('https://1.1.1.1/cdn-cgi/trace', function(text){
+          if(!text) return null;
+          const m = text.match(/loc=([A-Z]{2})/);
+          return m ? {code:m[1], country:CC_MAP[m[1]]||'', city:''} : null;
+        }, function(result2){
+          clearTimeout(giveUp);
+          applyCountryToSplash(result2&&result2.country ? result2.country : '',
+                               result2&&result2.code    ? result2.code    : 'DEFAULT', '');
+        });
+      }
+    });
+  }
+
+  // Step 1 — Try GPS first (physical location, works on roaming)
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        // GPS succeeded — reverse geocode to get country/city
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        tryXHR(
+          'https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',
+          function(text){
+            try{
+              const d = JSON.parse(text);
+              const addr = d.address || {};
+              const country = addr.country || '';
+              const city = addr.city || addr.town || addr.village || addr.county || '';
+              // Map country name to code
+              const code = Object.keys(CC_MAP).find(k=>CC_MAP[k]===country) || 'DEFAULT';
+              return country ? {country, code, city} : null;
+            }catch(e){ return null; }
+          },
+          function(result){
+            clearTimeout(giveUp);
+            if(result && result.country){
+              applyCountryToSplash(result.country, result.code, result.city||'');
+              // Show GPS accuracy indicator on splash
+              const det = document.getElementById('sp-detecting');
+              if(det) det.innerHTML = '<span style="color:#34D399;font-size:11px;font-weight:700;">📍 GPS detected</span>';
+            } else {
+              detectByIP(); // GPS got coords but reverse geocode failed
+            }
+          }
+        );
+      },
+      function(err){
+        // User denied GPS or GPS failed — fall back to IP
+        detectByIP();
+      },
+      { timeout: 4000, maximumAge: 300000 } // 5 min cache — don't ask GPS every time
+    );
+  } else {
+    // Browser doesn't support GPS — use IP
+    detectByIP();
+  }
 }
 
 function applyCountryToSplash(country, countryCode, city){
