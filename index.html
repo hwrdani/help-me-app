@@ -208,6 +208,8 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 
 /* Featured */
 .feat-scroll{display:flex;gap:12px;padding:0 20px;overflow-x:auto;margin-bottom:22px;scrollbar-width:none;}
+.search-chip{padding:7px 14px;background:#F3F4F6;border-radius:20px;font-size:13px;font-weight:700;color:#374151;cursor:pointer;white-space:nowrap;border:2px solid transparent;transition:all .2s;flex-shrink:0;}
+.search-chip.active{background:#FF6B35;color:#fff;border-color:#FF6B35;}
 .feat-scroll::-webkit-scrollbar{display:none;}
 .feat-card{min-width:180px;background:#fff;border-radius:18px;overflow:hidden;
   box-shadow:0 4px 16px rgba(0,0,0,.07);cursor:pointer;flex-shrink:0;transition:transform .18s;}
@@ -644,10 +646,12 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     </div>
     <div class="home-greet">Good day 👋</div>
     <div class="home-q">What do you need help with?</div>
-    <div class="search-bar">
+    <div class="search-bar" onclick="openSearch()">
       <span style="font-size:18px;color:#9CA3AF">🔍</span>
-      <input type="text" placeholder="Search doctors, mechanics...">
-      <span style="font-size:18px;cursor:pointer" onclick="toast('⚙️ Filters coming soon!')">⚙️</span>
+      <input type="text" id="home-search-input" placeholder="Search doctors, mechanics, restaurants..."
+        onfocus="openSearch()" readonly
+        style="cursor:pointer;">
+      <span style="font-size:18px;cursor:pointer" onclick="event.stopPropagation();openSearch()">⚙️</span>
     </div>
   </div>
 
@@ -761,7 +765,7 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 
   <div class="bnav">
     <div class="bni active" onclick="go('home')"><div class="ic">🏠</div><span>Home</span></div>
-    <div class="bni" onclick="go('all-cats')"><div class="ic">🔍</div><span>Explore</span></div>
+    <div class="bni" onclick="openSearch()"><div class="ic">🔍</div><span>Explore</span></div>
     <div class="bni" onclick="go('favorites');renderFavs()"><div class="ic">❤️</div><span>Saved</span></div>
     <div class="bni" onclick="go('profile')"><div class="ic">👤</div><span>Profile</span></div>
   </div>
@@ -805,6 +809,56 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
   </div>
 
   <div class="reg-scroll" id="bizreg-content"></div>
+</div>
+
+<!-- ════════════════════════════════
+     SEARCH
+════════════════════════════════ -->
+<div class="screen" id="search">
+  <!-- Search header -->
+  <div style="background:#fff;padding:52px 16px 12px;border-bottom:1px solid #F3F4F6;position:sticky;top:0;z-index:10;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;display:flex;align-items:center;gap:10px;background:#F9F7F4;border-radius:14px;padding:12px 16px;border:2px solid #E5E7EB;" id="search-box-wrap">
+        <span style="font-size:18px;color:#9CA3AF;">🔍</span>
+        <input type="text" id="search-input" placeholder="Search doctors, restaurants, mechanics..."
+          style="flex:1;border:none;outline:none;font-size:15px;font-weight:600;
+          font-family:'Nunito',sans-serif;background:transparent;color:#1A1A2E;"
+          oninput="runSearch(this.value)"
+          autofocus>
+        <span id="search-clear" onclick="clearSearch()" style="display:none;font-size:18px;cursor:pointer;color:#9CA3AF;">✕</span>
+      </div>
+      <button onclick="closeSearch()"
+        style="padding:12px 14px;background:#F3F4F6;border:none;border-radius:12px;
+        font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#374151;
+        white-space:nowrap;">
+        Cancel
+      </button>
+    </div>
+
+    <!-- Quick filter chips -->
+    <div style="display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none;">
+      <div class="search-chip active" onclick="filterSearch(this,'all')">All</div>
+      <div class="search-chip" onclick="filterSearch(this,'doctors')">🏥 Doctors</div>
+      <div class="search-chip" onclick="filterSearch(this,'restaurants')">🍽️ Food</div>
+      <div class="search-chip" onclick="filterSearch(this,'mechanics')">🔧 Mechanics</div>
+      <div class="search-chip" onclick="filterSearch(this,'pharmacy')">💊 Pharmacy</div>
+      <div class="search-chip" onclick="filterSearch(this,'hotels')">🏨 Hotels</div>
+      <div class="search-chip" onclick="filterSearch(this,'beauty')">💇 Beauty</div>
+    </div>
+  </div>
+
+  <div class="scroll" style="padding:16px;" id="search-results">
+    <!-- Default state — show recent searches and popular categories -->
+    <div id="search-default">
+      <div style="font-size:13px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Popular Searches</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;" id="popular-searches-wrap"></div>
+      <div style="font-size:13px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Browse Categories</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="search-cat-grid"></div>
+    </div>
+
+    <!-- Results state -->
+    <div id="search-results-list" style="display:none;"></div>
+  </div>
 </div>
 
 <!-- ════════════════════════════════
@@ -1982,7 +2036,7 @@ function go(id){
   const sosFab = document.querySelector('.sos-fab');
   if(sosFab) sosFab.style.display = hideSOSScreens.includes(id) ? 'none' : 'flex';
   // Update active nav based on screen
-  const exploreScreens = ['all-cats','category','detail','biz-reg'];
+  const exploreScreens = ['all-cats','category','detail','biz-reg','search'];
   const savedScreens = ['favorites'];
   const profileScreens = ['profile','agent','agent-dashboard','register'];
   document.querySelectorAll('.bnav .bni').forEach(b=>b.classList.remove('active'));
@@ -2458,8 +2512,174 @@ function updateNote(name,val){
 }
 
 // ══════════════════════════════════
-// BUSINESS REGISTRATION FLOW
+// SEARCH
 // ══════════════════════════════════
+let searchFilter = 'all';
+let searchTimer = null;
+let allSuppliers = [];
+
+function openSearch(){
+  go('search');
+
+  // Populate popular searches and category grid once
+  const popWrap = document.getElementById('popular-searches-wrap');
+  if(popWrap && !popWrap.children.length){
+    ['Doctor near me','24hr Pharmacy','Italian Restaurant','Car Mechanic','Hotel','Dentist','Hair Salon','Airport Transfer']
+    .forEach(t=>{
+      const d = document.createElement('div');
+      d.style.cssText = 'padding:8px 16px;background:#F9F7F4;border:2px solid #E5E7EB;border-radius:20px;font-size:13px;font-weight:700;color:#374151;cursor:pointer;';
+      d.textContent = '🔍 '+t;
+      d.onmousedown = ()=>quickSearch(t);
+      popWrap.appendChild(d);
+    });
+  }
+  const catGrid = document.getElementById('search-cat-grid');
+  if(catGrid && !catGrid.children.length){
+    [['🏥','Doctors','doctors'],['🔧','Mechanics','mechanics'],['💊','Pharmacy','pharmacy'],['🍽️','Restaurants','restaurants'],['🏨','Hotels','hotels'],['💇','Beauty','beauty'],['🏠','Home Services','homeservices'],['✈️','Travel','travel']]
+    .forEach(([e,n,k])=>{
+      const d = document.createElement('div');
+      d.style.cssText = 'background:#fff;border-radius:14px;padding:14px;border:2px solid #F3F4F6;display:flex;align-items:center;gap:10px;cursor:pointer;';
+      d.innerHTML = `<span style="font-size:24px;">${e}</span><span style="font-size:13px;font-weight:700;color:#1A1A2E;">${n}</span>`;
+      d.onmousedown = ()=>openCat(k);
+      catGrid.appendChild(d);
+    });
+  }
+
+  setTimeout(()=>{
+    const input = document.getElementById('search-input');
+    if(input){ input.focus(); input.removeAttribute('readonly'); }
+  }, 300);
+
+  // Pre-load all suppliers in background
+  if(!allSuppliers.length) loadAllSuppliers();
+}
+
+function closeSearch(){
+  clearSearch();
+  go('home');
+}
+
+function clearSearch(){
+  const input = document.getElementById('search-input');
+  if(input) input.value = '';
+  const clear = document.getElementById('search-clear');
+  if(clear) clear.style.display = 'none';
+  document.getElementById('search-default').style.display = 'block';
+  document.getElementById('search-results-list').style.display = 'none';
+  searchFilter = 'all';
+  document.querySelectorAll('.search-chip').forEach((c,i)=>{
+    c.classList.toggle('active', i===0);
+  });
+}
+
+async function loadAllSuppliers(){
+  let data = await sbFetch('suppliers','?active=eq.true&order=rating.desc&limit=200');
+  if(!data || !data.length) data = SAMPLE_SUPPLIERS;
+  allSuppliers = data;
+  // Cache in window
+  window._supCache = window._supCache || {};
+  allSuppliers.forEach(s=>{ if(s.id) window._supCache[s.id]=s; });
+}
+
+function filterSearch(el, cat){
+  searchFilter = cat;
+  document.querySelectorAll('.search-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const input = document.getElementById('search-input');
+  if(input && input.value.trim()) runSearch(input.value);
+  else if(cat !== 'all'){ openCat(cat); }
+}
+
+function quickSearch(term){
+  const input = document.getElementById('search-input');
+  if(input){ input.value = term; }
+  runSearch(term);
+}
+
+function runSearch(query){
+  const clear = document.getElementById('search-clear');
+  if(clear) clear.style.display = query ? 'block' : 'none';
+
+  if(!query.trim()){
+    document.getElementById('search-default').style.display = 'block';
+    document.getElementById('search-results-list').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('search-default').style.display = 'none';
+  document.getElementById('search-results-list').style.display = 'block';
+
+  // Debounce
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=>{ performSearch(query.trim()); }, 250);
+}
+
+function performSearch(query){
+  const list = document.getElementById('search-results-list');
+  const q = query.toLowerCase();
+
+  // Search across multiple fields
+  let results = allSuppliers.filter(s=>{
+    const match =
+      (s.name||'').toLowerCase().includes(q) ||
+      (s.specialty||s.spec||'').toLowerCase().includes(q) ||
+      (s.category_key||s.cat||'').toLowerCase().includes(q) ||
+      (s.location||'').toLowerCase().includes(q) ||
+      (s.country||'').toLowerCase().includes(q) ||
+      (s.description||s.desc||'').toLowerCase().includes(q);
+
+    // Also check subcategory/category title from CATS
+    const catTitle = CATS[s.category_key||s.cat] ? CATS[s.category_key||s.cat].title.toLowerCase() : '';
+    const catMatch = catTitle.includes(q);
+
+    // Apply category filter if active
+    const filterMatch = searchFilter==='all' || (s.category_key||s.cat)===searchFilter;
+
+    return (match || catMatch) && filterMatch;
+  });
+
+  // Also search category names — show category cards if matches
+  const matchingCats = Object.keys(CATS).filter(k=>
+    CATS[k].title.toLowerCase().includes(q) && (searchFilter==='all' || k===searchFilter)
+  );
+
+  if(!results.length && !matchingCats.length){
+    list.innerHTML = `
+      <div style="text-align:center;padding:48px 20px;">
+        <div style="font-size:48px;margin-bottom:12px;">🔍</div>
+        <div style="font-weight:800;font-size:16px;color:#1A1A2E;margin-bottom:6px;">No results for "${query}"</div>
+        <div style="font-size:13px;color:#6B7280;font-weight:600;margin-bottom:20px;">Try a different search or browse categories</div>
+        <button onclick="go('register')" class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);">
+          🏪 Register Your Business
+        </button>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Show matching category cards first
+  if(matchingCats.length){
+    html += `<div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Categories</div>`;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">`;
+    html += matchingCats.map(k=>`
+      <div onclick="openCat('${k}')"
+        style="background:#fff;border-radius:14px;padding:14px;border:2px solid #F3F4F6;
+        display:flex;align-items:center;gap:10px;cursor:pointer;">
+        <span style="font-size:24px;">${CATS[k].emoji}</span>
+        <span style="font-size:12px;font-weight:700;color:#1A1A2E;line-height:1.3;">${CATS[k].title}</span>
+      </div>`).join('');
+    html += `</div>`;
+  }
+
+  // Show supplier results
+  if(results.length){
+    html += `<div style="font-size:12px;font-weight:800;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">${results.length} Provider${results.length>1?'s':''} Found</div>`;
+    html += results.map(s=>supplierCardHTML(s)).join('');
+  }
+
+  list.innerHTML = html;
+}
 let bizRegStep = 1;
 let bizRegData = {};
 
