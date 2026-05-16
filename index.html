@@ -871,21 +871,32 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
     <div class="login-ic">🆘</div>
     <div class="login-ttl">Help Me</div>
     <div class="login-sub">Find trusted services anywhere in the world</div>
-
-    <!-- Step indicators -->
     <div style="display:flex;align-items:center;gap:8px;margin-top:24px;">
       <div id="step-dot-1" style="width:32px;height:8px;border-radius:4px;background:#fff;transition:all .3s;"></div>
       <div id="step-dot-2" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
       <div id="step-dot-3" style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.4);transition:all .3s;"></div>
     </div>
-  </div><!-- /login-top -->
+  </div>
 
-  <!-- STEP 1: Phone number -->
-  <div id="login-s1" class="login-sheet" style="position:relative;z-index:2;">
+  <!-- STEP 0: Login or Sign Up choice -->
+  <div id="login-s0" class="login-sheet" style="position:relative;z-index:2;">
     <div class="ls-title">Welcome! 👋</div>
-    <div class="ls-sub">Enter your phone number to get started. We'll send a verification code via WhatsApp.</div>
+    <div class="ls-sub">Already have an account or joining for the first time?</div>
+    <button class="main-btn btn-purple" onclick="showLoginFlow()" style="margin-bottom:12px;">
+      🔐 Login — I have an account
+    </button>
+    <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);margin-bottom:20px;" onclick="showSignupFlow()">
+      🚀 Sign Up — I'm new here
+    </button>
+    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
+      🔒 We verify via WhatsApp. We never share your number.
+    </div>
+  </div>
 
-    <!-- Searchable country code -->
+  <!-- STEP 1: Phone number (shared for both login & signup) -->
+  <div id="login-s1" class="login-sheet" style="display:none;position:relative;z-index:2;">
+    <div class="ls-title" id="s1-title">Enter your number 📱</div>
+    <div class="ls-sub" id="s1-sub">We'll send a verification code to your WhatsApp</div>
     <div style="position:relative;margin-bottom:12px;">
       <div class="phone-wrap" style="cursor:pointer;" onclick="toggleCCDropdown()">
         <div id="cc-display" style="padding:14px 10px 14px 14px;font-size:14px;font-weight:700;
@@ -895,7 +906,6 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         </div>
         <input type="tel" placeholder="50 123 4567" id="phone-input" onclick="event.stopPropagation()">
       </div>
-      <!-- CC dropdown -->
       <div id="dd-cc" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
         border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:2000;margin-top:4px;
         border:2px solid #667EEA;overflow:hidden;">
@@ -908,53 +918,49 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
         <div id="cc-list" style="max-height:220px;overflow-y:auto;scrollbar-width:none;"></div>
       </div>
     </div>
-
     <button class="main-btn btn-purple" onclick="showOTP()" style="margin-bottom:14px;">
       💬 Send WhatsApp Code
     </button>
-    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
-      🔒 Your number is only used for verification.<br>We never share it with anyone.
+    <div style="text-align:center;margin-top:6px;">
+      <span style="font-size:13px;color:rgba(255,255,255,.6);font-weight:600;cursor:pointer;" onclick="showStep0()">← Back</span>
     </div>
   </div>
 
-  <!-- STEP 2: OTP -->
+  <!-- STEP 2: OTP verification -->
   <div id="login-s2" class="login-sheet" style="display:none;position:relative;z-index:2;">
-    <div class="ls-title">Check WhatsApp 💬</div>
-    <div class="ls-sub">We sent a 4-digit code to <strong id="otp-num">+971 50 ···</strong><br>Enter it below to verify your number.</div>
+    <div class="ls-title" id="s2-title">Check WhatsApp 💬</div>
+    <div class="ls-sub">We sent a 4-digit code to <strong id="otp-num">+971 50 ···</strong></div>
     <div class="otp-row">
       <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,0)">
       <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,1)">
       <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,2)">
       <input class="otp-input" maxlength="1" type="tel" oninput="otpNext(this,3)">
     </div>
-    <button class="main-btn btn-green" onclick="showProfile()" style="margin-bottom:14px;">
+    <button class="main-btn btn-green" onclick="verifyOTP()" style="margin-bottom:14px;">
       ✅ Verify Code
     </button>
     <div class="resend-row">Didn't receive it? <span onclick="toast('📲 New code sent!')">Resend Code</span></div>
     <div style="text-align:center;margin-top:10px;">
-      <span style="font-size:13px;color:#9CA3AF;font-weight:600;cursor:pointer;" onclick="go('login');resetLogin()">← Change number</span>
+      <span style="font-size:13px;color:#9CA3AF;font-weight:600;cursor:pointer;" onclick="showStep1()">← Change number</span>
     </div>
   </div>
 
-  <!-- STEP 3: Name & Country -->
+  <!-- STEP 3: Sign Up only — Name & Home Country -->
   <div id="login-s3" class="login-sheet" style="display:none;position:relative;z-index:2;">
     <div class="ls-title">Almost there! 🎉</div>
-    <div class="ls-sub">Just two quick details and you're in. Everything else is optional.</div>
-
+    <div class="ls-sub">Just two quick details and you're in.</div>
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">Your Name <span style="color:#FF4757">*</span></div>
       <input id="reg-name" type="text" placeholder="e.g. Mohammed, Sara, John..."
         style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
-        font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
+        font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;"
         onfocus="this.style.borderColor='#667EEA'" onblur="this.style.borderColor='#E5E7EB'">
     </div>
-
-    <!-- WhatsApp number -->
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:2px;">💬 WhatsApp Number <span style="color:#FF4757">*</span></div>
-      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:6px;">This may be different from your login number</div>
+      <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:6px;">May differ from your login number</div>
       <div style="position:relative;">
-        <div style="display:flex;gap:0;background:#F9F7F4;border:2px solid #E5E7EB;border-radius:13px;overflow:hidden;transition:border-color .2s;" id="wa-wrap">
+        <div style="display:flex;gap:0;background:#F9F7F4;border:2px solid #E5E7EB;border-radius:13px;overflow:hidden;" id="wa-wrap">
           <div id="wa-cc-display" style="padding:13px 10px 13px 13px;font-size:13px;font-weight:700;
             color:#1A1A2E;border-right:2px solid rgba(0,0,0,.08);white-space:nowrap;cursor:pointer;
             display:flex;align-items:center;gap:4px;min-width:100px;" onclick="toggleWACCDropdown()">
@@ -962,11 +968,8 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           </div>
           <input id="reg-wa" type="tel" placeholder="50 123 4567"
             style="flex:1;border:none;outline:none;background:transparent;padding:13px 12px;
-            font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;color:#1A1A2E;"
-            onfocus="document.getElementById('wa-wrap').style.borderColor='#667EEA'"
-            onblur="document.getElementById('wa-wrap').style.borderColor='#E5E7EB'">
+            font-size:14px;font-weight:600;font-family:'Nunito',sans-serif;color:#1A1A2E;">
         </div>
-        <!-- WA CC dropdown -->
         <div id="dd-wa-cc" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;
           border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:2000;margin-top:4px;
           border:2px solid #667EEA;overflow:hidden;">
@@ -981,19 +984,17 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
       </div>
       <div style="margin-top:6px;">
         <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#6B7280;cursor:pointer;">
-          <input type="checkbox" id="wa-same" onchange="copyLoginToWA(this)"
-            style="width:16px;height:16px;accent-color:#25D366;cursor:pointer;">
-          Same as my login number above
+          <input type="checkbox" id="wa-same" onchange="copyLoginToWA(this)" style="width:16px;height:16px;accent-color:#25D366;cursor:pointer;">
+          Same as my login number
         </label>
       </div>
     </div>
-
     <div style="margin-bottom:12px;">
       <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:5px;">🏠 I live in <span style="color:#FF4757">*</span></div>
       <div style="position:relative;">
         <input id="reg-country" type="text" placeholder="Search country..." autocomplete="off"
           style="width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:13px;font-size:15px;
-          font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;transition:border-color .2s;"
+          font-weight:600;font-family:'Nunito',sans-serif;outline:none;background:#F9F7F4;"
           onfocus="this.style.borderColor='#667EEA';showDropdown('dd-country','reg-country')"
           oninput="filterDropdown('dd-country','reg-country')"
           onblur="setTimeout(()=>hideDropdown('dd-country'),200)">
@@ -1002,22 +1003,16 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
           overflow-y:auto;margin-top:4px;border:2px solid #667EEA;scrollbar-width:none;"></div>
       </div>
     </div>
-
-    <!-- IP auto-detection note -->
     <div style="background:#EFF6FF;border:2px solid #BFDBFE;border-radius:13px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
       <span style="font-size:20px;">📍</span>
       <div>
-        <div style="font-size:12px;font-weight:800;color:#1E40AF;">Your current location is detected automatically</div>
-        <div style="font-size:11px;font-weight:600;color:#3B82F6;margin-top:2px;" id="reg-ip-location">Detecting your location...</div>
+        <div style="font-size:12px;font-weight:800;color:#1E40AF;">Current location detected automatically</div>
+        <div style="font-size:11px;font-weight:600;color:#3B82F6;margin-top:2px;" id="reg-ip-location">Detecting...</div>
       </div>
     </div>
-
     <button class="main-btn btn-purple" onclick="finishReg()" style="margin-bottom:12px;">
-      🚀 Enter Help Me
+      🚀 Create My Account
     </button>
-    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
-      You can add more profile details later.<br>Other info is completely optional.
-    </div>
   </div>
 </div>
 
@@ -3400,41 +3395,65 @@ function detectSplashCity(){
 
 // Called when user taps Get Started — user gesture allows GPS prompt on mobile
 function handleGetStarted(){
-  if(navigator.geolocation){
+  // Show location permission screen first
+  // This gives user context before the GPS popup appears
+  // and works on both HTTP and HTTPS
+  var btn = document.getElementById('sp-btn');
+
+  // Check if GPS is available and not previously denied
+  if(!navigator.geolocation){
+    go('login');
+    return;
+  }
+
+  // Update button to show we're working
+  if(btn){ btn.innerHTML = '📍 Detecting location...'; btn.style.opacity='0.8'; btn.disabled=true; }
+
+  var proceeded = false;
+  function proceed(){
+    if(proceeded) return;
+    proceeded = true;
+    if(btn){ btn.innerHTML = 'Get Started 🚀'; btn.style.opacity='1'; btn.disabled=false; }
+    go('login');
+  }
+
+  // Hard timeout — never block user more than 8 seconds
+  var hardStop = setTimeout(proceed, 8000);
+
+  try{
     navigator.geolocation.getCurrentPosition(
       function(pos){
-        // GPS success — reverse geocode
+        // GPS success
         var lat = pos.coords.latitude;
         var lng = pos.coords.longitude;
         var xhr = new XMLHttpRequest();
-        xhr.timeout = 3000;
+        xhr.timeout = 4000;
         xhr.open('GET','https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',true);
         xhr.setRequestHeader('User-Agent','HelpMeApp/1.0');
         xhr.onload = function(){
           try{
             var d = JSON.parse(xhr.responseText);
-            var addr = d.address || {};
-            var country = addr.country || '';
-            var city = addr.city || addr.town || addr.village || addr.county || '';
-            var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; }) || 'DEFAULT';
-            if(country){
-              applyCountryToSplash(country, code, city);
-              toast('📍 GPS: '+country);
-            }
+            var addr = d.address||{};
+            var country = addr.country||'';
+            var city = addr.city||addr.town||addr.village||'';
+            var code = Object.keys(CC_MAP).find(function(k){ return CC_MAP[k]===country; })||'DEFAULT';
+            if(country){ applyCountryToSplash(country,code,city); toast('📍 '+country+' detected'); }
           }catch(e){}
-          go('login');
+          clearTimeout(hardStop); proceed();
         };
-        xhr.onerror = xhr.ontimeout = function(){ go('login'); };
+        xhr.onerror = xhr.ontimeout = function(){ clearTimeout(hardStop); proceed(); };
         xhr.send();
       },
       function(err){
-        // GPS denied or failed — already have IP result, just proceed
-        go('login');
+        // Denied or unavailable — proceed with IP result
+        clearTimeout(hardStop);
+        proceed();
       },
-      { timeout: 5000, maximumAge: 300000 }
+      { timeout:6000, maximumAge:300000, enableHighAccuracy:false }
     );
-  } else {
-    go('login');
+  }catch(e){
+    clearTimeout(hardStop);
+    proceed();
   }
 }
 
@@ -3610,9 +3629,44 @@ function sosGo(e,msg){ closeSOS(); toast(e+' '+msg); }
 // ══════════════════════════════════
 // LOGIN — MANDATORY 3-STEP FLOW
 // ══════════════════════════════════
+let isLoginMode = false; // true = Login, false = Sign Up
+
+function showStep0(){
+  ['login-s1','login-s2','login-s3'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('login-s0').style.display='block';
+  setStep(1);
+}
+
+function showLoginFlow(){
+  isLoginMode = true;
+  document.getElementById('login-s0').style.display='none';
+  document.getElementById('login-s1').style.display='block';
+  document.getElementById('s1-title').textContent = 'Welcome back! 👋';
+  document.getElementById('s1-sub').textContent = 'Enter your WhatsApp number to login';
+  setStep(1);
+}
+
+function showSignupFlow(){
+  isLoginMode = false;
+  document.getElementById('login-s0').style.display='none';
+  document.getElementById('login-s1').style.display='block';
+  document.getElementById('s1-title').textContent = 'Create your account 🚀';
+  document.getElementById('s1-sub').textContent = 'Enter your WhatsApp number to get started';
+  setStep(1);
+}
+
+function showStep1(){
+  document.getElementById('login-s2').style.display='none';
+  document.getElementById('login-s1').style.display='block';
+  setStep(1);
+}
+
 function setStep(n){
   [1,2,3].forEach(i=>{
     const dot=document.getElementById('step-dot-'+i);
+    if(!dot) return;
     if(i===n){ dot.style.width='32px'; dot.style.background='#fff'; dot.style.opacity='1'; }
     else if(i<n){ dot.style.width='8px'; dot.style.background='#fff'; dot.style.opacity='0.6'; }
     else{ dot.style.width='8px'; dot.style.background='rgba(255,255,255,.4)'; dot.style.opacity='1'; }
@@ -3634,23 +3688,69 @@ function otpNext(input, idx){
   if(input.value.length===1){
     const inputs=document.querySelectorAll('.otp-input');
     if(idx<3) inputs[idx+1].focus();
-    // Auto-verify if all 4 filled
     const vals=[...inputs].map(i=>i.value);
-    if(vals.every(v=>v.length===1)) setTimeout(showProfile,400);
+    if(vals.every(v=>v.length===1)) setTimeout(verifyOTP, 400);
   }
 }
 
-function showProfile(){
+function verifyOTP(){
+  // Check if user exists in localStorage (returning user)
+  const existingUser = loadUser();
+  const phone = selectedCC.code+' '+document.getElementById('phone-input').value.trim();
+
   document.getElementById('login-s2').style.display='none';
-  document.getElementById('login-s3').style.display='block';
-  setStep(3);
-  setTimeout(()=>document.getElementById('reg-name').focus(),300);
-  // Show current IP-detected location in the note
-  const ipNote = document.getElementById('reg-ip-location');
-  if(ipNote){
-    const loc = currentEmergencyData._fullName || currentEmergencyData.country || '';
-    ipNote.textContent = loc ? '📍 Currently detected: '+loc : 'Location will be detected automatically';
+
+  if(isLoginMode){
+    // LOGIN — check if user exists
+    if(existingUser && existingUser.loggedIn){
+      // Returning user — log straight in
+      existingUser.loggedIn = true;
+      saveUser(existingUser);
+      applyUserToApp(existingUser);
+      toast('👋 Welcome back, '+existingUser.name+'!');
+      resetLogin();
+      const sosFab = document.querySelector('.sos-fab');
+      if(sosFab) sosFab.style.display='flex';
+      setTimeout(()=>go('home'),600);
+    } else {
+      // Phone not found — ask if they want to sign up instead
+      document.getElementById('login-s0').style.display='block';
+      document.getElementById('login-s0').innerHTML = `
+        <div class="ls-title">Account not found 🤔</div>
+        <div class="ls-sub">We couldn't find an account for <strong>${phone}</strong>.<br>Would you like to create one?</div>
+        <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);margin-bottom:12px;" onclick="showSignupFlow()">
+          🚀 Create New Account
+        </button>
+        <button class="main-btn btn-ghost" onclick="showStep0()">← Try Different Number</button>`;
+    }
+  } else {
+    // SIGN UP — go to profile details
+    document.getElementById('login-s3').style.display='block';
+    setStep(3);
+    setTimeout(()=>document.getElementById('reg-name').focus(),300);
+    const ipNote = document.getElementById('reg-ip-location');
+    if(ipNote){
+      const loc = currentEmergencyData._fullName || currentEmergencyData.country || '';
+      ipNote.textContent = loc ? '📍 Currently detected: '+loc : 'Will be detected automatically';
+    }
   }
+}
+
+function applyUserToApp(user){
+  document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=user.name);
+  document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 '+(user.location||user.country||''));
+  const greet = document.querySelector('.home-greet');
+  if(greet) greet.textContent = 'Welcome back, '+user.name+' 👋';
+  const locBar = document.getElementById('loc-name-bar');
+  if(locBar) locBar.textContent = user.location || user.country || '';
+  document.querySelectorAll('.loc-name').forEach(el=>{ if(user.location) el.textContent=user.location; });
+  const loginBtn = document.getElementById('prof-login-btn');
+  if(loginBtn) loginBtn.style.display='none';
+}
+
+function showProfile(){
+  // Legacy alias — now handled by verifyOTP
+  verifyOTP();
 }
 
 function finishReg(){
@@ -3661,53 +3761,44 @@ function finishReg(){
   if(!waNum)   { toast('⚠️ Please enter your WhatsApp number'); return; }
   if(!country) { toast('⚠️ Please enter where you live'); return; }
 
-  // Use IP-detected location — never the old form field
   const ipLocation = currentEmergencyData._fullName || currentEmergencyData.country || country;
-
-  try{
-    saveUser({
-      name, country,
-      location: ipLocation,
-      phone: selectedCC.code+' '+document.getElementById('phone-input').value,
-      whatsapp: selectedWACC.code+' '+waNum,
-      loggedIn: true
-    });
-  }catch(e){}
-
-  // Save to Supabase
-  sbInsert('users',{
+  const userData = {
     name, country,
     location: ipLocation,
     phone: selectedCC.code+' '+document.getElementById('phone-input').value,
-    whatsapp: selectedWACC.code+' '+waNum
-  });
+    whatsapp: selectedWACC.code+' '+waNum,
+    loggedIn: true
+  };
 
-  document.querySelectorAll('.prof-nm').forEach(el=>el.textContent=name);
-  document.querySelectorAll('.prof-since').forEach(el=>el.textContent='📍 '+ipLocation);
+  try{ saveUser(userData); }catch(e){}
+  sbInsert('users',{ name, country, location:ipLocation,
+    phone:userData.phone, whatsapp:userData.whatsapp });
 
-  // Update home greeting and location bar
-  const greet = document.querySelector('.home-greet');
-  if(greet) greet.textContent = 'Welcome, '+name+' 👋';
-  const locBar = document.getElementById('loc-name-bar');
-  if(locBar) locBar.textContent = ipLocation;
-  document.querySelectorAll('.loc-name').forEach(el=>el.textContent=ipLocation);
-
-  // Hide profile login button
-  const loginBtn = document.getElementById('prof-login-btn');
-  if(loginBtn) loginBtn.style.display='none';
-
+  applyUserToApp(userData);
   toast('🎉 Welcome to Help Me, '+name+'!');
   resetLogin();
-  // Show SOS button
   const sosFab = document.querySelector('.sos-fab');
-  if(sosFab) sosFab.style.display = 'flex';
+  if(sosFab) sosFab.style.display='flex';
   setTimeout(()=>go('home'),600);
 }
 
 function resetLogin(){
-  document.getElementById('login-s1').style.display='block';
-  document.getElementById('login-s2').style.display='none';
-  document.getElementById('login-s3').style.display='none';
+  document.getElementById('login-s0').style.display='block';
+  document.getElementById('login-s0').innerHTML = `
+    <div class="ls-title">Welcome! 👋</div>
+    <div class="ls-sub">Already have an account or joining for the first time?</div>
+    <button class="main-btn btn-purple" onclick="showLoginFlow()" style="margin-bottom:12px;">
+      🔐 Login — I have an account
+    </button>
+    <button class="main-btn" style="background:linear-gradient(135deg,#FF6B35,#F59E0B);margin-bottom:20px;" onclick="showSignupFlow()">
+      🚀 Sign Up — I'm new here
+    </button>
+    <div style="text-align:center;font-size:12px;color:#9CA3AF;font-weight:600;line-height:1.6;">
+      🔒 We verify via WhatsApp. We never share your number.
+    </div>`;
+  ['login-s1','login-s2','login-s3'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
   document.getElementById('phone-input').value='';
   document.querySelectorAll('.otp-input').forEach(i=>i.value='');
   setStep(1);
