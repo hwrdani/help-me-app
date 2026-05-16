@@ -122,7 +122,8 @@ body{font-family:'Nunito',sans-serif;background:#F9F7F4;color:#1A1A2E;overflow-x
 
 .sos-panel{display:none;flex-direction:column;gap:8px;align-items:flex-end;margin-top:4px;}
 .sos-panel.open{display:flex;}
-.sos-row{display:flex;align-items:center;gap:8px;cursor:pointer;animation:slideR .2s ease both;}
+.sos-row{display:flex;align-items:center;gap:8px;cursor:pointer;animation:slideR .2s ease both;padding:10px 14px;border-radius:12px;transition:background .15s;margin:2px 0;}
+.sos-row:active{background:rgba(255,255,255,.12);transform:scale(.98);}
 @keyframes slideR{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
 .sos-lbl{background:#fff;padding:9px 14px;border-radius:20px;font-size:13px;font-weight:800;
   box-shadow:0 3px 14px rgba(0,0,0,.12);white-space:nowrap;color:#1A1A2E;}
@@ -3601,15 +3602,13 @@ function renderSOSPanel(){
   ];
 
   rows.innerHTML = services.map(s=>`
-    <div class="sos-row" style="animation-delay:${s.delay};">
+    <div class="sos-row" style="animation-delay:${s.delay};cursor:${s.num?'pointer':'default'};"
+      ${s.num ? `onclick="window.location.href='tel:${s.num.replace(/\s/g,'')}';closeSOS();"` : `onclick="sosGoSearch('${s.action}')"`}>
       <div style="flex:1;">
         <div class="sos-lbl">${s.emoji} ${s.label}</div>
         ${s.num ? `<div style="font-size:11px;font-weight:800;color:#FF6B35;margin-top:2px;">📞 ${s.num}</div>` : ''}
       </div>
-      ${s.num
-        ? `<a href="tel:${s.num.replace(/\s/g,'')}" class="sos-ic" style="background:${s.bg};text-decoration:none;display:flex;align-items:center;justify-content:center;" onclick="closeSOS()">${s.emoji}</a>`
-        : `<button class="sos-ic" style="background:${s.bg};" onclick="sosGoSearch('${s.action}')">${s.emoji}</button>`
-      }
+      <div class="sos-ic" style="background:${s.bg};display:flex;align-items:center;justify-content:center;pointer-events:none;">${s.emoji}</div>
     </div>`).join('');
 }
 
