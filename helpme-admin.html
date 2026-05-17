@@ -8,20 +8,20 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#0F1117;
-  --surface:#1A1D27;
-  --surface2:#22263A;
-  --border:#2A2F45;
-  --text:#F0F2FF;
-  --text2:#8B92B3;
-  --text3:#555C7A;
+  --bg:#F5F6FA;
+  --surface:#FFFFFF;
+  --surface2:#F9FAFB;
+  --border:#E5E7EB;
+  --text:#111827;
+  --text2:#6B7280;
+  --text3:#9CA3AF;
   --orange:#FF6B35;
   --orange2:#FF8C5A;
-  --green:#34D399;
-  --red:#F87171;
-  --blue:#60A5FA;
-  --amber:#FBBF24;
-  --purple:#A78BFA;
+  --green:#059669;
+  --red:#DC2626;
+  --blue:#2563EB;
+  --amber:#D97706;
+  --purple:#7C3AED;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
@@ -36,7 +36,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:24px;
-  box-shadow:0 40px 80px rgba(0,0,0,.5);
+  box-shadow:0 20px 60px rgba(0,0,0,.1);
 }
 .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
 .login-logo .sos{
@@ -244,7 +244,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 .modal-overlay{
   display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
   z-index:9000;align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(4px);background:rgba(0,0,0,.4);
 }
 .modal-overlay.open{display:flex;}
 .modal{
@@ -279,7 +279,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
   position:fixed;bottom:24px;right:24px;z-index:9999;
   background:var(--surface);border:1px solid var(--border);
   border-radius:12px;padding:14px 20px;font-size:14px;font-weight:600;
-  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  box-shadow:0 8px 32px rgba(0,0,0,.12);
   transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;
 }
 #toast.show{transform:translateY(0);opacity:1;}
@@ -293,7 +293,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 /* ── LOADING ── */
 .loading{text-align:center;padding:40px;color:var(--text3);font-size:14px;}
 .spinner{
-  width:32px;height:32px;border:3px solid var(--border);
+  width:32px;height:32px;border:3px solid #E5E7EB;
   border-top-color:var(--orange);border-radius:50%;
   animation:spin 1s linear infinite;margin:0 auto 12px;
 }
@@ -331,7 +331,7 @@ tr:hover td{background:rgba(255,255,255,.02);}
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-track{background:#F3F4F6;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
