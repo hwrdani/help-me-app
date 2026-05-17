@@ -356,6 +356,9 @@ tr:hover td{background:rgba(255,255,255,.02);}
     </div>
     <button class="login-btn" onclick="doLogin()">Sign In →</button>
     <div class="login-err" id="login-err">❌ Wrong username or password</div>
+    <div style="margin-top:16px;padding:12px;background:#FEF3C7;border-radius:10px;font-size:12px;color:#92400E;text-align:center;display:none;" id="login-hint">
+      Username: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>helpme2026</strong>
+    </div>
   </div>
 </div>
 
@@ -911,16 +914,25 @@ let allData = {suppliers:[], users:[], agents:[], emergency:[], pending:[]};
 // AUTH
 // ══════════════════════════════════
 function doLogin(){
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  if(u===ADMIN_USER && p===ADMIN_PASS){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
-    loadDashboard();
-    loadPendingBadge();
-  } else {
-    document.getElementById('login-err').style.display='block';
-    setTimeout(()=>document.getElementById('login-err').style.display='none',3000);
+  try{
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value.trim();
+    if(u === ADMIN_USER && p === ADMIN_PASS){
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      try{ loadDashboard(); }catch(e){ console.log('Dashboard load error:',e); }
+      try{ loadPendingBadge(); }catch(e){}
+    } else {
+      const err = document.getElementById('login-err');
+      err.style.display = 'block';
+      err.textContent = '❌ Wrong username or password';
+      // Show hint
+      const hint = document.getElementById('login-hint');
+      if(hint) hint.style.display = 'block';
+      setTimeout(()=>err.style.display='none', 3000);
+    }
+  }catch(e){
+    alert('Login error: '+e.message);
   }
 }
 
