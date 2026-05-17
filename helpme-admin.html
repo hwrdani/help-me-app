@@ -734,6 +734,117 @@ tr:hover td{background:rgba(255,255,255,.02);}
   </div><!-- /main -->
 </div><!-- /app -->
 
+<!-- ═══ EDIT SUPPLIER MODAL ═══ -->
+<div class="modal-overlay" id="edit-supplier-modal">
+  <div class="modal" style="width:640px;">
+    <button class="modal-close" onclick="closeModal('edit-supplier-modal')">✕</button>
+    <div class="modal-title">✏️ Edit Business</div>
+    <div class="modal-sub" id="edit-sm-sub">Update business information</div>
+    <input type="hidden" id="edit-id">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-field" style="grid-column:1/-1;">
+        <label>Business Name</label>
+        <input id="edit-name" placeholder="Business name">
+      </div>
+      <div class="modal-field">
+        <label>Category</label>
+        <select id="edit-category">
+          <option value="">Select category...</option>
+          <option value="doctors">🏥 Doctors & Healthcare</option>
+          <option value="mechanics">🔧 Mechanics & Auto</option>
+          <option value="pharmacy">💊 Pharmacy</option>
+          <option value="restaurants">🍽️ Restaurants & Cafes</option>
+          <option value="hotels">🏨 Hotels & Stays</option>
+          <option value="beauty">💇 Beauty & Salons</option>
+          <option value="homeservices">🏠 Home Services</option>
+          <option value="shopping">🛒 Shopping</option>
+          <option value="professional">⚖️ Professional Services</option>
+          <option value="travel">✈️ Travel & Tourism</option>
+          <option value="fitness">💪 Sports & Fitness</option>
+          <option value="education">🎓 Education & Training</option>
+          <option value="pets">🐾 Pets & Animals</option>
+          <option value="family">👨‍👩‍👧 Family & Kids</option>
+          <option value="emergency">🚨 Emergency Services</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Specialty / Type</label>
+        <input id="edit-specialty" placeholder="e.g. General Practitioner">
+      </div>
+      <div class="modal-field">
+        <label>Phone</label>
+        <input id="edit-phone" placeholder="+973 1234 5678">
+      </div>
+      <div class="modal-field">
+        <label>WhatsApp</label>
+        <input id="edit-whatsapp" placeholder="+973 3670 6010">
+      </div>
+      <div class="modal-field">
+        <label>Website</label>
+        <input id="edit-website" placeholder="https://...">
+      </div>
+      <div class="modal-field">
+        <label>Country</label>
+        <input id="edit-country" placeholder="Bahrain">
+      </div>
+      <div class="modal-field">
+        <label>City / Area</label>
+        <input id="edit-city" placeholder="Manama">
+      </div>
+      <div class="modal-field">
+        <label>Plan</label>
+        <select id="edit-plan">
+          <option value="free">Free</option>
+          <option value="basic">Basic</option>
+          <option value="premium">Premium</option>
+          <option value="platinum">Platinum</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Status</label>
+        <select id="edit-active">
+          <option value="true">✅ Active</option>
+          <option value="false">⏳ Pending</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Rating</label>
+        <input id="edit-rating" type="number" step="0.1" min="0" max="5" placeholder="4.8">
+      </div>
+      <div class="modal-field">
+        <label>Review Count</label>
+        <input id="edit-reviews" type="number" placeholder="128">
+      </div>
+      <div class="modal-field" style="grid-column:1/-1;">
+        <label>Full Address</label>
+        <input id="edit-address" placeholder="Building, Street, Block, Area">
+      </div>
+      <div class="modal-field">
+        <label>Latitude</label>
+        <input id="edit-lat" type="number" step="any" placeholder="26.2285">
+      </div>
+      <div class="modal-field">
+        <label>Longitude</label>
+        <input id="edit-lng" type="number" step="any" placeholder="50.5860">
+      </div>
+      <div class="modal-field" style="grid-column:1/-1;">
+        <label>Description</label>
+        <textarea id="edit-description" placeholder="Business description..."></textarea>
+      </div>
+      <div class="modal-field" style="grid-column:1/-1;">
+        <label>Opening Hours</label>
+        <input id="edit-hours" placeholder="Mon-Sat 9AM-9PM, Fri Closed">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveSupplier()">💾 Save Changes</button>
+      <button class="btn btn-view" onclick="closeModal('edit-supplier-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ SUPPLIER DETAIL MODAL ═══ -->
 <div class="modal-overlay" id="supplier-modal">
   <div class="modal">
@@ -1088,6 +1199,7 @@ function renderPending(){
       <td>
         <div class="action-btns">
           <button class="btn btn-view" onclick="viewSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">👁 View</button>
+          <button class="btn btn-edit" onclick="editSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️ Edit</button>
           <button class="btn btn-approve" onclick="approveSupplier(${s.id})">✓ Approve</button>
           <button class="btn btn-reject" onclick="rejectSupplier(${s.id})">✕ Reject</button>
         </div>
@@ -1177,7 +1289,7 @@ function renderSuppliersData(data){
       <td>
         <div class="action-btns">
           <button class="btn btn-view" onclick="viewSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">View</button>
-          <button class="btn btn-edit" onclick="toggleActive(${s.id},${s.active})">${s.active?'Disable':'Enable'}</button>
+          <button class="btn btn-edit" onclick="editSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️ Edit</button>
           <button class="btn btn-delete" onclick="deleteSupplier(${s.id})">Delete</button>
         </div>
       </td>
@@ -1186,7 +1298,66 @@ function renderSuppliersData(data){
   renderPages('suppliers', data.length, page);
 }
 
-async function toggleActive(id, current){
+function editSupplier(s){
+  document.getElementById('edit-id').value          = s.id;
+  document.getElementById('edit-sm-sub').textContent = s.name + ' · ' + (s.country||'');
+  document.getElementById('edit-name').value         = s.name||'';
+  document.getElementById('edit-category').value     = s.category_key||'';
+  document.getElementById('edit-specialty').value    = s.specialty||'';
+  document.getElementById('edit-phone').value        = s.phone||'';
+  document.getElementById('edit-whatsapp').value     = s.whatsapp||'';
+  document.getElementById('edit-website').value      = s.website||'';
+  document.getElementById('edit-country').value      = s.country||'';
+  document.getElementById('edit-city').value         = s.city||s.location||'';
+  document.getElementById('edit-plan').value         = s.plan||'free';
+  document.getElementById('edit-active').value       = s.active ? 'true' : 'false';
+  document.getElementById('edit-rating').value       = s.rating||'';
+  document.getElementById('edit-reviews').value      = s.review_count||'';
+  document.getElementById('edit-address').value      = s.address||'';
+  document.getElementById('edit-lat').value          = s.latitude||'';
+  document.getElementById('edit-lng').value          = s.longitude||'';
+  document.getElementById('edit-description').value  = s.description||'';
+  document.getElementById('edit-hours').value        = s.opening_hours||'';
+  openModal('edit-supplier-modal');
+}
+
+async function saveSupplier(){
+  const id = document.getElementById('edit-id').value;
+  if(!id){ toast('❌ No business selected', 'error'); return; }
+
+  const data = {
+    name:          document.getElementById('edit-name').value.trim(),
+    category_key:  document.getElementById('edit-category').value,
+    specialty:     document.getElementById('edit-specialty').value.trim(),
+    phone:         document.getElementById('edit-phone').value.trim(),
+    whatsapp:      document.getElementById('edit-whatsapp').value.trim(),
+    website:       document.getElementById('edit-website').value.trim(),
+    country:       document.getElementById('edit-country').value.trim(),
+    city:          document.getElementById('edit-city').value.trim(),
+    location:      document.getElementById('edit-city').value.trim(),
+    plan:          document.getElementById('edit-plan').value,
+    active:        document.getElementById('edit-active').value === 'true',
+    rating:        parseFloat(document.getElementById('edit-rating').value)||null,
+    review_count:  parseInt(document.getElementById('edit-reviews').value)||null,
+    address:       document.getElementById('edit-address').value.trim(),
+    latitude:      parseFloat(document.getElementById('edit-lat').value)||null,
+    longitude:     parseFloat(document.getElementById('edit-lng').value)||null,
+    description:   document.getElementById('edit-description').value.trim(),
+    opening_hours: document.getElementById('edit-hours').value.trim(),
+  };
+
+  if(!data.name){ toast('⚠️ Business name is required', 'warn'); return; }
+
+  const ok = await sbUpdate('suppliers', id, data);
+  if(ok){
+    toast('✅ Business updated successfully!');
+    closeModal('edit-supplier-modal');
+    loadSuppliers();
+    loadDashboard();
+  } else {
+    toast('❌ Failed to save changes', 'error');
+  }
+}
   const ok = await sbUpdate('suppliers', id, {active:!current});
   if(ok){ toast(current ? '⏸️ Listing disabled' : '✅ Listing enabled', current?'warn':'success'); loadSuppliers(); }
   else toast('❌ Failed to update', 'error');
@@ -1224,9 +1395,10 @@ function viewSupplier(s){
       <div class="detail-value">${v}</div>
     </div>`).join('');
   document.getElementById('sm-actions').innerHTML = !s.active
-    ? `<button class="btn btn-approve" onclick="approveSupplier(${s.id});closeModal('supplier-modal')">✓ Approve Listing</button>
-       <button class="btn btn-reject" onclick="rejectSupplier(${s.id});closeModal('supplier-modal')">✕ Reject & Delete</button>`
-    : `<button class="btn btn-edit" onclick="toggleActive(${s.id},true);closeModal('supplier-modal')">⏸ Disable Listing</button>
+    ? `<button class="btn btn-approve" onclick="approveSupplier(${s.id});closeModal('supplier-modal')">✓ Approve</button>
+       <button class="btn btn-edit" onclick="closeModal('supplier-modal');editSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️ Edit</button>
+       <button class="btn btn-reject" onclick="rejectSupplier(${s.id});closeModal('supplier-modal')">✕ Reject</button>`
+    : `<button class="btn btn-edit" onclick="closeModal('supplier-modal');editSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️ Edit</button>
        <button class="btn btn-delete" onclick="deleteSupplier(${s.id});closeModal('supplier-modal')">🗑️ Delete</button>`;
   openModal('supplier-modal');
 }
