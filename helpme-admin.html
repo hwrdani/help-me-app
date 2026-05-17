@@ -893,8 +893,53 @@ tr:hover td{background:rgba(255,255,255,.02);}
 // ══════════════════════════════════
 const SUPABASE_URL = 'https://mcduuatcrfjcuxhmktst.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_19cNoziJhEj53lbragMwBg_g-P6BmOv';
-const ADMIN_USER   = 'admin';
-const ADMIN_PASS   = 'helpme2026';  // ← Change this password!
+// ══════════════════════════════════
+// AUTH — Simple & Reliable
+// ══════════════════════════════════
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'helpme2026';
+
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  if(u === ADMIN_USER && p === ADMIN_PASS){
+    sessionStorage.setItem('hm_admin','1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadDashboard();
+    loadPendingBadge();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-hint').style.display = 'block';
+    setTimeout(()=>{
+      document.getElementById('login-err').style.display='none';
+    }, 3000);
+  }
+}
+
+function doLogout(){
+  sessionStorage.removeItem('hm_admin');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+}
+
+// Check if already logged in this session
+window.addEventListener('DOMContentLoaded', ()=>{
+  if(sessionStorage.getItem('hm_admin')==='1'){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadDashboard();
+    loadPendingBadge();
+  }
+  // Enter key support
+  document.getElementById('login-pass').addEventListener('keydown', e=>{
+    if(e.key==='Enter') doLogin();
+  });
+  document.getElementById('login-user').addEventListener('keydown', e=>{
+    if(e.key==='Enter') document.getElementById('login-pass').focus();
+  });
+});
 
 const CATS = {
   doctors:'Doctors & Healthcare', mechanics:'Mechanics & Auto',
@@ -913,35 +958,6 @@ let allData = {suppliers:[], users:[], agents:[], emergency:[], pending:[]};
 // ══════════════════════════════════
 // AUTH
 // ══════════════════════════════════
-function doLogin(){
-  try{
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value.trim();
-    if(u === ADMIN_USER && p === ADMIN_PASS){
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      try{ loadDashboard(); }catch(e){ console.log('Dashboard load error:',e); }
-      try{ loadPendingBadge(); }catch(e){}
-    } else {
-      const err = document.getElementById('login-err');
-      err.style.display = 'block';
-      err.textContent = '❌ Wrong username or password';
-      // Show hint
-      const hint = document.getElementById('login-hint');
-      if(hint) hint.style.display = 'block';
-      setTimeout(()=>err.style.display='none', 3000);
-    }
-  }catch(e){
-    alert('Login error: '+e.message);
-  }
-}
-
-function doLogout(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('login-pass').value='';
-}
-
 // ══════════════════════════════════
 // SUPABASE
 // ══════════════════════════════════
@@ -1647,11 +1663,6 @@ document.querySelectorAll('.modal-overlay').forEach(overlay=>{
   overlay.addEventListener('click', e=>{
     if(e.target===overlay) overlay.classList.remove('open');
   });
-});
-
-// Enter key on login
-document.getElementById('login-user').addEventListener('keydown', e=>{
-  if(e.key==='Enter') document.getElementById('login-pass').focus();
 });
 </script>
 </body>
