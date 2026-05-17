@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Me — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0F1117;
+  --surface:#1A1D27;
+  --surface2:#22263A;
+  --border:#2A2F45;
+  --text:#F0F2FF;
+  --text2:#8B92B3;
+  --text3:#555C7A;
+  --orange:#FF6B35;
+  --orange2:#FF8C5A;
+  --green:#34D399;
+  --red:#F87171;
+  --blue:#60A5FA;
+  --amber:#FBBF24;
+  --purple:#A78BFA;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── LOGIN ── */
+#login-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  width:380px;padding:48px 40px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 40px 80px rgba(0,0,0,.5);
+}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
+.login-logo .sos{
+  width:48px;height:48px;background:var(--orange);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;color:#fff;font-family:'DM Mono',monospace;
+  letter-spacing:-1px;
+}
+.login-logo .brand{font-size:22px;font-weight:700;color:var(--text);}
+.login-logo .brand span{color:var(--orange);}
+.login-title{font-size:28px;font-weight:700;margin-bottom:6px;}
+.login-sub{font-size:14px;color:var(--text2);margin-bottom:32px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input{
+  width:100%;padding:13px 16px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;
+  transition:border-color .2s;
+}
+.form-group input:focus{border-color:var(--orange);}
+.login-btn{
+  width:100%;padding:14px;margin-top:8px;
+  background:var(--orange);border:none;border-radius:12px;
+  color:#fff;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+}
+.login-btn:hover{background:var(--orange2);transform:translateY(-1px);}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;display:none;text-align:center;}
+
+/* ── LAYOUT ── */
+#app{display:none;min-height:100vh;}
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:240px;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:24px 0;z-index:100;
+}
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;padding:0 24px 24px;
+  border-bottom:1px solid var(--border);margin-bottom:16px;
+}
+.sidebar-logo .sos{
+  width:36px;height:36px;background:var(--orange);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#fff;font-family:'DM Mono',monospace;letter-spacing:-1px;
+}
+.sidebar-logo .brand{font-size:16px;font-weight:700;}
+.sidebar-logo .brand span{color:var(--orange);}
+.sidebar-logo .badge{
+  margin-left:auto;font-size:10px;font-weight:700;
+  background:var(--orange);color:#fff;padding:2px 8px;border-radius:20px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 24px;cursor:pointer;
+  font-size:14px;font-weight:500;color:var(--text2);
+  transition:all .2s;border-left:3px solid transparent;
+  margin:1px 0;
+}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{
+  background:rgba(255,107,53,.1);color:var(--orange);
+  border-left-color:var(--orange);
+}
+.nav-item .ic{font-size:18px;width:24px;text-align:center;}
+.nav-section{
+  font-size:10px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1px;
+  padding:16px 24px 6px;
+}
+.sidebar-bottom{
+  margin-top:auto;padding:16px 24px;
+  border-top:1px solid var(--border);
+}
+.admin-tag{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;color:var(--text2);
+}
+.admin-avatar{
+  width:32px;height:32px;background:var(--orange);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.logout-btn{
+  margin-left:auto;font-size:12px;color:var(--text3);
+  cursor:pointer;padding:4px 8px;border-radius:6px;border:none;background:none;
+  font-family:'DM Sans',sans-serif;transition:color .2s;
+}
+.logout-btn:hover{color:var(--red);}
+
+/* ── MAIN ── */
+.main{margin-left:240px;padding:32px;min-height:100vh;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── TOP BAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:32px;
+}
+.page-title{font-size:24px;font-weight:700;}
+.page-sub{font-size:14px;color:var(--text2);margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.refresh-btn{
+  padding:9px 16px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text2);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.refresh-btn:hover{border-color:var(--orange);color:var(--orange);}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:20px 24px;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;right:0;width:80px;height:80px;
+  border-radius:0 16px 0 80px;opacity:.15;
+}
+.stat-card.orange::before{background:var(--orange);}
+.stat-card.green::before{background:var(--green);}
+.stat-card.blue::before{background:var(--blue);}
+.stat-card.purple::before{background:var(--purple);}
+.stat-label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.stat-value{font-size:32px;font-weight:700;line-height:1;}
+.stat-value.orange{color:var(--orange);}
+.stat-value.green{color:var(--green);}
+.stat-value.blue{color:var(--blue);}
+.stat-value.purple{color:var(--purple);}
+.stat-icon{position:absolute;top:20px;right:20px;font-size:24px;opacity:.6;}
+.stat-trend{font-size:12px;color:var(--text2);margin-top:8px;}
+
+/* ── TABLES ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;margin-bottom:20px;
+}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;border-bottom:1px solid var(--border);
+}
+.card-title{font-size:15px;font-weight:700;}
+.card-actions{display:flex;align-items:center;gap:8px;}
+.search-input{
+  padding:8px 14px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:9px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;
+  width:220px;transition:border-color .2s;
+}
+.search-input:focus{border-color:var(--orange);}
+.search-input::placeholder{color:var(--text3);}
+.filter-select{
+  padding:8px 14px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:9px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;
+  cursor:pointer;
+}
+table{width:100%;border-collapse:collapse;}
+th{
+  padding:12px 16px;text-align:left;
+  font-size:11px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.5px;
+  background:var(--surface2);border-bottom:1px solid var(--border);
+}
+td{
+  padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+
+/* ── BADGES ── */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;
+}
+.badge.pending{background:rgba(251,191,36,.15);color:var(--amber);}
+.badge.approved{background:rgba(52,211,153,.15);color:var(--green);}
+.badge.rejected{background:rgba(248,113,113,.15);color:var(--red);}
+.badge.free{background:rgba(139,146,179,.15);color:var(--text2);}
+.badge.basic{background:rgba(255,107,53,.15);color:var(--orange);}
+.badge.premium{background:rgba(96,165,250,.15);color:var(--blue);}
+.badge.platinum{background:rgba(167,139,250,.15);color:var(--purple);}
+.badge.active{background:rgba(52,211,153,.15);color:var(--green);}
+.badge.probation{background:rgba(251,191,36,.15);color:var(--amber);}
+
+/* ── ACTION BUTTONS ── */
+.action-btns{display:flex;gap:6px;align-items:center;}
+.btn{
+  padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;border:none;transition:all .2s;
+}
+.btn-approve{background:rgba(52,211,153,.15);color:var(--green);}
+.btn-approve:hover{background:var(--green);color:#000;}
+.btn-reject{background:rgba(248,113,113,.15);color:var(--red);}
+.btn-reject:hover{background:var(--red);color:#fff;}
+.btn-view{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+.btn-view:hover{border-color:var(--orange);color:var(--orange);}
+.btn-delete{background:rgba(248,113,113,.08);color:var(--red);}
+.btn-delete:hover{background:var(--red);color:#fff;}
+.btn-edit{background:rgba(96,165,250,.1);color:var(--blue);}
+.btn-edit:hover{background:var(--blue);color:#fff;}
+.btn-primary{background:var(--orange);color:#fff;padding:9px 18px;border-radius:10px;font-size:13px;}
+.btn-primary:hover{background:var(--orange2);}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:9000;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:32px;width:560px;max-height:85vh;
+  overflow-y:auto;position:relative;
+}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
+.modal-close{
+  position:absolute;top:24px;right:24px;
+  width:32px;height:32px;background:var(--surface2);border:none;border-radius:8px;
+  color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{color:var(--red);}
+.modal-field{margin-bottom:16px;}
+.modal-field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.modal-field input,.modal-field select,.modal-field textarea{
+  width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;
+}
+.modal-field textarea{min-height:80px;resize:vertical;}
+.modal-field input:focus,.modal-field select:focus{border-color:var(--orange);}
+.modal-actions{display:flex;gap:10px;margin-top:24px;}
+.detail-row{display:flex;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-label{width:140px;color:var(--text2);font-weight:600;flex-shrink:0;}
+.detail-value{color:var(--text);flex:1;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:14px 20px;font-size:14px;font-weight:600;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:60px 20px;color:var(--text3);}
+.empty .icon{font-size:48px;margin-bottom:12px;}
+.empty .msg{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text2);}
+.empty .sub{font-size:13px;}
+
+/* ── LOADING ── */
+.loading{text-align:center;padding:40px;color:var(--text3);font-size:14px;}
+.spinner{
+  width:32px;height:32px;border:3px solid var(--border);
+  border-top-color:var(--orange);border-radius:50%;
+  animation:spin 1s linear infinite;margin:0 auto 12px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── EMERGENCY TABLE ── */
+.em-number{
+  font-family:'DM Mono',monospace;font-size:13px;
+  background:var(--surface2);padding:3px 8px;border-radius:6px;
+  color:var(--orange);
+}
+.city-flag{font-size:18px;margin-right:6px;}
+
+/* ── PAGINATION ── */
+.pagination{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--text2);
+}
+.page-btns{display:flex;gap:6px;}
+.page-btn{
+  padding:6px 12px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;font-size:13px;color:var(--text2);cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.page-btn:hover,.page-btn.active{border-color:var(--orange);color:var(--orange);}
+
+/* ── CHARTS ── */
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 8px;}
+.chart-bar{
+  flex:1;background:var(--orange);border-radius:4px 4px 0 0;opacity:.7;
+  transition:opacity .2s;min-width:8px;
+}
+.chart-bar:hover{opacity:1;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="sos">SOS</div>
+      <div class="brand">Help <span>Me</span></div>
+    </div>
+    <div class="login-title">Admin Dashboard</div>
+    <div class="login-sub">Sign in to manage your platform</div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="admin" value="admin">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="login-err">❌ Wrong username or password</div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sos">SOS</div>
+      <div class="brand">Help <span>Me</span></div>
+      <div class="badge">ADMIN</div>
+    </div>
+
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="ic">📊</span> Dashboard
+    </div>
+
+    <div class="nav-section">Businesses</div>
+    <div class="nav-item" onclick="showPage('pending',this)">
+      <span class="ic">⏳</span> Pending Approval
+      <span id="pending-badge" style="margin-left:auto;background:var(--amber);color:#000;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;display:none;"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('suppliers',this)">
+      <span class="ic">🏪</span> All Businesses
+    </div>
+
+    <div class="nav-section">People</div>
+    <div class="nav-item" onclick="showPage('users',this)">
+      <span class="ic">👥</span> Users
+    </div>
+    <div class="nav-item" onclick="showPage('agents',this)">
+      <span class="ic">🤝</span> Agents
+    </div>
+
+    <div class="nav-section">System</div>
+    <div class="nav-item" onclick="showPage('emergency',this)">
+      <span class="ic">🚨</span> Emergency Numbers
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="admin-tag">
+        <div class="admin-avatar">👤</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;">Admin</div>
+          <div style="font-size:11px;color:var(--text3);">helpmeapp.io</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Welcome back. Here's what's happening.</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card orange">
+          <div class="stat-label">Total Businesses</div>
+          <div class="stat-value orange" id="stat-suppliers">—</div>
+          <div class="stat-icon">🏪</div>
+          <div class="stat-trend" id="stat-suppliers-trend">Loading...</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Registered Users</div>
+          <div class="stat-value green" id="stat-users">—</div>
+          <div class="stat-icon">👥</div>
+          <div class="stat-trend" id="stat-users-trend">Loading...</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Active Agents</div>
+          <div class="stat-value blue" id="stat-agents">—</div>
+          <div class="stat-icon">🤝</div>
+          <div class="stat-trend" id="stat-agents-trend">Loading...</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">Pending Approval</div>
+          <div class="stat-value purple" id="stat-pending">—</div>
+          <div class="stat-icon">⏳</div>
+          <div class="stat-trend" style="color:var(--amber)">Needs review</div>
+        </div>
+      </div>
+
+      <!-- Recent registrations -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Business Registrations</div>
+          <button class="btn btn-view" onclick="showPage('suppliers',document.querySelector('.nav-item:nth-child(6))'))">View All</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Category</th>
+              <th>Country</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recent-suppliers">
+            <tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Split: Recent users + countries breakdown -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Users</div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Country</th><th>Joined</th></tr>
+            </thead>
+            <tbody id="recent-users">
+              <tr><td colspan="3"><div class="loading"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Businesses by Country</div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Country</th><th>Businesses</th><th>Share</th></tr>
+            </thead>
+            <tbody id="country-breakdown">
+              <tr><td colspan="3"><div class="loading"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PENDING APPROVAL ══ -->
+    <div class="page" id="page-pending">
+      <div class="topbar">
+        <div>
+          <div class="page-title">⏳ Pending Approval</div>
+          <div class="page-sub">Review and approve new business registrations</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadPending()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Awaiting Review</div>
+          <div class="card-actions">
+            <input class="search-input" placeholder="🔍 Search..." oninput="filterTable('pending-table',this.value)">
+          </div>
+        </div>
+        <table id="pending-table">
+          <thead>
+            <tr>
+              <th>Business Name</th>
+              <th>Category</th>
+              <th>Country / City</th>
+              <th>Phone</th>
+              <th>Plan</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pending-list">
+            <tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div id="pending-count">Loading...</div>
+          <div class="page-btns" id="pending-pages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ALL SUPPLIERS ══ -->
+    <div class="page" id="page-suppliers">
+      <div class="topbar">
+        <div>
+          <div class="page-title">🏪 All Businesses</div>
+          <div class="page-sub">Manage all registered business listings</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadSuppliers()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Business Directory</div>
+          <div class="card-actions">
+            <input class="search-input" placeholder="🔍 Search businesses..." oninput="filterTable('suppliers-table',this.value)">
+            <select class="filter-select" onchange="loadSuppliers(this.value)" id="supplier-filter">
+              <option value="">All Status</option>
+              <option value="active=eq.true">Active</option>
+              <option value="active=eq.false">Inactive</option>
+            </select>
+            <select class="filter-select" onchange="filterSuppliersByCountry(this.value)" id="country-filter">
+              <option value="">All Countries</option>
+            </select>
+          </div>
+        </div>
+        <table id="suppliers-table">
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Category</th>
+              <th>Location</th>
+              <th>Plan</th>
+              <th>Rating</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="suppliers-list">
+            <tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div id="suppliers-count">Loading...</div>
+          <div class="page-btns" id="suppliers-pages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ USERS ══ -->
+    <div class="page" id="page-users">
+      <div class="topbar">
+        <div>
+          <div class="page-title">👥 Users</div>
+          <div class="page-sub">All registered app users</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadUsers()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">User Directory</div>
+          <div class="card-actions">
+            <input class="search-input" placeholder="🔍 Search users..." oninput="filterTable('users-table',this.value)">
+          </div>
+        </div>
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>WhatsApp</th>
+              <th>Home Country</th>
+              <th>Location</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-list">
+            <tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div id="users-count">Loading...</div>
+          <div class="page-btns" id="users-pages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AGENTS ══ -->
+    <div class="page" id="page-agents">
+      <div class="topbar">
+        <div>
+          <div class="page-title">🤝 Agents</div>
+          <div class="page-sub">Manage your agent network</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadAgents()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Agent Network</div>
+          <div class="card-actions">
+            <input class="search-input" placeholder="🔍 Search agents..." oninput="filterTable('agents-table',this.value)">
+            <select class="filter-select" onchange="loadAgents(this.value)">
+              <option value="">All Status</option>
+              <option value="status=eq.active">Active</option>
+              <option value="status=eq.probation">Probation</option>
+              <option value="status=eq.pending">Pending</option>
+            </select>
+          </div>
+        </div>
+        <table id="agents-table">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Agent ID</th>
+              <th>Country</th>
+              <th>Phone</th>
+              <th>Contracts</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="agents-list">
+            <tr><td colspan="8"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div id="agents-count">Loading...</div>
+          <div class="page-btns" id="agents-pages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EMERGENCY NUMBERS ══ -->
+    <div class="page" id="page-emergency">
+      <div class="topbar">
+        <div>
+          <div class="page-title">🚨 Emergency Numbers</div>
+          <div class="page-sub">City-level emergency contacts — 131 cities across 30 countries</div>
+        </div>
+        <div class="topbar-right">
+          <button class="refresh-btn" onclick="loadEmergency()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Emergency Directory</div>
+          <div class="card-actions">
+            <input class="search-input" placeholder="🔍 Search city or country..." oninput="filterTable('emergency-table',this.value)">
+            <select class="filter-select" onchange="filterEmergencyByCountry(this.value)" id="em-country-filter">
+              <option value="">All Countries</option>
+            </select>
+          </div>
+        </div>
+        <table id="emergency-table">
+          <thead>
+            <tr>
+              <th>City</th>
+              <th>Country</th>
+              <th>Ambulance</th>
+              <th>Police</th>
+              <th>Fire</th>
+              <th>Traffic</th>
+              <th>Roadside</th>
+              <th>Hospital</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="emergency-list">
+            <tr><td colspan="9"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div id="emergency-count">Loading...</div>
+          <div class="page-btns" id="emergency-pages"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ SUPPLIER DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="supplier-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('supplier-modal')">✕</button>
+    <div class="modal-title" id="sm-title">Business Details</div>
+    <div class="modal-sub" id="sm-sub">Review information before approving</div>
+    <div id="sm-body"></div>
+    <div class="modal-actions" id="sm-actions"></div>
+  </div>
+</div>
+
+<!-- ═══ EDIT EMERGENCY MODAL ═══ -->
+<div class="modal-overlay" id="emergency-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('emergency-modal')">✕</button>
+    <div class="modal-title">Edit Emergency Numbers</div>
+    <div class="modal-sub" id="em-modal-city">City — Country</div>
+    <input type="hidden" id="em-edit-id">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-field"><label>Ambulance</label><input id="em-ambulance"></div>
+      <div class="modal-field"><label>Police</label><input id="em-police"></div>
+      <div class="modal-field"><label>Fire</label><input id="em-fire"></div>
+      <div class="modal-field"><label>Traffic Police</label><input id="em-traffic"></div>
+      <div class="modal-field"><label>Roadside</label><input id="em-roadside"></div>
+      <div class="modal-field"><label>Coast Guard</label><input id="em-coast"></div>
+      <div class="modal-field"><label>Tourist Police</label><input id="em-tourist"></div>
+    </div>
+    <div class="modal-field"><label>Hospital Direct</label><input id="em-hospital"></div>
+    <div class="modal-field"><label>Notes</label><textarea id="em-notes"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveEmergency()">💾 Save Changes</button>
+      <button class="btn btn-view" onclick="closeModal('emergency-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+// CONFIG
+// ══════════════════════════════════
+const SUPABASE_URL = 'https://mcduuatcrfjcuxhmktst.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_19cNoziJhEj53lbragMwBg_g-P6BmOv';
+const ADMIN_USER   = 'admin';
+const ADMIN_PASS   = 'helpme2026';  // ← Change this password!
+
+const CATS = {
+  doctors:'Doctors & Healthcare', mechanics:'Mechanics & Auto',
+  pharmacy:'Pharmacy', restaurants:'Restaurants & Cafes',
+  hotels:'Hotels & Stays', beauty:'Beauty & Salons',
+  homeservices:'Home Services', shopping:'Shopping',
+  professional:'Professional Services', travel:'Travel & Tourism',
+  fitness:'Sports & Fitness', education:'Education & Training',
+  pets:'Pets & Animals', family:'Family & Kids', emergency:'Emergency Services'
+};
+
+const PER_PAGE = 20;
+let currentPage = {suppliers:1, users:1, agents:1, emergency:1, pending:1};
+let allData = {suppliers:[], users:[], agents:[], emergency:[], pending:[]};
+
+// ══════════════════════════════════
+// AUTH
+// ══════════════════════════════════
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if(u===ADMIN_USER && p===ADMIN_PASS){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadDashboard();
+    loadPendingBadge();
+  } else {
+    document.getElementById('login-err').style.display='block';
+    setTimeout(()=>document.getElementById('login-err').style.display='none',3000);
+  }
+}
+
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-pass').value='';
+}
+
+// ══════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════
+async function sbFetch(table, params=''){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`,{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'}
+    });
+    return await res.json();
+  }catch(e){ return []; }
+}
+
+async function sbUpdate(table, id, data){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{
+        'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+        'Content-Type':'application/json','Prefer':'return=minimal'
+      },
+      body:JSON.stringify(data)
+    });
+    return res.ok;
+  }catch(e){ return false; }
+}
+
+async function sbDelete(table, id){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`,{
+      method:'DELETE',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    return res.ok;
+  }catch(e){ return false; }
+}
+
+async function sbCount(table, params=''){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`,{
+      headers:{
+        'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+        'Prefer':'count=exact','Range':'0-0'
+      }
+    });
+    const range = res.headers.get('content-range');
+    return range ? parseInt(range.split('/')[1]) : 0;
+  }catch(e){ return 0; }
+}
+
+// ══════════════════════════════════
+// NAV
+// ══════════════════════════════════
+function showPage(page, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  if(el) el.classList.add('active');
+  const loaders = {
+    dashboard:loadDashboard, pending:loadPending,
+    suppliers:loadSuppliers, users:loadUsers,
+    agents:loadAgents, emergency:loadEmergency
+  };
+  if(loaders[page]) loaders[page]();
+}
+
+// ══════════════════════════════════
+// TOAST
+// ══════════════════════════════════
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = type==='error' ? 'var(--red)' : type==='warn' ? 'var(--amber)' : 'var(--green)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════════════════════════════════
+// MODAL
+// ══════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ══════════════════════════════════
+// TABLE FILTER
+// ══════════════════════════════════
+function filterTable(tableId, query){
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll('tbody tr');
+  const q = query.toLowerCase();
+  rows.forEach(row=>{
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ══════════════════════════════════
+// HELPERS
+// ══════════════════════════════════
+function timeAgo(dateStr){
+  if(!dateStr) return '—';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff/60000);
+  const hours = Math.floor(diff/3600000);
+  const days = Math.floor(diff/86400000);
+  if(mins < 60) return mins+'m ago';
+  if(hours < 24) return hours+'h ago';
+  if(days < 30) return days+'d ago';
+  return new Date(dateStr).toLocaleDateString();
+}
+
+function formatDate(dateStr){
+  if(!dateStr) return '—';
+  return new Date(dateStr).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function planBadge(plan){
+  const p = (plan||'free').toLowerCase();
+  return `<span class="badge ${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</span>`;
+}
+
+function statusBadge(active){
+  return active
+    ? `<span class="badge approved">✓ Active</span>`
+    : `<span class="badge pending">⏳ Pending</span>`;
+}
+
+function stars(rating){
+  if(!rating) return '<span style="color:var(--text3)">—</span>';
+  return `<span style="color:var(--amber)">★</span> <span style="font-family:\'DM Mono\',monospace;font-size:13px;">${parseFloat(rating).toFixed(1)}</span>`;
+}
+
+// ══════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════
+async function loadDashboard(){
+  // Load stats in parallel
+  const [suppliers, users, agents, pending] = await Promise.all([
+    sbCount('suppliers',''),
+    sbCount('users',''),
+    sbCount('agents',''),
+    sbCount('suppliers','?active=eq.false'),
+  ]);
+
+  document.getElementById('stat-suppliers').textContent = suppliers;
+  document.getElementById('stat-users').textContent = users;
+  document.getElementById('stat-agents').textContent = agents;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-suppliers-trend').textContent = suppliers+' total listings';
+  document.getElementById('stat-users-trend').textContent = users+' total registered';
+  document.getElementById('stat-agents-trend').textContent = agents+' in network';
+
+  // Update pending badge
+  if(pending > 0){
+    const b = document.getElementById('pending-badge');
+    b.textContent = pending; b.style.display='inline-block';
+  }
+
+  // Recent suppliers
+  const recentSup = await sbFetch('suppliers','?order=created_at.desc&limit=8');
+  const tbody = document.getElementById('recent-suppliers');
+  if(!recentSup || !recentSup.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="icon">🏪</div><div class="msg">No businesses yet</div></div></td></tr>';
+  } else {
+    tbody.innerHTML = recentSup.map(s=>`
+      <tr>
+        <td><div style="font-weight:600;">${s.name||'—'}</div><div style="font-size:12px;color:var(--text2);">${s.specialty||''}</div></td>
+        <td><span style="font-size:12px;color:var(--text2);">${CATS[s.category_key]||s.category_key||'—'}</span></td>
+        <td><span style="font-size:13px;">${s.country||'—'}</span></td>
+        <td>${planBadge(s.plan)}</td>
+        <td>${statusBadge(s.active)}</td>
+        <td style="font-size:12px;color:var(--text2);">${timeAgo(s.created_at)}</td>
+        <td><div class="action-btns">
+          <button class="btn btn-view" onclick="viewSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">View</button>
+          ${!s.active ? `<button class="btn btn-approve" onclick="approveSupplier(${s.id})">Approve</button>` : ''}
+        </div></td>
+      </tr>`).join('');
+  }
+
+  // Recent users
+  const recentUsers = await sbFetch('users','?order=created_at.desc&limit=8');
+  const utbody = document.getElementById('recent-users');
+  if(!recentUsers || !recentUsers.length){
+    utbody.innerHTML = '<tr><td colspan="3"><div class="empty"><div class="icon">👥</div><div class="msg">No users yet</div></div></td></tr>';
+  } else {
+    utbody.innerHTML = recentUsers.map(u=>`
+      <tr>
+        <td style="font-weight:600;">${u.name||'—'}</td>
+        <td style="font-size:13px;color:var(--text2);">${u.country||'—'}</td>
+        <td style="font-size:12px;color:var(--text3);">${timeAgo(u.created_at)}</td>
+      </tr>`).join('');
+  }
+
+  // Country breakdown
+  const allSup = await sbFetch('suppliers','?select=country&active=eq.true');
+  const ctbody = document.getElementById('country-breakdown');
+  if(!allSup || !allSup.length){
+    ctbody.innerHTML = '<tr><td colspan="3"><div class="empty"><div class="icon">🌍</div><div class="msg">No data</div></div></td></tr>';
+  } else {
+    const countMap = {};
+    allSup.forEach(s=>{ if(s.country) countMap[s.country]=(countMap[s.country]||0)+1; });
+    const sorted = Object.entries(countMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const total = allSup.length;
+    ctbody.innerHTML = sorted.map(([country,count])=>`
+      <tr>
+        <td style="font-weight:600;">${country}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--orange);">${count}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:var(--surface2);border-radius:3px;">
+              <div style="width:${Math.round(count/total*100)}%;height:100%;background:var(--orange);border-radius:3px;"></div>
+            </div>
+            <span style="font-size:12px;color:var(--text2);width:32px;text-align:right;">${Math.round(count/total*100)}%</span>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+}
+
+// ══════════════════════════════════
+// PENDING BADGE
+// ══════════════════════════════════
+async function loadPendingBadge(){
+  const count = await sbCount('suppliers','?active=eq.false');
+  if(count > 0){
+    const b = document.getElementById('pending-badge');
+    b.textContent = count; b.style.display='inline-block';
+  }
+}
+
+// ══════════════════════════════════
+// PENDING APPROVAL
+// ══════════════════════════════════
+async function loadPending(){
+  document.getElementById('pending-list').innerHTML = '<tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+  const data = await sbFetch('suppliers','?active=eq.false&order=created_at.desc');
+  allData.pending = data || [];
+  renderPending();
+}
+
+function renderPending(){
+  const data = allData.pending;
+  const tbody = document.getElementById('pending-list');
+  document.getElementById('pending-count').textContent = data.length+' pending';
+
+  if(!data.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="icon">✅</div><div class="msg">All caught up!</div><div class="sub">No pending approvals</div></div></td></tr>';
+    return;
+  }
+
+  const page = currentPage.pending;
+  const start = (page-1)*PER_PAGE;
+  const items = data.slice(start, start+PER_PAGE);
+
+  tbody.innerHTML = items.map(s=>`
+    <tr>
+      <td>
+        <div style="font-weight:700;">${s.name||'—'}</div>
+        <div style="font-size:11px;color:var(--text2);">${s.specialty||''}</div>
+      </td>
+      <td style="font-size:13px;">${CATS[s.category_key]||s.category_key||'—'}</td>
+      <td>
+        <div style="font-weight:600;font-size:13px;">${s.country||'—'}</div>
+        <div style="font-size:11px;color:var(--text2);">${s.city||s.location||''}</div>
+      </td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;">${s.phone||'—'}</td>
+      <td>${planBadge(s.plan)}</td>
+      <td style="font-size:12px;color:var(--text2);">${timeAgo(s.created_at)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-view" onclick="viewSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">👁 View</button>
+          <button class="btn btn-approve" onclick="approveSupplier(${s.id})">✓ Approve</button>
+          <button class="btn btn-reject" onclick="rejectSupplier(${s.id})">✕ Reject</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  renderPages('pending', data.length, page);
+}
+
+async function approveSupplier(id){
+  const ok = await sbUpdate('suppliers', id, {active:true});
+  if(ok){
+    toast('✅ Business approved and live!');
+    allData.pending = allData.pending.filter(s=>s.id!==id);
+    renderPending();
+    loadPendingBadge();
+  } else {
+    toast('❌ Failed to approve', 'error');
+  }
+}
+
+async function rejectSupplier(id){
+  if(!confirm('Reject and delete this listing? This cannot be undone.')) return;
+  const ok = await sbDelete('suppliers', id);
+  if(ok){
+    toast('🗑️ Listing rejected and removed', 'warn');
+    allData.pending = allData.pending.filter(s=>s.id!==id);
+    renderPending();
+    loadPendingBadge();
+  } else {
+    toast('❌ Failed to reject', 'error');
+  }
+}
+
+// ══════════════════════════════════
+// ALL SUPPLIERS
+// ══════════════════════════════════
+async function loadSuppliers(filter=''){
+  document.getElementById('suppliers-list').innerHTML = '<tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+  const params = filter ? `?${filter}&order=created_at.desc` : '?order=created_at.desc';
+  const data = await sbFetch('suppliers', params);
+  allData.suppliers = data || [];
+
+  // Populate country filter
+  const countries = [...new Set(allData.suppliers.map(s=>s.country).filter(Boolean))].sort();
+  const cf = document.getElementById('country-filter');
+  if(cf.children.length <= 1){
+    countries.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; cf.appendChild(o); });
+  }
+
+  renderSuppliers();
+}
+
+function filterSuppliersByCountry(country){
+  const data = country ? allData.suppliers.filter(s=>s.country===country) : allData.suppliers;
+  renderSuppliersData(data);
+}
+
+function renderSuppliers(){ renderSuppliersData(allData.suppliers); }
+
+function renderSuppliersData(data){
+  const tbody = document.getElementById('suppliers-list');
+  document.getElementById('suppliers-count').textContent = data.length+' businesses';
+
+  if(!data.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="icon">🏪</div><div class="msg">No businesses found</div></div></td></tr>';
+    return;
+  }
+
+  const page = currentPage.suppliers;
+  const items = data.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  tbody.innerHTML = items.map(s=>`
+    <tr>
+      <td>
+        <div style="font-weight:700;">${s.emoji||''} ${s.name||'—'}</div>
+        <div style="font-size:11px;color:var(--text2);">${s.specialty||''}</div>
+      </td>
+      <td style="font-size:12px;color:var(--text2);">${CATS[s.category_key]||s.category_key||'—'}</td>
+      <td>
+        <div style="font-size:13px;font-weight:600;">${s.country||'—'}</div>
+        <div style="font-size:11px;color:var(--text2);">${s.city||s.location||''}</div>
+      </td>
+      <td>${planBadge(s.plan)}</td>
+      <td>${stars(s.rating)} ${s.review_count ? `<span style="font-size:11px;color:var(--text2);">(${s.review_count})</span>` : ''}</td>
+      <td>${statusBadge(s.active)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-view" onclick="viewSupplier(${JSON.stringify(s).replace(/"/g,'&quot;')})">View</button>
+          <button class="btn btn-edit" onclick="toggleActive(${s.id},${s.active})">${s.active?'Disable':'Enable'}</button>
+          <button class="btn btn-delete" onclick="deleteSupplier(${s.id})">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  renderPages('suppliers', data.length, page);
+}
+
+async function toggleActive(id, current){
+  const ok = await sbUpdate('suppliers', id, {active:!current});
+  if(ok){ toast(current ? '⏸️ Listing disabled' : '✅ Listing enabled', current?'warn':'success'); loadSuppliers(); }
+  else toast('❌ Failed to update', 'error');
+}
+
+async function deleteSupplier(id){
+  if(!confirm('Delete this business permanently? This cannot be undone.')) return;
+  const ok = await sbDelete('suppliers', id);
+  if(ok){ toast('🗑️ Business deleted', 'warn'); allData.suppliers = allData.suppliers.filter(s=>s.id!==id); renderSuppliers(); }
+  else toast('❌ Failed to delete', 'error');
+}
+
+function viewSupplier(s){
+  document.getElementById('sm-title').textContent = s.emoji+' '+s.name;
+  document.getElementById('sm-sub').textContent = s.specialty+' · '+s.country;
+  const rows = [
+    ['Category', CATS[s.category_key]||s.category_key||'—'],
+    ['Plan', (s.plan||'free').toUpperCase()],
+    ['Status', s.active ? '✅ Active' : '⏳ Pending Approval'],
+    ['Phone', s.phone||'—'],
+    ['WhatsApp', s.whatsapp||'—'],
+    ['Website', s.website||'—'],
+    ['Address', s.address||'—'],
+    ['City', s.city||s.location||'—'],
+    ['Country', s.country||'—'],
+    ['Coordinates', s.latitude ? `${s.latitude}, ${s.longitude}` : '—'],
+    ['Rating', s.rating ? `${s.rating} ★ (${s.review_count||0} reviews)` : '—'],
+    ['Description', s.description||'—'],
+    ['Opening Hours', s.opening_hours||'—'],
+    ['Registered', formatDate(s.created_at)],
+  ];
+  document.getElementById('sm-body').innerHTML = rows.map(([l,v])=>`
+    <div class="detail-row">
+      <div class="detail-label">${l}</div>
+      <div class="detail-value">${v}</div>
+    </div>`).join('');
+  document.getElementById('sm-actions').innerHTML = !s.active
+    ? `<button class="btn btn-approve" onclick="approveSupplier(${s.id});closeModal('supplier-modal')">✓ Approve Listing</button>
+       <button class="btn btn-reject" onclick="rejectSupplier(${s.id});closeModal('supplier-modal')">✕ Reject & Delete</button>`
+    : `<button class="btn btn-edit" onclick="toggleActive(${s.id},true);closeModal('supplier-modal')">⏸ Disable Listing</button>
+       <button class="btn btn-delete" onclick="deleteSupplier(${s.id});closeModal('supplier-modal')">🗑️ Delete</button>`;
+  openModal('supplier-modal');
+}
+
+// ══════════════════════════════════
+// USERS
+// ══════════════════════════════════
+async function loadUsers(){
+  document.getElementById('users-list').innerHTML = '<tr><td colspan="7"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+  const data = await sbFetch('users','?order=created_at.desc');
+  allData.users = data || [];
+  renderUsers();
+}
+
+function renderUsers(){
+  const data = allData.users;
+  const tbody = document.getElementById('users-list');
+  document.getElementById('users-count').textContent = data.length+' users';
+
+  if(!data.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="icon">👥</div><div class="msg">No users yet</div></div></td></tr>';
+    return;
+  }
+
+  const page = currentPage.users;
+  const items = data.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  tbody.innerHTML = items.map(u=>`
+    <tr>
+      <td style="font-weight:600;">${u.name||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;">${u.phone||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;">${u.whatsapp||'—'}</td>
+      <td style="font-size:13px;">${u.country||'—'}</td>
+      <td style="font-size:13px;color:var(--text2);">${u.location||'—'}</td>
+      <td style="font-size:12px;color:var(--text2);">${formatDate(u.created_at)}</td>
+      <td>
+        <button class="btn btn-delete" onclick="deleteUser(${u.id})">Delete</button>
+      </td>
+    </tr>`).join('');
+
+  renderPages('users', data.length, page);
+}
+
+async function deleteUser(id){
+  if(!confirm('Delete this user account? This cannot be undone.')) return;
+  const ok = await sbDelete('users', id);
+  if(ok){ toast('🗑️ User deleted', 'warn'); allData.users = allData.users.filter(u=>u.id!==id); renderUsers(); }
+  else toast('❌ Failed to delete', 'error');
+}
+
+// ══════════════════════════════════
+// AGENTS
+// ══════════════════════════════════
+async function loadAgents(filter=''){
+  document.getElementById('agents-list').innerHTML = '<tr><td colspan="8"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+  const params = filter ? `?${filter}&order=created_at.desc` : '?order=created_at.desc';
+  const data = await sbFetch('agents', params);
+  allData.agents = data || [];
+  renderAgents();
+}
+
+function renderAgents(){
+  const data = allData.agents;
+  const tbody = document.getElementById('agents-list');
+  document.getElementById('agents-count').textContent = data.length+' agents';
+
+  if(!data.length){
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="icon">🤝</div><div class="msg">No agents yet</div></div></td></tr>';
+    return;
+  }
+
+  const page = currentPage.agents;
+  const items = data.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  tbody.innerHTML = items.map(a=>`
+    <tr>
+      <td>
+        <div style="font-weight:700;">${a.name||'—'}</div>
+        <div style="font-size:11px;color:var(--text2);">${a.whatsapp||a.phone||''}</div>
+      </td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--orange);">${a.agent_id||'—'}</td>
+      <td style="font-size:13px;">${a.country||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;">${a.phone||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;color:var(--green);">${a.contracts_count||0}</td>
+      <td>${a.status === 'active' ? '<span class="badge active">✓ Active</span>' : a.status === 'probation' ? '<span class="badge probation">⚠ Probation</span>' : '<span class="badge pending">⏳ Pending</span>'}</td>
+      <td style="font-size:12px;color:var(--text2);">${formatDate(a.created_at)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-approve" onclick="updateAgentStatus(${a.id},'active')">Activate</button>
+          <button class="btn btn-delete" onclick="deleteAgent(${a.id})">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  renderPages('agents', data.length, page);
+}
+
+async function updateAgentStatus(id, status){
+  const ok = await sbUpdate('agents', id, {status});
+  if(ok){ toast('✅ Agent status updated'); loadAgents(); }
+  else toast('❌ Failed to update', 'error');
+}
+
+async function deleteAgent(id){
+  if(!confirm('Delete this agent? This cannot be undone.')) return;
+  const ok = await sbDelete('agents', id);
+  if(ok){ toast('🗑️ Agent deleted', 'warn'); allData.agents = allData.agents.filter(a=>a.id!==id); renderAgents(); }
+  else toast('❌ Failed to delete', 'error');
+}
+
+// ══════════════════════════════════
+// EMERGENCY NUMBERS
+// ══════════════════════════════════
+async function loadEmergency(){
+  document.getElementById('emergency-list').innerHTML = '<tr><td colspan="9"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+  const data = await sbFetch('emergency_numbers','?order=country_name,city');
+  allData.emergency = data || [];
+
+  // Populate country filter
+  const countries = [...new Set(data.map(e=>e.country_name).filter(Boolean))].sort();
+  const cf = document.getElementById('em-country-filter');
+  if(cf.children.length <= 1){
+    countries.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; cf.appendChild(o); });
+  }
+
+  renderEmergency();
+}
+
+function filterEmergencyByCountry(country){
+  const data = country ? allData.emergency.filter(e=>e.country_name===country) : allData.emergency;
+  renderEmergencyData(data);
+}
+
+function renderEmergency(){ renderEmergencyData(allData.emergency); }
+
+function renderEmergencyData(data){
+  const tbody = document.getElementById('emergency-list');
+  document.getElementById('emergency-count').textContent = data.length+' cities';
+
+  if(!data.length){
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="icon">🚨</div><div class="msg">No emergency numbers found</div></div></td></tr>';
+    return;
+  }
+
+  const page = currentPage.emergency;
+  const items = data.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  tbody.innerHTML = items.map(e=>`
+    <tr>
+      <td style="font-weight:700;">${e.city||'—'}</td>
+      <td>${e.flag||''} <span style="font-size:13px;">${e.country_name||'—'}</span></td>
+      <td><span class="em-number">${e.ambulance||'—'}</span></td>
+      <td><span class="em-number">${e.police||'—'}</span></td>
+      <td><span class="em-number">${e.fire||'—'}</span></td>
+      <td><span class="em-number">${e.traffic_police||'—'}</span></td>
+      <td><span class="em-number" style="color:var(--blue);">${e.roadside||'—'}</span></td>
+      <td style="font-size:12px;color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${e.hospital_direct||''}">${e.hospital_direct||'—'}</td>
+      <td>
+        <button class="btn btn-edit" onclick="editEmergency(${JSON.stringify(e).replace(/"/g,'&quot;')})">✏️ Edit</button>
+      </td>
+    </tr>`).join('');
+
+  renderPages('emergency', data.length, page);
+}
+
+function editEmergency(e){
+  document.getElementById('em-modal-city').textContent = e.city+' — '+e.country_name;
+  document.getElementById('em-edit-id').value = e.id;
+  document.getElementById('em-ambulance').value = e.ambulance||'';
+  document.getElementById('em-police').value = e.police||'';
+  document.getElementById('em-fire').value = e.fire||'';
+  document.getElementById('em-traffic').value = e.traffic_police||'';
+  document.getElementById('em-roadside').value = e.roadside||'';
+  document.getElementById('em-coast').value = e.coast_guard||'';
+  document.getElementById('em-tourist').value = e.tourist_police||'';
+  document.getElementById('em-hospital').value = e.hospital_direct||'';
+  document.getElementById('em-notes').value = e.notes||'';
+  openModal('emergency-modal');
+}
+
+async function saveEmergency(){
+  const id = document.getElementById('em-edit-id').value;
+  const data = {
+    ambulance:    document.getElementById('em-ambulance').value,
+    police:       document.getElementById('em-police').value,
+    fire:         document.getElementById('em-fire').value,
+    traffic_police: document.getElementById('em-traffic').value,
+    roadside:     document.getElementById('em-roadside').value,
+    coast_guard:  document.getElementById('em-coast').value,
+    tourist_police: document.getElementById('em-tourist').value,
+    hospital_direct: document.getElementById('em-hospital').value,
+    notes:        document.getElementById('em-notes').value,
+    updated_at:   new Date().toISOString(),
+  };
+  const ok = await sbUpdate('emergency_numbers', id, data);
+  if(ok){
+    toast('✅ Emergency numbers updated!');
+    closeModal('emergency-modal');
+    loadEmergency();
+  } else {
+    toast('❌ Failed to save', 'error');
+  }
+}
+
+// ══════════════════════════════════
+// PAGINATION
+// ══════════════════════════════════
+function renderPages(section, total, current){
+  const pages = Math.ceil(total/PER_PAGE);
+  const wrap = document.getElementById(section+'-pages');
+  if(!wrap || pages <= 1){ if(wrap) wrap.innerHTML=''; return; }
+
+  let html = '';
+  for(let i=1;i<=pages;i++){
+    html += `<button class="page-btn${i===current?' active':''}" onclick="goPage('${section}',${i})">${i}</button>`;
+  }
+  wrap.innerHTML = html;
+}
+
+function goPage(section, page){
+  currentPage[section] = page;
+  const renderers = {
+    suppliers:renderSuppliers, users:renderUsers,
+    agents:renderAgents, emergency:renderEmergency, pending:renderPending
+  };
+  if(renderers[section]) renderers[section]();
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click', e=>{
+    if(e.target===overlay) overlay.classList.remove('open');
+  });
+});
+
+// Enter key on login
+document.getElementById('login-user').addEventListener('keydown', e=>{
+  if(e.key==='Enter') document.getElementById('login-pass').focus();
+});
+</script>
+</body>
+</html>
